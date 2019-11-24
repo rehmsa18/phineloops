@@ -19,7 +19,7 @@ public class Main {
 
     private void generate(int width, int height, String outputFile){
 	// generate grid and store it to outputFile...
-	//...            
+	//...  
     }
 
     private boolean solve(String inputFile, String outputFile){
@@ -48,7 +48,7 @@ public class Main {
         options.addOption("o", "output", true, "Store the generated or solved grid in <arg>. (Use only with --generate and --solve.)");
         options.addOption("t", "threads", true, "Maximum number of solver threads. (Use only with --solve.)");
         options.addOption("x", "nbcc", true, "Maximum number of connected components. (Use only with --generate.)");
-	options.addOption("G", "gui", true, "Run with the graphic user interface.");
+        options.addOption("G", "gui", true, "Run with the graphic user interface.");
         options.addOption("h", "help", false, "Display this help");
         
         try {
@@ -69,7 +69,7 @@ public class Main {
 		if(! cmd.hasOption("o")) throw new ParseException("Missing mandatory --output argument.");
 		outputFile = cmd.getOptionValue( "o" );
 
-		generate(width, height, outputFile); 
+		//generate(width, height, outputFile); 
 	    }
 	    else if( cmd.hasOption( "s" ) ) {
 		System.out.println("Running phineloops solver.");
@@ -77,18 +77,18 @@ public class Main {
 		if(! cmd.hasOption("o")) throw new ParseException("Missing mandatory --output argument.");      
 		outputFile = cmd.getOptionValue( "o" );
 
-		boolean solved = solve(intputFile, outputFile); 
+		//boolean solved = solve(intputFile, outputFile); 
 
-		System.out.println("SOLVED: " + solved);            
+		//System.out.println("SOLVED: " + solved);            
 	    }
         
 	    else if( cmd.hasOption( "c" )) {
 		System.out.println("Running phineloops checker.");
 		inputFile = cmd.getOptionValue( "c" );
             		
-		boolean solved = check(inputFile); 
+		//boolean solved = check(inputFile); 
 
-		System.out.println("SOLVED: " + solved);           
+		//System.out.println("SOLVED: " + solved);           
 	    }
 	    else {
 		throw new ParseException("You must specify at least one of the following options: -generate -check -solve ");           
@@ -100,6 +100,8 @@ public class Main {
             System.exit(1); // exit with error      
 	}
 
-        System.exit(0); // exit with success                            
+
+        System.exit(0); // exit with success   
+
     }
 }

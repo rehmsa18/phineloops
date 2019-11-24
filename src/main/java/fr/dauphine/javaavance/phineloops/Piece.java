@@ -1,5 +1,7 @@
 package fr.dauphine.javaavance.phineloops;
 
+import java.util.Random;
+
 public class Piece {
 	int x;
 	int y;
@@ -14,6 +16,13 @@ public class Piece {
 		this.y = -1;
 	}
 	
+	public Piece(int type, int orientation) {
+		this.type = type;
+		this.orientation = orientation;
+		this.defineLinks();
+		this.defineNbNeighbors();
+	}
+	
 	public Piece(int x, int y, int type) {
 		this.x = x;
 		this.y = y;
@@ -22,7 +31,7 @@ public class Piece {
 		this.defineNbNeighbors();
 	}
 
-	public Piece(int x, int y, int orientation, int type) {
+	public Piece(int x, int y, int type, int orientation) {
 		this.x = x;
 		this.y = y;
 		this.orientation = orientation;
@@ -33,11 +42,21 @@ public class Piece {
 	
 	public void defineNbNeighbors() {
 		switch (this.type) {
-		case 1 : this.nbneighbors = 1;
-		case 2 : this.nbneighbors = 2;
-		case 3 : this.nbneighbors = 3;
-		case 4 : this.nbneighbors = 4;
-		case 5 : this.nbneighbors = 2;
+			case 1 : 
+				this.nbneighbors = 1;
+				break;
+			case 2 : 
+				this.nbneighbors = 2;
+				break;
+			case 3 : 
+				this.nbneighbors = 3;
+				break;
+			case 4 : 
+				this.nbneighbors = 4;
+				break;
+			case 5 : 
+				this.nbneighbors = 2;
+				break;
 		}
 	}
 	
@@ -94,27 +113,33 @@ public class Piece {
 		//for type 1 and 2 orientation and place in tab links are linked so useless to write a switch for orientation
 		case 1  : 
 			this.links[this.orientation] = 1;
+			break;
 		case 2 : 
 			this.links[this.orientation] = 1;
 			this.links[this.orientation+2] = 1;
+			break;
 		case 3 :
 			switch (this.orientation) {
 			case 0 :
 				this.links[0] = 1;
 				this.links[1] = 1;
 				this.links[3] = 1;
+				break;
 			case 1 :
 				this.links[0] = 1;
 				this.links[1] = 1;
 				this.links[2] = 1;
+				break;
 			case 2 :
 				this.links[1] = 1;
 				this.links[2] = 1;
 				this.links[3] = 1;
+				break;
 			case 3 :
 				this.links[0] = 1;
 				this.links[2] = 1;
 				this.links[3] = 1;
+				break;
 			}
 
 		case 5 : 
@@ -122,15 +147,19 @@ public class Piece {
 			case 0 :
 				this.links[0] = 1;
 				this.links[1] = 1;
+				break;
 			case 1 :
 				this.links[1] = 1;
 				this.links[2] = 1;
+				break;
 			case 2 :
 				this.links[2] = 1;
 				this.links[3] = 1;
+				break;
 			case 3 :
 				this.links[0] = 1;
 				this.links[3] = 1;
+				break;
 			}
 
 		}
@@ -181,5 +210,114 @@ public class Piece {
 		}
 		return false;
 	}
+	
+	/**
+	 * Says if a piece can be linked by its north neighbor 
+	 * @return true if no link possible
+	 */
+	public boolean noLinkNorth() {
+		return this.links[0] == 0;
+	}
+	
+	/**
+	 * Says if a piece can be linked by its east neighbor 
+	 * @return true if no link possible
+	 */
+	public boolean noLinkEast() {
+		return this.links[1] == 0;
+	}
+	
+	/**
+	 * Says if a piece can be linked by its south neighbor 
+	 * @return true if no link possible
+	 */
+	public boolean noLinkSouth() {
+		return this.links[2] == 0;
+	}
+	
+	/**
+	 * Says if a piece can be linked by its west neighbor 
+	 * @return true if no link possible
+	 */
+	public boolean noLinkWest() {
+		return this.links[3] == 0;
+	}
+	
+	/**
+	 * Display the type and orientation of the piece
+	 */
+	public String toString() {
+		return "(" + x + "," + y + ") " +type + " " + orientation + " " + this.unicode();
+	}
+	
+	/**
+	 * Associate each piece with the good unicode
+	 * @return
+	 */
+	public String unicode() {
+		switch (this.type) {
+			case 0 : 
+				return " ";
+			case 1  : 
+				switch (this.orientation) {
+					case 0 :
+						return "\u2579";
+					case 1 :
+						return "\u257A";
+					case 2 :
+						return "\u257B";
+					case 3 :
+						return "\u2578";
+					}
+			case 2 : 
+				switch (this.orientation) {
+					case 0 :
+						return "\u2503";
+					case 1 :
+						return "\u2501";
+				}
+			case 3 :
+				switch (this.orientation) {
+					case 0 :
+						return "\u253B";
+					case 1 :
+						return "\u2523";
+					case 2 :
+						return "\u2533";
+					case 3 :
+						return "\u252B";
+					}
+			case 4 : 
+				return "\u2549";
+			case 5 : 
+				switch (this.orientation) {
+					case 0 :
+						return "\u2517";
+					case 1 :
+						return "\u250F";
+					case 2 :
+						return "\u2513";
+					case 3 :
+						return "\u251B";
+					}
+			}
+		return null;	
+	}
+	
+	/**
+	 * Modifies the orientation of the piece randomly
+	 */
+	public void shufflePiece() {
+		int orientations[] = {0,1,2,3};
+		int temp;
+		
+		do {
+			temp = orientations[new Random().nextInt(orientations.length)];
+		}while( !isOrientationChoice( temp ) );
+		
+		this.orientation = temp;
+			
 
+	}
+	
 }

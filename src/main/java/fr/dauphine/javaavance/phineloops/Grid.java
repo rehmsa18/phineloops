@@ -3,11 +3,12 @@ package fr.dauphine.javaavance.phineloops;
 public class Grid {
 	int width;
 	int height;
-	Piece cases[][] = new Piece[height][width];
+	Piece cases[][];
 	
 	public Grid(int width, int height) {
 		this.width = width;
 		this.height = height;
+		cases = new Piece[width][height];
 	}
 	
 	/**
@@ -26,7 +27,7 @@ public class Grid {
 	 * @param Piece p
 	 */
 	public void add (Piece p) {
-		cases[p.x][p.y] = new Piece(p.x, p.y, p.orientation, p.type);
+		cases[p.x][p.y] = new Piece(p.x, p.y, p.type, p.orientation);
 	}
 	
 
@@ -72,6 +73,25 @@ public class Grid {
 			}
 		}
 		return (cpt == p.nbneighbors);
+	}
+
+	/**
+	 * Display in console the unicode for each piece of the grid
+	 */
+	public void displayInConsole() {
+		String rows = "";
+		for(int y=0; y<height; y++) {
+			String row = "";
+			for(int x=0; x<width; x++) {
+				row += " " + cases[x][y].unicode();
+			}
+			rows += row +"\n";
+		}
+		System.out.println(rows);	
+	}
+	
+	public Piece[][] getCase() {
+		return cases;
 	}
 
 }

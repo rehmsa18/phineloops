@@ -49,15 +49,40 @@ public class GeneratorGrid {
 	 * @return true if all possible links done with neighbors
 	 */
 	public boolean respectLinkNeighbors(int x, int y, Piece p) {	
+		//for piece not in the west border 
+		//the piece on its west side need to have the same value for the link west-east
 		if( x > 0 ) {
 			if( p.links[3] != grid.getCase()[x-1][y].links[1] )
 				return false;
 		}
+		//for piece not in the north border 
+		//the piece on its north side need to have the same value for the link north-south
 		if( y > 0) {
 			if( p.links[0] != grid.getCase()[x][y-1].links[2] )
 				return false;
 		}
 		return true;
+	}
+	
+	/**
+	 * Says two neighbors can not be of the type 1 
+	 * @param x
+	 * @param y
+	 * @param p
+	 * @return true if the two piece are of the type 1
+	 */
+	public boolean pieceType1Neighbors(int x, int y, Piece p) {	
+		//the piece and its west neighbor can not be of the type 1 to avoid too much connected component in the grid
+		if( x > 0 ) {
+			if( (p.type == 1) && (grid.getCase()[x-1][y].type == 1) )
+				return true;
+		}
+	    //the piece and its north neighbor can not be of the type 1 to avoid too much connected component in the grid
+		if( y > 0) {
+			if( (p.type == 1) && (grid.getCase()[x][y-1].type == 1) )
+				return true;
+		}
+		return false;
 	}
 
 	/**
@@ -223,6 +248,13 @@ public class GeneratorGrid {
 			}
 		}
 		
+		if(piecesPossible.size()>1) {
+			for(Piece p : pieces ) {
+				if( this.pieceType1Neighbors(x, y, p) ) {
+					piecesPossible.remove(p);
+				}	
+			}
+		}
 		Random rand = new Random(); 
 		Piece chosenPiece = piecesPossible.get(rand.nextInt(piecesPossible.size())); 
         chosenPiece = new Piece(x, y, chosenPiece.type, chosenPiece.orientation);

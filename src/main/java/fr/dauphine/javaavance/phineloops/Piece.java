@@ -74,7 +74,7 @@ public class Piece {
 			return (orientation<=3 && orientation>=0);
 		
 		case 2 : 
-			return (orientation<=2 && orientation>=0);
+			return (orientation==0 || orientation==1);
 		}
 		
 		return false;	
@@ -88,10 +88,13 @@ public class Piece {
 	   */
 	
 	public void rotatePiece() {
-		if (this.isOrientationChoice(this.orientation+1)) {
+		this.orientation ++;
+		int limitOrientation = 4;
+		while ( !this.isOrientationChoice(this.orientation) && orientation < limitOrientation) {
 			this.orientation++;
 		}
-		this.orientation = 0;
+		if(this.orientation >= 4)
+			this.orientation = 0;
 	}
 	
 	/**

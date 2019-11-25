@@ -32,8 +32,9 @@ public class GridDisplay extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-		GeneratorGrid gg = new GeneratorGrid(15,15);
+		GeneratorGrid gg = new GeneratorGrid(10,10);
 		gg.buildSolution();	
+		//gg.shuffleSolution();
 		row = gg.height;
 		column = gg.width;
 		width = column*DIM;
@@ -43,6 +44,7 @@ public class GridDisplay extends Application {
         primaryStage.setTitle("Infinity loop");
         Canvas canvas = new Canvas(width, height);
         final GraphicsContext gc = canvas.getGraphicsContext2D();
+        //drawGridLine(gc, row, column);
         drawShapes(gc, row, column, cases);
         
         Group root = new Group();
@@ -57,7 +59,7 @@ public class GridDisplay extends Application {
         	  int x = (int) (e.getX()/DIM);
         	  int y = (int) (e.getY()/DIM);
               gc.setStroke(Color.WHITE);
-              gc.clearRect(x*DIM+1, y*DIM+1, DIM-1, DIM-1);
+              gc.clearRect(x*DIM, y*DIM, DIM, DIM);
               gc.setStroke(Color.BLUE);
         	  cases[x][y].rotatePiece();
         	  draw(cases[x][y], x, y, gc);
@@ -71,13 +73,8 @@ public class GridDisplay extends Application {
 
     private void drawShapes(GraphicsContext gc, int row, int column, Piece cases[][]) {
 
-        for (int i = 0; i < row; i++)
-            gc.strokeLine( 0 , i*DIM, column*DIM, i*DIM);
-        
-        for (int i = 0; i < column; i++)
-            gc.strokeLine( i*DIM, 0, i*DIM, row*DIM);
-
         gc.setStroke(Color.BLUE);
+        gc.setFill(Color.BLUE);
         gc.setLineWidth(3);
         
 		for(int y=0; y<row; y++) {
@@ -94,14 +91,22 @@ public class GridDisplay extends Application {
     	int y = b*DIM;
     	
 		if (p.type==1) {
-			if(p.orientation==0) 
+			if(p.orientation==0) {
 				gc.strokeLine( x+(DIM/2), y, x+(DIM/2), y+(DIM/2));
-			else if(p.orientation==1) 
-				gc.strokeLine( x+(DIM/2), y+(DIM/2), x+DIM, y+(DIM/2));
-			else if(p.orientation==2)
+				gc.fillOval(x+(DIM/4), y+(DIM/4), DIM/2, DIM/2);
+			}
+			else if(p.orientation==1) {
+				gc.strokeLine( x+(DIM/2), y+(DIM/2), x+DIM, y+(DIM/2));	
+				gc.fillOval(x+(DIM/4), y+(DIM/4), DIM/2, DIM/2);
+			}
+			else if(p.orientation==2) {
 				gc.strokeLine( x+(DIM/2), y+(DIM/2), x+(DIM/2), y+DIM);
-			else if(p.orientation==3)
+				gc.fillOval(x+(DIM/4), y+(DIM/4), DIM/2, DIM/2);
+			}
+			else if(p.orientation==3) {
 				gc.strokeLine( x , y+(DIM/2) , x+(DIM/2), y+(DIM/2));
+				gc.fillOval(x+(DIM/4), y+(DIM/4), DIM/2, DIM/2);
+			}
 		}
 		
 		else if(p.type==2) {
@@ -147,11 +152,18 @@ public class GridDisplay extends Application {
 				gc.strokeArc( x-(DIM/2), y-(DIM/2), DIM, DIM, 270, 90, ArcType.OPEN);
 			
 		}
-		        
-		      		
+		        	      		
 	}
 
 
+	public void drawGridLine(GraphicsContext gc, int row, int column) {
+        for (int i = 0; i < row; i++)
+            gc.strokeLine( 0 , i*DIM, column*DIM, i*DIM);
+        
+        for (int i = 0; i < column; i++)
+            gc.strokeLine( i*DIM, 0, i*DIM, row*DIM);
+		
+	}
 
 
 	

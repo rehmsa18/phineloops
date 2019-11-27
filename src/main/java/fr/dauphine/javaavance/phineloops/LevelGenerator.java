@@ -6,14 +6,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class GeneratorGrid {
+public class LevelGenerator {
 	
 	protected Grid grid;
 	protected int width;
 	protected int height;
 	ArrayList<Piece> pieces;
 
-	public GeneratorGrid(int width, int height) {
+	public LevelGenerator(int width, int height) {
 		this.width = width;
 		this.height = height;
 		grid = new Grid(width, height);
@@ -309,7 +309,7 @@ public class GeneratorGrid {
 			fichier.newLine();
 			for(int y=0; y<height; y++) {
 				for(int x=0; x<width; x++) {
-					fichier.write(grid.cases[x][y].toString());
+					fichier.write(grid.cases[x][y].toString2());
 					fichier.newLine();
 				}
 			}
@@ -318,7 +318,7 @@ public class GeneratorGrid {
 	}
 	
 	public static void main(String[] args) throws IOException {
-		GeneratorGrid gg = new GeneratorGrid(10,10);
+		LevelGenerator gg = new LevelGenerator(10,10);
 		gg.buildSolution();
 		gg.shuffleSolution();
 		gg.storeInFile("game_to_solve");

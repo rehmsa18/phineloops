@@ -1,11 +1,13 @@
 package fr.dauphine.javaavance.phineloops;
 
-public class Grid {
+import java.util.Observable;
+
+public class Grid  extends Observable {
 	int width;
 	int height;
 	Piece cases[][];
 	
-	public Grid(int width, int height) {
+	public Grid(int width, int height){
 		this.width = width;
 		this.height = height;
 		cases = new Piece[width][height];

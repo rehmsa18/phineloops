@@ -1,5 +1,6 @@
 package fr.dauphine.javaavance.phineloops;
 
+import java.awt.Graphics;
 import java.util.Random;
 
 public class Piece {
@@ -10,6 +11,8 @@ public class Piece {
 	int lock = 0; //indicate if we can move a piece, it is lock if = 1
 	int links[] = {0,0,0,0}; //tab to define where the piece makes a link with value 1 {North,East,South,West}
 	int nbneighbors = 0;
+	int gridX;
+	int gridY;
 	
 	public Piece() {
 		this.x = -1;
@@ -247,10 +250,17 @@ public class Piece {
 	}
 	
 	/**
-	 * Display the type and orientation of the piece
+	 * Display the type and orientation of the piece, place in grid, and unicode shape
 	 */
 	public String toString() {
 		return "(" + x + "," + y + ") " +type + " " + orientation + " " + this.unicode();
+	}
+	
+	/**
+	 * Display the type and orientation of the piece
+	 */
+	public String toString2() {
+		return type + " " + orientation;
 	}
 	
 	/**
@@ -319,8 +329,12 @@ public class Piece {
 		}while( !isOrientationChoice( temp ) );
 		
 		this.orientation = temp;
-			
-
+	}
+	
+	public void draw(Graphics g) {
+		// TODO Auto-generated method stub
+		DrawablePiece dp=new DrawablePiece(this);
+		dp.paintComponent(g);
 	}
 	
 }

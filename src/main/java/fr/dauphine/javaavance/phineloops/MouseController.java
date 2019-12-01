@@ -27,19 +27,13 @@ public class MouseController implements MouseListener{
    	  	b --;
    	  	int row = d.row;
    	  	int column = d.column;
-   	  	
-   	  	//System.out.println(a + " " + e.getX());
-   	  	//System.out.println(b + " "+ e.getY());
 
-   	  	
-   	  	System.out.println("case clicked");
-	    
 		for(int y=0; y<row; y++) {
 			for(int x=0; x<column; x++) {		
 				if(x == a && y == b) {
 					System.out.print(cases[x][y] + " -> ");
 					cases[x][y].rotatePiece();
-					System.out.print(cases[x][y]);
+					System.out.println(cases[x][y]);
 					levelDisplay.repaint();				
 				}
 			}

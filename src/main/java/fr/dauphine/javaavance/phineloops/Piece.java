@@ -11,6 +11,7 @@ public class Piece {
 	int lock = 0; //indicate if we can move a piece, it is lock if = 1
 	int links[] = {0,0,0,0}; //tab to define where the piece makes a link with value 1 {North,East,South,West}
 	int nbneighbors = 0;
+	int connectedComponent;
 	int gridX;
 	int gridY;
 	
@@ -253,7 +254,7 @@ public class Piece {
 	 * Display the type and orientation of the piece, place in grid, and unicode shape
 	 */
 	public String toString() {
-		return "(" + x + "," + y + ") " +type + " " + orientation + " " + this.unicode();
+		return "(" + x + "," + y + ") " +type + " " + orientation + " " + this.unicode() + connectedComponent;
 	}
 	
 	/**
@@ -261,6 +262,13 @@ public class Piece {
 	 */
 	public String toString2() {
 		return type + " " + orientation;
+	}
+	
+	/**
+	 * Display the connectedComponent of the piece
+	 */
+	public int getConnectedComponent() {
+		return connectedComponent;
 	}
 	
 	/**
@@ -331,10 +339,15 @@ public class Piece {
 		this.orientation = temp;
 	}
 	
+	/**
+	 * Draw piece on graphic interface
+	 * @param g
+	 */
 	public void draw(Graphics g) {
 		// TODO Auto-generated method stub
 		DrawablePiece dp=new DrawablePiece(this);
 		dp.paintComponent(g);
 	}
+	
 	
 }

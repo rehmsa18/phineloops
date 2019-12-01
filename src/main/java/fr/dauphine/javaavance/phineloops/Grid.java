@@ -29,7 +29,7 @@ public class Grid  extends Observable {
 	 * @param Piece p
 	 */
 	public void add (Piece p) {
-		cases[p.x][p.y] = new Piece(p.x, p.y, p.type, p.orientation);
+		cases[p.x][p.y] = p;
 	}
 	
 
@@ -92,6 +92,10 @@ public class Grid  extends Observable {
 		System.out.println(rows);	
 	}
 	
+	/**
+	 * 
+	 * @return all pieces of the grid
+	 */
 	public Piece[][] getCase() {
 		return cases;
 	}

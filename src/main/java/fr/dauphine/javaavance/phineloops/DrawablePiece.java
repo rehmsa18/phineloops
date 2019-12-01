@@ -15,6 +15,10 @@ public class DrawablePiece {
 		this.y = p.gridY;
 	}
 
+    /**
+     * Draw piece in graphic interface 
+     * @param g
+     */
 	public void paintComponent(Graphics g) {
 		
 		if (p.type==1) {

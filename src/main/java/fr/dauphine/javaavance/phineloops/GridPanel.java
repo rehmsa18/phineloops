@@ -30,19 +30,18 @@ public class GridPanel extends JPanel implements Observer {
 	
 	protected void paintComponent(Graphics g) {
 		
-		this.setBackground(Color.white);
-		
-    	super.paintComponent(g);
+		 this.setBackground(Color.white);
+    	 super.paintComponent(g);
     	 Graphics2D g2 = (Graphics2D) g;
     	 g2.setStroke(new BasicStroke(3));
-    	 //this.drawGridLine(g2);
-        g.setColor(Color.BLUE);
+    	 //this.drawGridLine(g2);	
+    	 g.setColor(Color.BLUE);
     	
-		for(int y=0; y<row; y++) {
-			for(int x=0; x<column; x++) {
-				cases[x][y].gridX = x*DIM;
-				cases[x][y].gridY =y*DIM;
-				cases[x][y].draw(g);
+		 for(int y=0; y<row; y++) {
+			 for(int x=0; x<column; x++) {
+				 cases[x][y].gridX = x*DIM;
+				 cases[x][y].gridY =y*DIM;
+				 cases[x][y].draw(g);
 			}
 		}
     }

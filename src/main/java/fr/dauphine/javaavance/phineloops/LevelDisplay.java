@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 
-
 public class LevelDisplay extends JFrame {
 	
 	int DIM = 30;
@@ -35,10 +34,18 @@ public class LevelDisplay extends JFrame {
 
     public static void main(String[] args) {
     	
-    	int row = 16;
-    	int column = 16;
+    	int row = 10;
+    	int column = 10;
+    	int maxConnectedComponent = 27;
     	
-		LevelGenerator generator = new LevelGenerator(row,column);
+		LevelGenerator generator = new LevelGenerator(column, row, maxConnectedComponent);
+		
+		if(maxConnectedComponent > (row*column)/2) {
+			System.err.println("Nombre de composantes connexes impossible");
+		}
+		
+		
+		//LevelGenerator generator = new LevelGenerator(column, row);
 		generator.buildSolution();
 		//generator.shuffleSolution();
 		Grid grid = generator.grid;

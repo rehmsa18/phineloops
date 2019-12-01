@@ -13,10 +13,10 @@ public class ButtonPanel extends JPanel {
 
 		this.setLayout(new FlowLayout());
 		
-		JButton btnCheck = new JButton("Check");
-		JButton btnShuffle = new JButton("Shuffle");
-		JButton btnSolve = new JButton("Solve");
-		JButton btnNew = new JButton("New");
+		JButton btnCheck = new JButton("Check"); // Check if a solution is true
+		JButton btnShuffle = new JButton("Shuffle"); // Shuffle a level
+		JButton btnSolve = new JButton("Solve"); // Resolve a level
+		JButton btnNew = new JButton("New"); // Get a new level
 		
 		this.add(btnCheck);
 		this.add(btnSolve);

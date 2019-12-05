@@ -67,17 +67,17 @@ public class LevelGenerator {
 	 * @param p
 	 * @return true if all possible links done with neighbors
 	 */
-	public boolean respectLinkNeighbors(int x, int y, Piece p) {	
+	public boolean respectLinkNeighbors(int i, int j, Piece p) {	
 		//for piece not in the west border 
 		//the piece on its west side need to have the same value for the link west-east
-		if( x > 0 ) {
-			if( p.links[3] != grid.getCase()[x-1][y].links[1] )
+		if( j > 0 ) {
+			if( p.links[3] != grid.getCase()[i][j-1].links[1] )
 				return false;
 		}
 		//for piece not in the north border 
 		//the piece on its north side need to have the same value for the link north-south
-		if( y > 0) {
-			if( p.links[0] != grid.getCase()[x][y-1].links[2] )
+		if( i > 0) {
+			if( p.links[0] != grid.getCase()[i-1][j].links[2] )
 				return false;
 		}
 		return true;
@@ -90,15 +90,15 @@ public class LevelGenerator {
 	 * @param p
 	 * @return true if the two piece are of the type 1
 	 */
-	public boolean pieceType1Neighbors(int x, int y, Piece p) {	
+	public boolean pieceType1Neighbors(int i, int j, Piece p) {	
 		//the piece and its west neighbor can not be of the type 1 to avoid too much connected component in the grid
-		if( x > 0 ) {
-			if( (p.type == 1) && (grid.getCase()[x-1][y].type == 1) )
+		if( j > 0 ) {
+			if( (p.type == 1) && (grid.getCase()[i][j-1].type == 1) )
 				return true;
 		}
 	    //the piece and its north neighbor can not be of the type 1 to avoid too much connected component in the grid
-		if( y > 0) {
-			if( (p.type == 1) && (grid.getCase()[x][y-1].type == 1) )
+		if( i > 0) {
+			if( (p.type == 1) && (grid.getCase()[i-1][j].type == 1) )
 				return true;
 		}
 		return false;
@@ -110,8 +110,8 @@ public class LevelGenerator {
 	 * @param y
 	 * @return true if in the north west
 	 */
-	public boolean northWestSide(int x, int y) {
-		return ( x==0 && y==0 );		
+	public boolean northWestSide(int i, int j) {
+		return ( i==0 && j==0 );		
 	}
 
 	/**
@@ -120,8 +120,8 @@ public class LevelGenerator {
 	 * @param y
 	 * @return true if in the north east
 	 */
-	public boolean northEastSide(int x, int y) {
-		return ( x==width-1 && y==0 );		
+	public boolean northEastSide(int i, int j) {
+		return ( i==0 && j==width-1 );		
 	}
 	
 	/**
@@ -130,8 +130,8 @@ public class LevelGenerator {
 	 * @param y
 	 * @return true if in the south west
 	 */
-	public boolean southWestSide(int x, int y) {
-		return ( x==0 && y==height-1 );		
+	public boolean southWestSide(int i, int j) {
+		return ( i==height-1 && j==0 );		
 	}
 	
 	/**
@@ -140,8 +140,8 @@ public class LevelGenerator {
 	 * @param y
 	 * @return true if in the south east
 	 */
-	public boolean southEastSide(int x, int y) {
-		return ( x==width-1 && y==height-1 );		
+	public boolean southEastSide(int i, int j) {
+		return ( i==height-1 && j==width-1 );		
 	}
 	
 	/**
@@ -150,8 +150,8 @@ public class LevelGenerator {
 	 * @param y
 	 * @return true if in the west border
 	 */
-	public boolean westBorder(int x, int y) {
-		return ( x==0 );		
+	public boolean westBorder(int j) {
+		return ( j==0 );		
 	}	
 	
 	/**
@@ -160,8 +160,8 @@ public class LevelGenerator {
 	 * @param y
 	 * @return true if in the east border
 	 */
-	public boolean eastBorder(int x, int y) {
-		return ( x==width-1 );		
+	public boolean eastBorder(int j) {
+		return ( j==width-1 );		
 	}	
 	
 	/**
@@ -170,8 +170,8 @@ public class LevelGenerator {
 	 * @param y
 	 * @return true if in the north border
 	 */
-	public boolean northBorder(int x, int y) {
-		return ( y==0 );		
+	public boolean northBorder(int i) {
+		return ( i==0 );		
 	}
 	
 	/**
@@ -180,8 +180,8 @@ public class LevelGenerator {
 	 * @param y
 	 * @return true if in the south border
 	 */
-	public boolean southBorder(int x, int y) {
-		return ( y==height-1 );		
+	public boolean southBorder(int i) {
+		return ( i==height-1 );		
 	}	
 	
 	
@@ -192,68 +192,68 @@ public class LevelGenerator {
 	 * @param y
 	 * @return Piece
 	 */
-	public Piece associatePieceToGrid(int x, int y) {
+	public Piece associatePieceToGrid(int i, int j) {
 		ArrayList<Piece> piecesPossible = new ArrayList<Piece>();
 
-		if( northWestSide(x,y) ){
+		if( northWestSide(i,j) ){
 			for(Piece p : pieces ) {
-				if( p.noLinkNorth() && p.noLinkWest() && this.respectLinkNeighbors(x, y, p)) {
+				if( p.noLinkNorth() && p.noLinkWest() && this.respectLinkNeighbors(i, j, p)) {
 					piecesPossible.add(p);
 				}	
 			}
 		}
 		
-		else if( northEastSide(x,y) ){
+		else if( northEastSide(i,j) ){
 			for(Piece p : pieces ) {
-				if( p.noLinkNorth() && p.noLinkEast() && this.respectLinkNeighbors(x, y, p) ) {
+				if( p.noLinkNorth() && p.noLinkEast() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}		
 			}		
 		}
 		
-		else if( southWestSide(x,y) ){
+		else if( southWestSide(i,j) ){
 			for(Piece p : pieces ) {
-				if( p.noLinkSouth() && p.noLinkWest() && this.respectLinkNeighbors(x, y, p) ) {
+				if( p.noLinkSouth() && p.noLinkWest() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}		
 			}
 		}
 		
-		else if( southEastSide(x,y) ){
+		else if( southEastSide(i,j) ){
 			for(Piece p : pieces ) {
-				if( p.noLinkSouth() && p.noLinkEast() && this.respectLinkNeighbors(x, y, p) ) {
+				if( p.noLinkSouth() && p.noLinkEast() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}	
 			}
 		}
 		
-		else if( westBorder(x,y) ){
+		else if( westBorder(j) ){
 			for(Piece p : pieces ) {
-				if( p.noLinkWest() && this.respectLinkNeighbors(x, y, p) ) {
+				if( p.noLinkWest() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}		
 			}
 		}
 		
-		else if( eastBorder(x,y) ){
+		else if( eastBorder(j) ){
 			for(Piece p : pieces ) {
-				if( p.noLinkEast() && this.respectLinkNeighbors(x, y, p) ) {
+				if( p.noLinkEast() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}		
 			}
 		}
 		
-		else if( northBorder(x,y) ){
+		else if( northBorder(i) ){
 			for(Piece p : pieces ) {
-				if( p.noLinkNorth() && this.respectLinkNeighbors(x, y, p) ) {
+				if( p.noLinkNorth() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}	
 			}
 		}
 		
-		else if( southBorder(x,y) ){
+		else if( southBorder(i) ){
 			for(Piece p : pieces ) {
-				if( p.noLinkSouth() && this.respectLinkNeighbors(x, y, p) ) {
+				if( p.noLinkSouth() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}	
 			}
@@ -261,7 +261,7 @@ public class LevelGenerator {
 	
 		else {	
 			for(Piece p : pieces ) {
-				if( this.respectLinkNeighbors(x, y, p) ) {
+				if( this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}	
 			}
@@ -270,78 +270,10 @@ public class LevelGenerator {
 		// choose randomly a piece among the possibilities
 		Random rand = new Random(); 
 		Piece chosenPiece = piecesPossible.get(rand.nextInt(piecesPossible.size())); 
-        chosenPiece = new Piece(x, y, chosenPiece.type, chosenPiece.orientation);
+        chosenPiece = new Piece(i, j, chosenPiece.type, chosenPiece.orientation);
         
-        // if the number of connected components is indicated
-        // and if we have almost the maximum number of connected componenet with no more links possible
-        // the rest of the connected componenets with open links need to be connected
-        // we select the pieces with links on their east or south side or are of type 0
-		if( (maxConnectedComponent-nbConnectedComponent) == 1 && connectedComponentIndicated == true) {		
-			Collections.shuffle(piecesPossible);
-			for(Piece piece : piecesPossible){
-				if( piece.links[1]==1 || piece.links[2]==1 || piece.type == 0)
-					chosenPiece = new Piece(x, y, piece.type, piece.orientation);	
-			}
-		}
-		
-		// if the number of maximum of connected component is highter 
-		// than number of connected componenet with no more links possible
-		// Choose piece of type 1
-		if( (maxConnectedComponent-nbConnectedComponent) > 1 && connectedComponentIndicated == true){
-			for(Piece piece : piecesPossible){
-				if( piece.type == 1 && piece.orientation == 1 )
-					chosenPiece = new Piece(x, y, piece.type, piece.orientation);
-				else if(piece.type == 1 && piece.orientation == 3)
-					chosenPiece = new Piece(x, y, piece.type, piece.orientation);
-				else if(piece.type == 1 && piece.orientation == 2)
-					chosenPiece = new Piece(x, y, piece.type, piece.orientation);
-				else if(piece.type == 1 && piece.orientation == 0)
-					chosenPiece = new Piece(x, y, piece.type, piece.orientation);
-				
-			}
-		}
         
-		// if the piece type is different from 0
-        // add the piece to a new connected component 
-		// the new connected component is added in a list of connected components
-        if(chosenPiece.type!=0) {
-        	ConnectedComponent connectedComponent = new ConnectedComponent();
-            connectedComponent.addPiece(chosenPiece);
-            connectedComponents.add(connectedComponent);
-        }
 
-        // if the piece is linked on its north side with its neighbor
-        // then add in its connected component, all pieces from its neighbor's connected component  
-        // delete the neighbor's connected componenet
-        if(chosenPiece.links[0]==1) {
-        	for(int i=0; i<connectedComponents.size(); i++) {
-        		if(connectedComponents.get(i).contains(grid.cases[x][y-1]) && connectedComponents.get(i)!=connectedComponents.get(connectedComponents.size()-1)  ) {
-        			connectedComponents.get(connectedComponents.size()-1).addAll(connectedComponents.get(i));
-        			connectedComponents.remove(connectedComponents.get(i));
-        		}
-        	}
-		}
-        
-        // if the piece is linked on its west side with its neighbor
-        // then add in its connected component, all pieces from its neighbor's connected component  
-        // delete the neighbor's connected componenet
-        if(chosenPiece.links[3]==1) {
-        	for(int i=0; i<connectedComponents.size(); i++) {
-        		if(connectedComponents.get(i).contains(grid.cases[x-1][y]) && connectedComponents.get(i)!=connectedComponents.get(connectedComponents.size()-1)) {
-        			connectedComponents.get(connectedComponents.size()-1).addAll(connectedComponents.get(i));
-        			connectedComponents.remove(connectedComponents.get(i));
-        		}
-        	}
-		}
-       
-        // if a connected component can no longer be linked to another piece
-        // then the number of real connected component increments
-        for(int i=0; i<connectedComponents.size(); i++) {
-        	if(connectedComponents.get(i).nbLinkPossible == 0) {
-        		connectedComponents.remove(connectedComponents.get(i));
-        		nbConnectedComponent++;
-        	}
-        }
 
 		return chosenPiece;
 	}
@@ -353,9 +285,10 @@ public class LevelGenerator {
 	 */
 	public void buildSolution() {
 		nbConnectedComponent = 0;
-		for(int y=0; y<height; y++) {
-			for(int x=0; x<width; x++) {
-				Piece chosenPiece = associatePieceToGrid(x,y);
+		for(int i=0; i<height; i++) {
+			for(int j=0; j<width; j++) {
+				Piece chosenPiece = associatePieceToGrid(i,j);
+				System.out.println(chosenPiece);
 				grid.add(chosenPiece);
 			}	
 		}
@@ -369,9 +302,9 @@ public class LevelGenerator {
 	 * Shuffle the generated grid
 	 */
 	public void shuffleSolution() {
-		for(int y=0; y<height; y++) {
-			for(int x=0; x<width; x++) {
-				grid.cases[x][y].shufflePiece();
+		for(int i=0; i<height; i++) {
+			for(int j=0; j<width; j++) {
+				grid.cases[i][j].shufflePiece();
 			}		
 		}
 		System.out.println("Solution after shuffle");
@@ -385,13 +318,13 @@ public class LevelGenerator {
 	 */
 	public void storeInFile(String nomFichier) throws IOException {
 		BufferedWriter fichier = new BufferedWriter(new FileWriter(nomFichier));
-			fichier.write(Integer.toString(width));
-			fichier.newLine();
 			fichier.write(Integer.toString(height));
 			fichier.newLine();
-			for(int y=0; y<height; y++) {
-				for(int x=0; x<width; x++) {
-					fichier.write(grid.cases[x][y].toString2());
+			fichier.write(Integer.toString(width));
+			fichier.newLine();
+			for(int i=0; i<height; i++) {
+				for(int j=0; j<width; j++) {
+					fichier.write(grid.cases[i][j].toString2());
 					fichier.newLine();
 				}
 			}

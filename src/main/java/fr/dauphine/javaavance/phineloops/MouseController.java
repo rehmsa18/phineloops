@@ -11,11 +11,11 @@ public class MouseController implements MouseListener{
 
 	private static final int DIM  = 30;
 	Piece cases[][];
-	GridPanel d;
+	GridPanel gridPanel;
 	LevelDisplay levelDisplay;
 
 	public MouseController(GridPanel gridPanel, LevelDisplay levelDisplay) {
-		this.d = gridPanel;
+		this.gridPanel = gridPanel;
 		this.levelDisplay = levelDisplay;
 		cases = gridPanel.cases;
 	}
@@ -25,15 +25,13 @@ public class MouseController implements MouseListener{
 		int a = (int) (e.getX()/DIM);
    	  	int b = (int) (e.getY()/DIM);
    	  	b --;
-   	  	int row = d.row;
-   	  	int column = d.column;
 
-		for(int y=0; y<row; y++) {
-			for(int x=0; x<column; x++) {		
-				if(x == a && y == b) {
-					System.out.print(cases[x][y] + " -> ");
-					cases[x][y].rotatePiece();
-					System.out.println(cases[x][y]);
+		for(int i=0; i<gridPanel.height; i++) {
+			for(int j=0; j<gridPanel.width; j++) {		
+				if(j == a && i == b) {
+					System.out.print(cases[i][j] + " -> ");
+					cases[i][j].rotatePiece();
+					System.out.println(cases[i][j]);
 					levelDisplay.repaint();				
 				}
 			}

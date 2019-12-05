@@ -12,18 +12,14 @@ import javax.swing.JPanel;
 public class GridPanel extends JPanel implements Observer {
 	
 	final static int DIM = 30;
-	int row;
-	int column;
 	int width;
 	int height;
 	Piece cases[][];
 	Grid grid;
 
 	public GridPanel(Grid grid) {
-		row = grid.height;
-		column = grid.width;
-		width = column*DIM;
-		height = row*DIM;
+		height = grid.height;
+		width = grid.width;
 		cases = grid.cases;
 		grid.addObserver(this);
 	}
@@ -37,11 +33,11 @@ public class GridPanel extends JPanel implements Observer {
     	 //this.drawGridLine(g2);	
     	 g.setColor(Color.BLUE);
     	
-		 for(int y=0; y<row; y++) {
-			 for(int x=0; x<column; x++) {
-				 cases[x][y].gridX = x*DIM;
-				 cases[x][y].gridY =y*DIM;
-				 cases[x][y].draw(g);
+		 for(int i=0; i<height; i++) {
+			 for(int j=0; j<width; j++) {
+				 cases[i][j].gridX = j*DIM;
+				 cases[i][j].gridY = i*DIM;
+				 cases[i][j].draw(g);
 			}
 		}
     }
@@ -50,9 +46,9 @@ public class GridPanel extends JPanel implements Observer {
 	@Override
 	public void update(Observable o, Object arg) {
 		Graphics g = this.getGraphics();    
-		for(int y=0; y<row; y++) {
-			for(int x=0; x<column; x++) {
-				cases[x][y].draw(g);
+		for(int i=0; i<height; i++) {
+			for(int j=0; j<width; j++) {
+				cases[i][j].draw(g);
 			}
 		}
 		
@@ -61,11 +57,11 @@ public class GridPanel extends JPanel implements Observer {
 	public void drawGridLine(Graphics g) {
     	g.setColor(Color.RED);
     	
-        for (int i = 0; i < row; i++)
-            g.drawLine( 0 , i*DIM, column*DIM, i*DIM);
+        for (int i = 0; i < height; i++)
+            g.drawLine( 0 , i*DIM, width*DIM, i*DIM);
         
-        for (int i = 0; i < column; i++)
-            g.drawLine( i*DIM, 0, i*DIM, row*DIM);
+        for (int i = 0; i < width; i++)
+            g.drawLine( i*DIM, 0, i*DIM, height*DIM);
 	}
 
 }

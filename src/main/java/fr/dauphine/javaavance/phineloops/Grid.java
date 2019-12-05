@@ -82,10 +82,10 @@ public class Grid  extends Observable {
 	 */
 	public void displayInConsole() {
 		String rows = "";
-		for(int y=0; y<height; y++) {
+		for(int i=0; i<height; i++) {
 			String row = "";
-			for(int x=0; x<width; x++) {
-				row += " " + cases[x][y].unicode();
+			for(int j=0; j<width; j++) {
+				row += " " + cases[i][j].unicode();
 			}
 			rows += row +"\n";
 		}

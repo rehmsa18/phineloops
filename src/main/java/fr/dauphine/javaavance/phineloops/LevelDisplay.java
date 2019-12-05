@@ -34,18 +34,18 @@ public class LevelDisplay extends JFrame {
 
     public static void main(String[] args) {
     	
-    	int row = 10;
-    	int column = 10;
+    	int width = 10;
+    	int height = 10;
     	int maxConnectedComponent = 27;
     	
-		LevelGenerator generator = new LevelGenerator(column, row, maxConnectedComponent);
+		//LevelGenerator generator = new LevelGenerator(column, row, maxConnectedComponent);
 		
-		if(maxConnectedComponent > (row*column)/2) {
-			System.err.println("Nombre de composantes connexes impossible");
+		if(maxConnectedComponent > (width*height)/2) {
+			//System.err.println("Nombre de composantes connexes impossible");
 		}
 		
 		
-		//LevelGenerator generator = new LevelGenerator(column, row);
+		LevelGenerator generator = new LevelGenerator(width, height);
 		generator.buildSolution();
 		//generator.shuffleSolution();
 		Grid grid = generator.grid;

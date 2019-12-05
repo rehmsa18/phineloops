@@ -185,16 +185,16 @@ public class LevelGenerator {
 	}	
 	
 	
-	
 	/**
-	 * Choose the piece to place in a position in the grid
-	 * @param x
-	 * @param y
-	 * @return Piece
+	 * Get the alternatives of a piece depending on its position in the grid
+	 * @param i
+	 * @param j
+	 * @return list of pieces 
 	 */
-	public Piece associatePieceToGrid(int i, int j) {
+	public ArrayList<Piece> pieceAlternative(int i, int j){
+		
 		ArrayList<Piece> piecesPossible = new ArrayList<Piece>();
-
+		
 		if( northWestSide(i,j) ){
 			for(Piece p : pieces ) {
 				if( p.noLinkNorth() && p.noLinkWest() && this.respectLinkNeighbors(i, j, p)) {
@@ -265,16 +265,113 @@ public class LevelGenerator {
 					piecesPossible.add(p);
 				}	
 			}
+		}	
+		return piecesPossible;
+	}
+	
+	
+	/**
+	 * Choose piece depending of the indicated number of connected components 
+	 * @param i
+	 * @param j
+	 * @param chosenPiece
+	 * @param piecesPossible
+	 * @return piece
+	 */
+	public Piece respectNumberConnectedComponents(int i, int j, Piece chosenPiece, ArrayList<Piece> piecesPossible) {
+		
+    	// if the number of connected components is indicated
+        // and if we have almost the maximum number of connected componenet with no more links possible
+        // the rest of the connected componenets with open links need to be connected
+        // we select the pieces with links on their east or south side or are of type 0
+		if( (maxConnectedComponent-nbConnectedComponent) == 1 ) {		
+			Collections.shuffle(piecesPossible);
+			for(Piece piece : piecesPossible){
+				if( piece.links[1]==1 || piece.links[2]==1)
+					chosenPiece = new Piece(i, j, piece.type, piece.orientation);	
+			}
 		}
-			
+		
+		// if the number of maximum of connected component is highter 
+		// than number of connected componenet with no more links possible
+		// Choose piece of type 1
+		if( (maxConnectedComponent-nbConnectedComponent) > 1 ){
+			for(Piece piece : piecesPossible){
+				if( piece.type == 1 && piece.orientation == 1 )
+					chosenPiece = new Piece(i, j, piece.type, piece.orientation);
+				else if(piece.type == 1 && piece.orientation == 3)
+					chosenPiece = new Piece(i, j, piece.type, piece.orientation);
+				else if(piece.type == 1 && piece.orientation == 2)
+					chosenPiece = new Piece(i, j, piece.type, piece.orientation);
+				else if(piece.type == 1 && piece.orientation == 0)
+					chosenPiece = new Piece(i, j, piece.type, piece.orientation);			
+			}
+		}
+        
+
+        // add the piece to a new connected component 
+		// the new connected component is added in a list of connected components
+    	ConnectedComponent connectedComponent = new ConnectedComponent();
+        connectedComponent.addPiece(chosenPiece);
+        connectedComponents.add(connectedComponent);
+
+
+        // if the piece is linked on its north side with its neighbor
+        // then add in its connected component, all pieces from its neighbor's connected component  
+        // delete the neighbor's connected componenet
+        if(chosenPiece.links[0]==1) {
+        	for(int k=0; k<connectedComponents.size(); k++) {
+        		if(connectedComponents.get(k).contains(grid.cases[i-1][j]) && connectedComponents.get(k)!=connectedComponents.get(connectedComponents.size()-1)  ) {
+        			connectedComponents.get(connectedComponents.size()-1).addAll(connectedComponents.get(k));
+        			connectedComponents.remove(connectedComponents.get(k));
+        		}
+        	}
+		}
+        
+        // if the piece is linked on its west side with its neighbor
+        // then add in its connected component, all pieces from its neighbor's connected component  
+        // delete the neighbor's connected componenet
+        if(chosenPiece.links[3]==1) {
+        	for(int k=0; k<connectedComponents.size(); k++) {
+        		if(connectedComponents.get(k).contains(grid.cases[i][j-1]) && connectedComponents.get(k)!=connectedComponents.get(connectedComponents.size()-1)) {
+        			connectedComponents.get(connectedComponents.size()-1).addAll(connectedComponents.get(k));
+        			connectedComponents.remove(connectedComponents.get(k));
+        		}
+        	}
+		}
+       
+        // if a connected component can no longer be linked to another piece
+        // then the number of real connected component increments
+        for(int k=0; k<connectedComponents.size(); k++) {
+        	if(connectedComponents.get(k).nbLinkPossible == 0) {
+        		connectedComponents.remove(connectedComponents.get(k));
+        		nbConnectedComponent++;
+        	}
+        }
+        
+        return chosenPiece;	
+	}
+	
+	
+	
+	/**
+	 * Choose the piece to place in a position in the grid
+	 * @param x
+	 * @param y
+	 * @return Piece
+	 */
+	public Piece associatePieceToGrid(int i, int j) {
+		
+		ArrayList<Piece> piecesPossible = this.pieceAlternative(i, j);
+	
 		// choose randomly a piece among the possibilities
 		Random rand = new Random(); 
 		Piece chosenPiece = piecesPossible.get(rand.nextInt(piecesPossible.size())); 
-        chosenPiece = new Piece(i, j, chosenPiece.type, chosenPiece.orientation);
-        
-        
+        chosenPiece = new Piece(i, j, chosenPiece.type, chosenPiece.orientation);     
 
-
+        if(connectedComponentIndicated == true) {       	
+        	chosenPiece = respectNumberConnectedComponents(i, j, chosenPiece, piecesPossible);
+        }   
 		return chosenPiece;
 	}
 	
@@ -288,15 +385,13 @@ public class LevelGenerator {
 		for(int i=0; i<height; i++) {
 			for(int j=0; j<width; j++) {
 				Piece chosenPiece = associatePieceToGrid(i,j);
-				System.out.println(chosenPiece);
 				grid.add(chosenPiece);
 			}	
 		}
 		System.out.println("Solution generated besfore shuffle");
 		grid.displayInConsole();
-    	
-    	System.out.println("nombre de composantes connexes : " + nbConnectedComponent +"\n");
 	}
+	
 
 	/**
 	 * Shuffle the generated grid
@@ -311,25 +406,5 @@ public class LevelGenerator {
 		grid.displayInConsole();
 	}
 
-	/**
-	 * Store in a file the generated grid after shuffle
-	 * @param nomFichier
-	 * @throws IOException
-	 */
-	public void storeInFile(String nomFichier) throws IOException {
-		BufferedWriter fichier = new BufferedWriter(new FileWriter(nomFichier));
-			fichier.write(Integer.toString(height));
-			fichier.newLine();
-			fichier.write(Integer.toString(width));
-			fichier.newLine();
-			for(int i=0; i<height; i++) {
-				for(int j=0; j<width; j++) {
-					fichier.write(grid.cases[i][j].toString2());
-					fichier.newLine();
-				}
-			}
-			fichier.close();
-		
-	}
 
 }

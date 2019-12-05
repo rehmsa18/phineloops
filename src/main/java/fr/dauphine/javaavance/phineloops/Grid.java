@@ -1,5 +1,10 @@
 package fr.dauphine.javaavance.phineloops;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Observable;
 
 public class Grid  extends Observable {
@@ -10,7 +15,7 @@ public class Grid  extends Observable {
 	public Grid(int width, int height){
 		this.width = width;
 		this.height = height;
-		cases = new Piece[width][height];
+		cases = new Piece[height][width];
 	}
 	
 	/**
@@ -98,6 +103,51 @@ public class Grid  extends Observable {
 	 */
 	public Piece[][] getCase() {
 		return cases;
+	}
+	
+	/**
+	 * Write the grid in a file
+	 * @param filename
+	 * @throws IOException
+	 */
+	public void writeFile(String filename) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			writer.write(Integer.toString(height));
+			writer.newLine();
+			writer.write(Integer.toString(width));
+			writer.newLine();
+			for(int i=0; i<height; i++) {
+				for(int j=0; j<width; j++) {
+					writer.write(cases[i][j].toString2());
+					writer.newLine();
+				}
+			}
+			writer.close();	
+	}
+	
+	/**
+	 * Read a file and get the grid
+	 * @param filename
+	 * @throws IOException
+	 * @return Grid
+	 */
+	public static Grid readFile(String filename) throws IOException {
+		BufferedReader reader = new BufferedReader(new FileReader(filename));
+			int height = Integer.parseInt(reader.readLine());
+			int width = Integer.parseInt(reader.readLine());
+
+			Grid grid = new Grid(width, height);
+			
+			for(int i=0; i<height; i++) {
+				for(int j=0; j<width; j++) {
+					String s = reader.readLine();
+					int x = Integer.parseInt(s.split(" ")[0]);
+					int y = Integer.parseInt(s.split(" ")[1]);
+					grid.cases[i][j] = new Piece(x,y); 
+				}
+			}
+			reader.close();	
+		return grid;
 	}
 
 }

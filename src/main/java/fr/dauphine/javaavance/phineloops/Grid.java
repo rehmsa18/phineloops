@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.util.Observable;
 
 public class Grid  extends Observable {
-	int width;
 	int height;
+	int width;
 	Piece cases[][];
 	
-	public Grid(int width, int height){
-		this.width = width;
+	public Grid(int height, int width){
 		this.height = height;
-		cases = new Piece[height][width];
+		this.width = width;
+		cases = new Piece[this.height][this.width];
 	}
 	
 	/**
@@ -25,7 +25,7 @@ public class Grid  extends Observable {
 	 * @return true if the piece can exists
 	 */
 	public boolean existsPiece(int x, int y) {
-		return ((x < 0) || (y > 0) || (x >= this.width) || (y >= this.height));
+		return ((x < 0) || (y > 0) || (x >= this.height) || (y >= this.width));
 		
 	}
 	
@@ -105,6 +105,81 @@ public class Grid  extends Observable {
 		return cases;
 	}
 	
+	/** 
+	 * Lock pieces that will never move considered their position on the side of the grid and affect the good orientation as well
+	 */
+	public void defaultLock() {
+		if (this.cases[0][0].type == 5) {
+			this.cases[0][0].orientation = 1;
+			this.cases[0][0].lock = 1;
+		}
+		
+		if (this.cases[0][this.width-1].type == 5) {
+			this.cases[0][this.width-1].orientation = 2;
+			this.cases[0][this.width-1].lock = 1;
+		}
+		
+		if (this.cases[this.height-1][0].type == 5) {
+			this.cases[this.height-1][0].orientation = 0;
+			this.cases[this.height-1][0].lock = 1;
+		}
+		this.cases[this.height-1][0].toString();
+		
+		if (this.cases[this.height-1][this.width-1].type == 5) {
+			this.cases[this.height-1][this.width-1].orientation = 3;
+			this.cases[this.height-1][this.width-1].lock = 1;
+		}
+		
+		for (int i = 1; i < this.height-1; i++) {
+			switch (this.cases[i][0].type) {
+				case 2 : 
+					this.cases[i][0].orientation = 1;
+					this.cases[i][0].lock = 1;
+					break;
+				case 3 : 
+					this.cases[i][0].orientation = 2;
+					this.cases[i][0].lock = 1;
+					break;
+			}
+			
+			switch (this.cases[i][this.width-1].type) {
+				case 2 : 
+					this.cases[i][this.width-1].orientation = 1;
+					this.cases[i][this.width-1].lock = 1;
+					break;
+				case 3 : 
+					this.cases[i][this.width-1].orientation = 0;
+					this.cases[i][this.width-1].lock = 1;
+					break;
+			}
+		}
+		
+		for (int j = 1; j < this.width-1; j++) {
+			switch (this.cases[0][j].type) {
+				case 2 : 
+					this.cases[0][j].orientation = 0;
+					this.cases[0][j].lock = 1;
+					break;
+				case 3 : 
+					this.cases[0][j].orientation = 1;
+					this.cases[0][j].lock = 1;
+					break;
+			}
+			
+			switch (this.cases[this.height-1][j].type) {
+				case 2 : 
+					this.cases[this.height-1][j].orientation = 0;
+					this.cases[this.height-1][j].lock = 1;
+					break;
+				case 3 : 
+					this.cases[this.height-1][j].orientation = 3;
+					this.cases[this.height-1][j].lock = 1;
+					break;
+			}
+		}
+		
+	}
+	
 	/**
 	 * Write the grid in a file
 	 * @param filename
@@ -136,7 +211,7 @@ public class Grid  extends Observable {
 			int height = Integer.parseInt(reader.readLine());
 			int width = Integer.parseInt(reader.readLine());
 
-			Grid grid = new Grid(width, height);
+			Grid grid = new Grid(height, width);
 			
 			for(int i=0; i<height; i++) {
 				for(int j=0; j<width; j++) {

@@ -12,7 +12,6 @@ public class LevelDisplay extends JFrame {
 	int DIM = 30;
 
 	public LevelDisplay(LevelGenerator generator, Grid grid) {
-		
 		GridPanel gridPanel = new GridPanel(grid);
 		grid.addObserver(gridPanel);
 		MouseController mc = new MouseController(gridPanel, this);
@@ -24,7 +23,7 @@ public class LevelDisplay extends JFrame {
 	    container.setLayout(new BorderLayout());
 	    container.add(gridPanel, BorderLayout.CENTER);
 	    container.add(buttonPanel, BorderLayout.SOUTH);
-		
+	    
 		this.setTitle("Infinity loop");
 		this.setSize(new Dimension(grid.width*DIM + 1*DIM, grid.height*DIM + 3*DIM));
 		this.setVisible(true);
@@ -41,7 +40,7 @@ public class LevelDisplay extends JFrame {
     	int maxConnectedComponent = 25;
 		
     
-		LevelGenerator generator = new LevelGenerator(width, height, maxConnectedComponent);
+		LevelGenerator generator = new LevelGenerator(height, width, maxConnectedComponent);
 		
 		//LevelGenerator generator = new LevelGenerator(width, height);
 		

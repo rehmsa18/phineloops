@@ -6,9 +6,9 @@ public class LevelChecker {
 	
 	public static boolean checker() throws IOException {
 		
-		System.out.println("test");//to delet
-		
 		Grid  grid= Grid.readFile("a");
+		
+		System.out.println("hello");
 
 		grid.displayInConsole();		
 		

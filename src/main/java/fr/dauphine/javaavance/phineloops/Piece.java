@@ -185,6 +185,8 @@ public class Piece {
 		}
 		if(this.orientation >= 4)
 			this.orientation = 0;
+		
+		this.defineLinks();
 	}
 	
 	/**
@@ -422,6 +424,7 @@ public class Piece {
 		}while( !isOrientationChoice( temp ) );
 		
 		this.orientation = temp;
+		this.defineLinks();
 	}
 	
 	/**

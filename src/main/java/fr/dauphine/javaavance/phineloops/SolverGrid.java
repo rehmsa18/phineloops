@@ -547,7 +547,7 @@ public class SolverGrid {
 			}
 		}
 		Solver solver = model.getSolver();
-		System.out.println(solver.solve());		
+		System.out.println("Solution after solver : " + solver.solve());		
 		this.translate(pairsrightline, pairsleftline, pairstopcol, pairsbotcol);
 	}
 	
@@ -574,7 +574,7 @@ public class SolverGrid {
 	}
 	
 	public static void main(String[] args) {
-		LevelGenerator test = new LevelGenerator(100, 100);
+		LevelGenerator test = new LevelGenerator(10, 10);
 		test.buildSolution();
 		test.shuffleSolution();
 		SolverGrid sol = new SolverGrid(test.grid);

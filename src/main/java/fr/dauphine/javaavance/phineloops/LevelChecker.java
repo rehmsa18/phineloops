@@ -4,17 +4,17 @@ import java.io.IOException;
 
 public class LevelChecker {
 	
-	public static boolean checker() throws IOException {
-		
-		Grid  grid= Grid.readFile("a");
-		
-		System.out.println("hello");
-
-		grid.displayInConsole();		
+	Grid grid;
+	
+	public LevelChecker(Grid grid) {
+		this.grid = grid;
+	}
+	
+	public boolean check() throws IOException {
 		
 		for(int i=0; i<grid.height; i++){
 			for(int j=0; j<grid.width; j++){
-				
+								
 				//verify the pieces in the northern border
 				if (!grid.existsPiece(i-1,j) && grid.cases[i][j].links[0] == 1){
 					return false;
@@ -39,14 +39,9 @@ public class LevelChecker {
 				if(!grid.allLinked(grid.cases[i][j])) {
 					return false;
 				}
-			}
-			
+			}			
 		}
 		return true;
-	}
-
-	public static void main(String[] args) throws IOException {
-		System.out.println(LevelChecker.checker());
 	}
 
 }

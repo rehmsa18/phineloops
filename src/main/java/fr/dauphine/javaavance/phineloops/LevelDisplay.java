@@ -17,7 +17,7 @@ public class LevelDisplay extends JFrame {
 		MouseController mc = new MouseController(gridPanel, this);
 		this.addMouseListener(mc);
 		
-		ButtonPanel buttonPanel = new ButtonPanel(generator, this);
+		ButtonPanel buttonPanel = new ButtonPanel(generator, grid, this);
 
 		Container container = this.getContentPane();
 	    container.setLayout(new BorderLayout());
@@ -35,29 +35,26 @@ public class LevelDisplay extends JFrame {
 
     public static void main(String[] args) throws IOException {
     	
-    	int width = 10;
-    	int height = 7; 
-    	int maxConnectedComponent = 25;
+    	int width = 15;
+    	int height = 10; 
+    	int maxConnectedComponent = 7;
 		
     
-		LevelGenerator generator = new LevelGenerator(height, width, maxConnectedComponent);
-		
-		//LevelGenerator generator = new LevelGenerator(width, height);
-		
-		
+		/*LevelGenerator generator = new LevelGenerator(height, width, maxConnectedComponent);
 		if(maxConnectedComponent > (width*height)/2) {
 			System.err.println("Nombre de composantes connexes impossible");
-		}
+		}*/
+		
+		LevelGenerator generator = new LevelGenerator(height, width);
 		
 		generator.buildSolution();
+		generator.shuffleSolution();
 		Grid grid = generator.grid;
 		
 		//grid.writeFile("a");
 		//Grid grid = Grid.readFile("a");
 		
-		LevelDisplay ld = new LevelDisplay(generator, grid);
-
-		
+		LevelDisplay ld = new LevelDisplay(generator, grid);	
 				
     }
   

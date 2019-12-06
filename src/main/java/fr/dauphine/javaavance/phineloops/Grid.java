@@ -25,8 +25,7 @@ public class Grid  extends Observable {
 	 * @return true if the piece can exists
 	 */
 	public boolean existsPiece(int x, int y) {
-		return ((x < 0) || (y > 0) || (x >= this.height) || (y >= this.width));
-		
+		return ( (x >= 0) && (y >= 0) && (x < this.height) && (y < this.width) );	
 	}
 	
 	/**
@@ -56,26 +55,27 @@ public class Grid  extends Observable {
 	public boolean allLinked(Piece p) {
 		int cpt = 0;
 		
-		if ( (p.links[0] == 1) && this.existsPiece(p.x,p.y+1) ){
-				if (p.isLinked(this.cases[p.x][p.y+1])){
+		if ( (p.links[0] == 1) && this.existsPiece(p.x-1,p.y) ){
+				if (p.isLinked(this.cases[p.x-1][p.y])){
 					cpt++;
 				}
 		}
 		
-		if ( (p.links[2] == 1) && this.existsPiece(p.x,p.y-1) ){
-			if (p.isLinked(this.cases[p.x][p.y-1])){
-				cpt++;
-			}
-		}
-		
-		if ( (p.links[1] == 1) && this.existsPiece(p.x+1,p.y) ){
+		if ( (p.links[2] == 1) && this.existsPiece(p.x+1,p.y) ){
 			if (p.isLinked(this.cases[p.x+1][p.y])){
 				cpt++;
 			}
 		}
+
 		
-		if ( (p.links[3] == 1) && this.existsPiece(p.x-1,p.y) ){
-			if (p.isLinked(this.cases[p.x-1][p.y])){
+		if ( (p.links[1] == 1) && this.existsPiece(p.x,p.y+1) ){
+			if (p.isLinked(this.cases[p.x][p.y+1])){
+				cpt++;
+			}
+		}
+		
+		if ( (p.links[3] == 1) && this.existsPiece(p.x,p.y-1) ){
+			if (p.isLinked(this.cases[p.x][p.y-1])){
 				cpt++;
 			}
 		}
@@ -218,7 +218,7 @@ public class Grid  extends Observable {
 					String s = reader.readLine();
 					int x = Integer.parseInt(s.split(" ")[0]);
 					int y = Integer.parseInt(s.split(" ")[1]);
-					grid.cases[i][j] = new Piece(x,y); 
+					grid.add(new Piece(i,j,x,y)); 
 				}
 			}
 			reader.close();	

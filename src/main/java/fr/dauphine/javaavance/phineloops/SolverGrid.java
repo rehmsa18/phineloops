@@ -574,13 +574,13 @@ public class SolverGrid {
 	}
 	
 	public static void main(String[] args) {
-		LevelGenerator test = new LevelGenerator(10, 10);
+		LevelGenerator test = new LevelGenerator(100, 100);
 		test.buildSolution();
 		test.shuffleSolution();
 		SolverGrid sol = new SolverGrid(test.grid);
 		sol.solve();
 		sol.grid.displayInConsole();
-		LevelDisplay display = new LevelDisplay(test, sol.grid);
+		//LevelDisplay display = new LevelDisplay(test, sol.grid);
 	}
 }	
 	

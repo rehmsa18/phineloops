@@ -265,22 +265,21 @@ public class Piece {
 	 * @return -1 not neighbors, 0 p is at North, 1 at East, 2 at South, 3 at West
 	 */
 	public int isNeighbor(Piece p) {
-		if ( (this.x == p.x) && (this.y + 1 == p.y)) {
+		if ( (this.x == p.x + 1) && (this.y == p.y)) {
 			return 0;
 		}
 		
-		if ( (this.x == p.x) && (this.y - 1 == p.y)) {
+		if ( (this.x == p.x - 1) && (this.y == p.y)) {
 			return 2;
 		}
 		
-		if ( (this.y == p.y) && (this.x + 1 == p.x)) {
+		if ( (this.y == p.y - 1) && (this.x == p.x)) {
 			return 1;
 		}
 		
-		if ( (this.y == p.y) && (this.x - 1 == p.x)) {
+		if ( (this.y == p.y + 1) && (this.x == p.x)) {
 			return 3;
 		}
-		
 		return -1;
 	}
 
@@ -340,7 +339,7 @@ public class Piece {
 	 * Display the type and orientation of the piece, place in grid, and unicode shape
 	 */
 	public String toString() {
-		return "(" + x + "," + y + ") " +type + " " + orientation + " " + this.unicode() + connectedComponent;
+		return "(" + x + "," + y + ") " +type + " " + orientation + " " + this.unicode();
 	}
 	
 	/**

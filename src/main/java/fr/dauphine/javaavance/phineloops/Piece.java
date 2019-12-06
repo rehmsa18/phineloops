@@ -25,6 +25,9 @@ public class Piece {
 		this.orientation = orientation;
 		this.defineLinks();
 		this.defineNbNeighbors();
+		if ( (this.type == 0) || (this.type == 4) ) { //this kind of piece will never move
+			this.lock = 1; 
+		}
 	}
 	
 	public Piece(int x, int y, int type) {
@@ -33,6 +36,9 @@ public class Piece {
 		this.type = type;
 		this.defineLinks();
 		this.defineNbNeighbors();
+		if ( (this.type == 0) || (this.type == 4) ) { //this kind of piece will never move
+			this.lock = 1; 
+		}
 	}
 
 	public Piece(int x, int y, int type, int orientation) {
@@ -42,6 +48,9 @@ public class Piece {
 		this.type = type;
 		this.defineLinks();
 		this.defineNbNeighbors();
+		if ( (this.type == 0) || (this.type == 4) ) { //this kind of piece will never move
+			this.lock = 1; 
+		}
 	}
 	
 	public void defineNbNeighbors() {
@@ -64,6 +73,83 @@ public class Piece {
 		}
 	}
 	
+	/**
+	 * Define orientation of a piece considered it type and its links
+	 * @param type
+	 * @param links
+	 */
+	public void defineOrientation (int type, int []links) {
+		switch (this.type) {
+		case 0 : case 4 : 
+			this.orientation = 0;
+			break;
+		case 1 : 
+			if (links[0] == 1) {
+				this.orientation = 0;
+				break;
+			}
+			if (links[1] == 1) {
+				this.orientation = 1;
+				break;
+			}
+			if (links[2] == 1) {
+				this.orientation = 2;
+				break;
+			}
+			if (links[3] == 1) {
+				this.orientation = 3;
+				break;
+			}
+			break;
+		case 2 : 
+			if (links[0] == 1) {
+				this.orientation = 0;
+				break;
+			}
+			if (links[1] == 1) {
+				this.orientation = 1;
+				break;
+			}
+			break;
+		case 3 : 
+			if (links[0] == 0) {
+				this.orientation = 2;
+				break;
+			}
+			if (links[1] == 0) {
+				this.orientation = 3;
+				break;
+			}
+			if (links[2] == 0) {
+				this.orientation = 0;
+				break;
+			}
+			if (links[3] == 0) {
+				this.orientation = 1;
+				break;
+			}
+			break;
+
+		case 5 : 
+			if (links[0] == 1 && links[1] == 1) {
+				this.orientation = 0;
+				break;
+			}
+			if (links[1] == 1 && links[2] == 1) {
+				this.orientation = 1;
+				break;
+			}
+			if (links[2] == 1 && links[3] == 1) {
+				this.orientation = 2;
+				break;
+			}
+			if (links[3] == 1 && links[0] == 1) {
+				this.orientation = 3;
+				break;
+			}
+			break;
+		}
+	}
 	/**
 	   * Says if orientation in parameter is possible
 	   * for this kind of piece

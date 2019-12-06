@@ -21,21 +21,21 @@ public class LevelGenerator {
 	int nbConnectedComponent;
 	boolean connectedComponentIndicated = false;
 
-	public LevelGenerator(int width, int height) {
+	public LevelGenerator(int height, int width) {
 		this.width = width;
 		this.height = height;
 		this.maxConnectedComponent = -1;
-		grid = new Grid(width, height);
+		grid = new Grid(height, width);
 		pieces = this.definePieces();
 	}
 	
-	public LevelGenerator(int width, int height, int maxConnectedComponent) {
+	public LevelGenerator(int height, int width, int maxConnectedComponent) {
 		this.width = width;
 		this.height = height;
 		this.maxConnectedComponent = maxConnectedComponent;
 		this.nbConnectedComponent = 0;
 		this.connectedComponentIndicated = true;
-		grid = new Grid(width, height);
+		grid = new Grid(height, width);
 		pieces = this.definePieces();
 	}
 	
@@ -284,7 +284,7 @@ public class LevelGenerator {
         // and if we have almost the maximum number of connected componenet with no more links possible
         // the rest of the connected componenets with open links need to be connected
         // we select the pieces with links on their east or south side or are of type 0
-		if( (maxConnectedComponent-nbConnectedComponent) == 1 ) {		
+		if( (maxConnectedComponent-nbConnectedComponent) == 1) {		
 			Collections.shuffle(piecesPossible);
 			for(Piece piece : piecesPossible){
 				if( piece.links[1]==1 || piece.links[2]==1)
@@ -318,7 +318,7 @@ public class LevelGenerator {
 
         // if the piece is linked on its north side with its neighbor
         // then add in its connected component, all pieces from its neighbor's connected component  
-        // delete the neighbor's connected componenet
+        // delete the neighbor's connected component
         if(chosenPiece.links[0]==1) {
         	for(int k=0; k<connectedComponents.size(); k++) {
         		if(connectedComponents.get(k).contains(grid.cases[i-1][j]) && connectedComponents.get(k)!=connectedComponents.get(connectedComponents.size()-1)  ) {
@@ -330,7 +330,7 @@ public class LevelGenerator {
         
         // if the piece is linked on its west side with its neighbor
         // then add in its connected component, all pieces from its neighbor's connected component  
-        // delete the neighbor's connected componenet
+        // delete the neighbor's connected component
         if(chosenPiece.links[3]==1) {
         	for(int k=0; k<connectedComponents.size(); k++) {
         		if(connectedComponents.get(k).contains(grid.cases[i][j-1]) && connectedComponents.get(k)!=connectedComponents.get(connectedComponents.size()-1)) {
@@ -388,7 +388,7 @@ public class LevelGenerator {
 				grid.add(chosenPiece);
 			}	
 		}
-		System.out.println("Solution generated besfore shuffle");
+		System.out.println("Solution generated before shuffle");
 		grid.displayInConsole();
 	}
 	

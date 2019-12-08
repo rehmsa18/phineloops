@@ -1,9 +1,7 @@
 package fr.dauphine.javaavance.phineloops;
 
 import org.chocosolver.solver.Model;
-import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.Solver;
-import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 
 import fr.dauphine.javaavance.phineloops.Grid;
@@ -255,8 +253,9 @@ public class SolverGrid {
 	 * For a side piece, sides not existant neighbors are as well defined
 	 * 
 	 * A pair as value 0 or 1, 0 if pieces of the pair are not connected, 1 else
+	 * @return 
 	 */
-	public void solve() {
+	public boolean solve() {
 		Model model = new Model("choco solver");		
 		IntVar[][]pairsrightline = new IntVar[this.grid.height][this.grid.width];
 		IntVar[][]pairsleftline = new IntVar[this.grid.height][this.grid.width];
@@ -547,8 +546,9 @@ public class SolverGrid {
 			}
 		}
 		Solver solver = model.getSolver();
-		System.out.println("Solution after solver : " + solver.solve());		
+		solver.solve();		
 		this.translate(pairsrightline, pairsleftline, pairstopcol, pairsbotcol);
+		return solver.solve();
 	}
 	
 	/**

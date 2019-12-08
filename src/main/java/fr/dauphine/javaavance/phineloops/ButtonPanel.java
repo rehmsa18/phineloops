@@ -6,10 +6,16 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
 public class ButtonPanel extends JPanel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public ButtonPanel(LevelGenerator levelGenerator, Grid grid, LevelDisplay levelDisplay ) {
 
@@ -29,7 +35,7 @@ public class ButtonPanel extends JPanel {
 			public void actionPerformed(ActionEvent evt) {
 				LevelChecker levelChecker = new LevelChecker(grid);
 				try {
-					System.out.println("Solution : " + levelChecker.check() + "\n");
+			        JOptionPane.showMessageDialog(null, "The solution is " + levelChecker.check() + "." , "solution checker", JOptionPane.INFORMATION_MESSAGE);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

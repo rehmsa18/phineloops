@@ -9,6 +9,10 @@ import javax.swing.JFrame;
 
 public class LevelDisplay extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int DIM = 30;
 
 	public LevelDisplay(LevelGenerator generator, Grid grid) {
@@ -35,11 +39,10 @@ public class LevelDisplay extends JFrame {
 
     public static void main(String[] args) throws IOException {
     	
-    	int width = 15;
-    	int height = 10; 
-    	int maxConnectedComponent = 7;
-		
-    
+    	int width = 25;
+    	int height = 15; 
+    	
+    	//int maxConnectedComponent = 7;
 		/*LevelGenerator generator = new LevelGenerator(height, width, maxConnectedComponent);
 		if(maxConnectedComponent > (width*height)/2) {
 			System.err.println("Nombre de composantes connexes impossible");
@@ -54,6 +57,7 @@ public class LevelDisplay extends JFrame {
 		//grid.writeFile("a");
 		//Grid grid = Grid.readFile("a");
 		
+		@SuppressWarnings("unused")
 		LevelDisplay ld = new LevelDisplay(generator, grid);	
 				
     }

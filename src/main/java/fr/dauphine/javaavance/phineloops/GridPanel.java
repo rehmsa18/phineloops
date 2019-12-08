@@ -11,6 +11,10 @@ import javax.swing.JPanel;
 
 public class GridPanel extends JPanel implements Observer {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	final static int DIM = 30;
 	int width;
 	int height;

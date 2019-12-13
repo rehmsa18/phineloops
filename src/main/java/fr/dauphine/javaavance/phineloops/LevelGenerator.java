@@ -383,8 +383,8 @@ public class LevelGenerator {
 				grid.add(chosenPiece);
 			}	
 		}
-		System.out.println("Solution generated before shuffle");
-		grid.displayInConsole();
+		//System.out.println("Solution generated before shuffle");
+		//grid.displayInConsole();
 	}
 	
 
@@ -397,8 +397,8 @@ public class LevelGenerator {
 				grid.cases[i][j].shufflePiece();
 			}		
 		}
-		System.out.println("Solution after shuffle");
-		grid.displayInConsole();
+		//System.out.println("Solution after shuffle");
+		//grid.displayInConsole();
 	}
 
 }

@@ -38,7 +38,7 @@ public class Main {
     private static boolean solve(String inputFile, String outputFile) throws IOException{
 	// load grid from inputFile, solve it and store result to outputFile...
     	Grid grid = Grid.readFile(inputFile);
-		SolverGrid sol = new SolverGrid(grid);
+		LevelSolverIA sol = new LevelSolverIA(grid);
 		sol.solve();
 		Grid grid2 = sol.grid;
 		grid2.writeFile(outputFile);

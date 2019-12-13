@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.io.IOException;
-
 import javax.swing.JFrame;
 
 public class LevelDisplay extends JFrame {

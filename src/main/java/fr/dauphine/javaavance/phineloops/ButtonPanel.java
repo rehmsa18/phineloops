@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 
+
 public class ButtonPanel extends JPanel {
 
 	/**
@@ -52,9 +53,8 @@ public class ButtonPanel extends JPanel {
 	      
 		btnSolve.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				SolverGrid sol = new SolverGrid(grid);
+				LevelSolverIA sol = new LevelSolverIA(grid);
 				sol.solve();
-				sol.grid.displayInConsole();
 				levelDisplay.repaint();
 	        }
 		});

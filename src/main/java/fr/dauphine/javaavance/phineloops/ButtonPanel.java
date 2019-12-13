@@ -53,7 +53,7 @@ public class ButtonPanel extends JPanel {
 	      
 		btnSolve.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				LevelSolverIA sol = new LevelSolverIA(grid);
+				SolverGrid sol = new SolverGrid(grid);
 				sol.solve();
 				levelDisplay.repaint();
 	        }

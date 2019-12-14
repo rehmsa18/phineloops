@@ -18,7 +18,7 @@ public class ButtonPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ButtonPanel(LevelGenerator levelGenerator, Grid grid, LevelDisplay levelDisplay ) {
+	public ButtonPanel(final LevelGenerator levelGenerator, final Grid grid, final LevelDisplay levelDisplay ) {
 
 		this.setLayout(new FlowLayout());
 		

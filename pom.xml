@@ -38,6 +38,8 @@
 	  	<archive>
 	    	<manifest>
 		    <mainClass>fr.dauphine.javaavance.phineloops.Main</mainClass>
+		    <addClasspath>true</addClasspath>
+                    <classpathPrefix>lib</classpathPrefix>
 	        </manifest>
 	    </archive>
 	    <descriptorRefs>

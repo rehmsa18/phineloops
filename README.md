@@ -2,7 +2,7 @@
 * Boris MARTIN
 * Fatima Zahra MARHOUSS
 
-H4 Les commandes à taper pour compiler et exécuter notre projet.
+#### Les commandes à taper pour compiler et exécuter notre projet.
 
 1. git clone https://github.com/Dauphine-Java-M1/phineloops-sfb 
 2. cd phineloops-sfb

@@ -40,16 +40,8 @@ public class GridPanel extends JPanel implements Observer {
 		DIM = dIM;
 	}
 
-	public int getWidth() {
-		return width;
-	}
-
 	public void setWidth(int width) {
 		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
 	}
 
 	public void setHeight(int height) {

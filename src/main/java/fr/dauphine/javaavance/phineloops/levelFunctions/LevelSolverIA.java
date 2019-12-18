@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.levelFunctions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,12 +9,37 @@ import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 
 import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class LevelSolverIA {
-	Grid grid;
-	int totalPiece;
-	int lockedPiece = 0;
-	int mobilePiece = 0;
+	private Grid grid;
+	private int totalPiece;
+	private int lockedPiece = 0;
+	
+	public Grid getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Grid grid) {
+		this.grid = grid;
+	}
+
+	public int getTotalPiece() {
+		return totalPiece;
+	}
+
+	public void setTotalPiece(int totalPiece) {
+		this.totalPiece = totalPiece;
+	}
+
+	public int getLockedPiece() {
+		return lockedPiece;
+	}
+
+	public void setLockedPiece(int lockedPiece) {
+		this.lockedPiece = lockedPiece;
+	}
+
 	public LevelSolverIA(Grid grid) {
 		this.grid = grid;
 		this.totalPiece = grid.getHeight()*grid.getWidth();
@@ -608,7 +633,7 @@ public class LevelSolverIA {
 		//grid.writeFile("file5");
 	   	//Grid grid2 = Grid.readFile("file5");
 		long debut = System.currentTimeMillis();
-		LevelSolverIA sol = new LevelSolverIA(test.grid);
+		LevelSolverIA sol = new LevelSolverIA(test.getGrid());
 		System.out.println("Solution after solver : " + sol.solve());
 		long fin = System.currentTimeMillis();
 		System.out.println(fin-debut);

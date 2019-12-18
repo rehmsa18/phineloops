@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops; 
+package fr.dauphine.javaavancee.phineloops.main; 
 
 import java.io.IOException;
 
@@ -9,7 +9,11 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelChecker;
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverIA;
 import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class Main {
     private static String inputFile = null;  
@@ -24,7 +28,7 @@ public class Main {
 		LevelGenerator generator = new LevelGenerator(height, width);
 		generator.buildSolution();
 		generator.shuffleSolution();
-		Grid grid = generator.grid;
+		Grid grid = generator.getGrid();
 		grid.writeFile(outputFile);
     }
     
@@ -33,7 +37,7 @@ public class Main {
 		LevelGenerator generator = new LevelGenerator(height, width, maxcc);
 		generator.buildSolution();
 		generator.shuffleSolution();
-		Grid grid = generator.grid;
+		Grid grid = generator.getGrid();
 		grid.writeFile(outputFile);
     }
 
@@ -42,7 +46,7 @@ public class Main {
     	Grid grid = Grid.readFile(inputFile);
 		LevelSolverIA sol = new LevelSolverIA(grid);
 		sol.solve();
-		Grid grid2 = sol.grid;
+		Grid grid2 = sol.getGrid();
 		grid2.writeFile(outputFile);
 		
     	return sol.solve();
@@ -59,7 +63,7 @@ public class Main {
     private static void gui(String inputFile) throws IOException{
 		Grid grid = Grid.readFile(inputFile);
 		LevelGenerator generator = new LevelGenerator(grid.getHeight(), grid.getWidth());
-		generator.grid = grid;
+		generator.setGrid(grid);
 		@SuppressWarnings("unused")
 		LevelDisplay ld = new LevelDisplay(generator, grid);
 		

@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.levelFunctions;
 
 
 import java.util.ArrayList;
@@ -11,14 +11,78 @@ import fr.dauphine.javaavance.phineloops.model.Piece;
 
 public class LevelGenerator {
 	
-	protected Grid grid;
-	protected int width;
-	protected int height;
-	ArrayList<Piece> pieces;
-	ArrayList<ConnectedComponent> connectedComponents  = new ArrayList<>();
-	int maxConnectedComponent; 
-	int nbConnectedComponent;
-	boolean connectedComponentIndicated = false;
+	private Grid grid;
+	private int width;
+	private int height;
+	private ArrayList<Piece> pieces;
+	private ArrayList<ConnectedComponent> connectedComponents  = new ArrayList<>();
+	private int maxConnectedComponent; 
+	private int nbConnectedComponent;
+	private boolean connectedComponentIndicated = false;
+
+	public Grid getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Grid grid) {
+		this.grid = grid;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public ArrayList<Piece> getPieces() {
+		return pieces;
+	}
+
+	public void setPieces(ArrayList<Piece> pieces) {
+		this.pieces = pieces;
+	}
+
+	public ArrayList<ConnectedComponent> getConnectedComponents() {
+		return connectedComponents;
+	}
+
+	public void setConnectedComponents(ArrayList<ConnectedComponent> connectedComponents) {
+		this.connectedComponents = connectedComponents;
+	}
+
+	public int getMaxConnectedComponent() {
+		return maxConnectedComponent;
+	}
+
+	public void setMaxConnectedComponent(int maxConnectedComponent) {
+		this.maxConnectedComponent = maxConnectedComponent;
+	}
+
+	public int getNbConnectedComponent() {
+		return nbConnectedComponent;
+	}
+
+	public void setNbConnectedComponent(int nbConnectedComponent) {
+		this.nbConnectedComponent = nbConnectedComponent;
+	}
+
+	public boolean isConnectedComponentIndicated() {
+		return connectedComponentIndicated;
+	}
+
+	public void setConnectedComponentIndicated(boolean connectedComponentIndicated) {
+		this.connectedComponentIndicated = connectedComponentIndicated;
+	}
 
 	public LevelGenerator(int height, int width) {
 		this.width = width;

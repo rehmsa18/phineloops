@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.controller;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -9,7 +9,11 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelChecker;
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverIA;
 import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 
 

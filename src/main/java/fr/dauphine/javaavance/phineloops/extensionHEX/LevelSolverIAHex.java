@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.extensionHEX;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;

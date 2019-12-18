@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.levelFunctions;
 
 import java.util.Stack;
 
@@ -7,9 +7,9 @@ import fr.dauphine.javaavance.phineloops.model.Piece;
 public class Node {
 	//https://www.javagists.com/java-tree-data-structure
 
-	Piece piece;
-	Node parent = null;
-	Node child = null;
+	private Piece piece;
+	private Node parent = null;
+	private Node child = null;
 
 	public Node(Piece piece){
 		this.piece = piece;

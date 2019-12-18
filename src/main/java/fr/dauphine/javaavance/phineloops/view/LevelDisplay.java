@@ -1,11 +1,15 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.view;
  
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.JFrame;
 
+import fr.dauphine.javaavance.phineloops.controller.ButtonPanel;
+import fr.dauphine.javaavance.phineloops.controller.MouseController;
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
 import fr.dauphine.javaavance.phineloops.model.Grid;
 
 public class LevelDisplay extends JFrame {
@@ -14,8 +18,28 @@ public class LevelDisplay extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	int DIM = 20;
-	int dimension;
+	private int DIM = 20;
+	private int dimension;
+
+	public int getDIM() {
+		return DIM;
+	}
+
+
+	public void setDIM(int dIM) {
+		DIM = dIM;
+	}
+
+
+	public int getDimension() {
+		return dimension;
+	}
+
+
+	public void setDimension(int dimension) {
+		this.dimension = dimension;
+	}
+
 
 	public LevelDisplay(LevelGenerator generator, Grid grid) {	    
 		
@@ -25,7 +49,6 @@ public class LevelDisplay extends JFrame {
 		this.addMouseListener(mc);
 		
 		ButtonPanel buttonPanel = new ButtonPanel(generator, grid, this);
-
 		Container container = this.getContentPane();
 	    container.setLayout(new BorderLayout());
 	    container.add(gridPanel, BorderLayout.CENTER);
@@ -55,7 +78,7 @@ public class LevelDisplay extends JFrame {
 		
 		generator.buildSolution();
 		generator.shuffleSolution();
-		Grid grid = generator.grid;
+		Grid grid = generator.getGrid();
 		
 		//grid.writeFile("a");
 		//Grid grid = Grid.readFile("a");

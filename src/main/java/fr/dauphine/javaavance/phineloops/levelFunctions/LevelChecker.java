@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.levelFunctions;
 
 import java.io.IOException;
 
@@ -6,8 +6,16 @@ import fr.dauphine.javaavance.phineloops.model.Grid;
 
 public class LevelChecker {
 	
-	Grid grid;
+	private Grid grid;
 	
+	public Grid getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Grid grid) {
+		this.grid = grid;
+	}
+
 	public LevelChecker(Grid grid) {
 		this.grid = grid;
 	}

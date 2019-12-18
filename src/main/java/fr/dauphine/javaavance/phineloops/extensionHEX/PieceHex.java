@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.extensionHEX;
 
 import java.awt.Graphics;
 import java.util.Random;

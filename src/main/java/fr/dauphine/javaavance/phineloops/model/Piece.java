@@ -4,10 +4,10 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
-import fr.dauphine.javaavance.phineloops.DrawablePiece;
+import fr.dauphine.javaavance.phineloops.view.DrawablePiece;
 
 public class Piece {
-	private int getI;
+	private int i;
 	private int j;
 	private int orientation = 0; //depends of piece between 0 and 3
 	private int type; //kind of piece 0,1,2,3,4,5
@@ -22,7 +22,7 @@ public class Piece {
 	private int fixe = 0;
 	
 	public Piece() {
-		this.getI = -1;
+		this.i = -1;
 		this.j = -1;
 	}
 	
@@ -38,7 +38,7 @@ public class Piece {
 	}
 
 	public Piece(int i, int j, int type, int orientation) {
-		this.getI = i;
+		this.i = i;
 		this.j = j;
 		this.orientation = orientation;
 		this.type = type;
@@ -51,11 +51,11 @@ public class Piece {
 	}
 	
 	public int getI() {
-		return getI;
+		return i;
 	}
 
 	public void setI(int i) {
-		this.getI = i;
+		this.i = i;
 	}
 
 	public int getJ() {
@@ -364,19 +364,19 @@ public class Piece {
 	 * @return -1 not neighbors, 0 p is at North, 1 at East, 2 at South, 3 at West
 	 */
 	public int isNeighbor(Piece p) {
-		if ( (this.getI == p.getI + 1) && (this.j == p.j)) {
+		if ( (this.i == p.i + 1) && (this.j == p.j)) {
 			return 0;
 		}
 		
-		if ( (this.getI == p.getI - 1) && (this.j == p.j)) {
+		if ( (this.i == p.i - 1) && (this.j == p.j)) {
 			return 2;
 		}
 		
-		if ( (this.j == p.j - 1) && (this.getI == p.getI)) {
+		if ( (this.j == p.j - 1) && (this.i == p.i)) {
 			return 1;
 		}
 		
-		if ( (this.j == p.j + 1) && (this.getI == p.getI)) {
+		if ( (this.j == p.j + 1) && (this.i == p.i)) {
 			return 3;
 		}
 		return -1;
@@ -438,7 +438,7 @@ public class Piece {
 	 * Display the type and orientation of the piece, place in grid, and unicode shape
 	 */
 	public String toString() {
-		return "(" + getI + "," + j + ") " +type + " " + orientation + " " + this.unicode();
+		return "(" + i + "," + j + ") " +type + " " + orientation + " " + this.unicode();
 	}
 	
 	/**

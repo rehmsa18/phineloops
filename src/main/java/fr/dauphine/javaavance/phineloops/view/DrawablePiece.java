@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -7,10 +7,10 @@ import fr.dauphine.javaavance.phineloops.model.Piece;
 
 public class DrawablePiece {
 
-	Piece p;
-	int x;
-	int y;
-	int DIM;
+	private Piece p;
+	private int x;
+	private int y;
+	private int DIM;
 	
     public DrawablePiece(Piece p, int DIM) {
 		this.p = p;

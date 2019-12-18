@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.extensionHEX;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.levelFunctions;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,14 +6,47 @@ import java.util.Stack;
 
 import fr.dauphine.javaavance.phineloops.model.Grid;
 import fr.dauphine.javaavance.phineloops.model.Piece;
+import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class LevelSolverThread {
 	
-	Grid grid;
-	int totalPiece;
-	int lockedPiece = 0;
-	int mobilePiece = 0;
+	private Grid grid;
+	private int totalPiece;
+	private int lockedPiece = 0;
+	private int mobilePiece = 0;
 		
+	public Grid getGrid() {
+		return grid;
+	}
+
+	public void setGrid(Grid grid) {
+		this.grid = grid;
+	}
+
+	public int getTotalPiece() {
+		return totalPiece;
+	}
+
+	public void setTotalPiece(int totalPiece) {
+		this.totalPiece = totalPiece;
+	}
+
+	public int getLockedPiece() {
+		return lockedPiece;
+	}
+
+	public void setLockedPiece(int lockedPiece) {
+		this.lockedPiece = lockedPiece;
+	}
+
+	public int getMobilePiece() {
+		return mobilePiece;
+	}
+
+	public void setMobilePiece(int mobilePiece) {
+		this.mobilePiece = mobilePiece;
+	}
+
 	public LevelSolverThread(Grid grid) {
 		this.grid = grid;
 		this.totalPiece = grid.getHeight()*grid.getWidth();
@@ -147,7 +180,7 @@ public class LevelSolverThread {
 		
 		//Node.printTree(root, " ");
 		
-		while(root.child!=null) {
+		while(root.getChild()!=null) {
 			Piece p = root.getLeafNode().getPiece();
 			grid.getCases()[p.getI()][p.getJ()] = p;
 			root.leafDelete(root); 
@@ -192,7 +225,7 @@ public class LevelSolverThread {
 	   	
 	    long debut = System.currentTimeMillis();
 	   
-		LevelSolverThread sol = new LevelSolverThread(test.grid);
+		LevelSolverThread sol = new LevelSolverThread(test.getGrid());
 		System.out.println(sol.solve());
 		
 	    long fin = System.currentTimeMillis();

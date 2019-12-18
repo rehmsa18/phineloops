@@ -38,6 +38,12 @@ public class LevelSolverIA {
 	 * Value 9 : Type 5 orientation 3
 	 */
 	public boolean solve() {
+		if (!this.grid.detectImpossible()) {
+			return false;
+		}
+		if (!this.grid.detectCircledByType0()) {
+			return false;
+		}
 		Model model = new Model("choco solver");		
 		IntVar[][]pieces = new IntVar[this.grid.height][this.grid.width];
 		//init variables to IntVar 
@@ -256,9 +262,141 @@ public class LevelSolverIA {
 		return resolution;
 	}
 	
+	/**
+	 * Try to find if all pieces can be not linked to each other
+	 * @return if it's can be solve or not
+	 */
+	public boolean nosolve() {
+		Model model = new Model("choco no solver");		
+		IntVar[][]pieces = new IntVar[this.grid.height][this.grid.width];
+		//init variables to IntVar 
+		for (int i = 0; i < this.grid.height; i++) {
+			for (int j = 0; j < this.grid.width; j++) {
+				//define possible values considering type and postion on the grid of a piece
+				switch(this.grid.cases[i][j].type) {
+				case 0 :
+					pieces[i][j] = model.intVar(new int[] {0});
+					break;
+				case 1 :
+					pieces[i][j] = model.intVar(new int[] {1,2,4,8});
+					break;
+				case 2 :
+					pieces[i][j] = model.intVar(new int[] {5,10});
+					break;
+				case 3 :
+					pieces[i][j] = model.intVar(new int[] {7,14,13,11});
+					break;
+				case 4 :
+					pieces[i][j] = model.intVar(new int[] {15});
+					break;
+				case 5 :
+					pieces[i][j] = model.intVar(new int[] {3,6,12,9});
+					break;
+				}
+			}			
+		}
+		
+		//Constraints : check two neighbors have to be linked considered their values
+		// For that we just have to check bit value of the piece and the bit value corresponding
+		//to the link with the right neighbor
+		// North : value % 2
+		//East : value % 4 / 2
+		//South : value % 8 / 4
+		//West : value / 8 
+		
+		//Constraints for corner pieces
+		
+		// Piece corner NW
+		//condition with north neighbor
+		//model.arithm(pieces[0][0].mod(2).intVar(), "=", 0).post();
+		//condition with east neighbor
+		model.arithm(pieces[0][0].mod(8).mod(4).div(2).intVar(),"*",pieces[0][1].div(8).intVar(),"=",0).post();
+		//condition with south neighbor
+		model.arithm(pieces[0][0].mod(8).div(4).intVar(),"*",pieces[1][0].mod(2).intVar(),"=",0).post();
+		//condition with west neighbor
+		//model.arithm(pieces[0][0].div(8).intVar(),"=",0).post();
+		
+		// Piece corner NE
+		//condition with north neighbor
+		//model.arithm(pieces[0][this.grid.width-1].mod(2).intVar(), "=", 0).post();
+		//condition with south neighbor
+		model.arithm(pieces[0][this.grid.width-1].mod(8).div(4).intVar(),"*",pieces[1][this.grid.width-1].mod(2).intVar(),"=",0).post();
+		//condition with west neighbor
+		//model.arithm(pieces[0][this.grid.width-1].div(8).intVar(),"*",pieces[0][this.grid.width-2].mod(8).mod(4).div(2).intVar(),"=",0).post();
+		
+		// Piece corner SW
+		//condition with north neighbor
+		//model.arithm(pieces[this.grid.height-1][0].mod(2).intVar(),"*",pieces[this.grid.height-2][0].mod(8).div(4).intVar(),"=",0).post();
+		//condition with east neighbor
+		model.arithm(pieces[this.grid.height-1][0].mod(8).mod(4).div(2).intVar(),"*",pieces[this.grid.height-1][1].div(8).intVar(),"=",0).post();
+		
+		// Piece corner SE
+		//condition with north neighbor
+		//model.arithm(pieces[this.grid.height-1][this.grid.width-1].mod(2).intVar(),"*",pieces[this.grid.height-2][this.grid.width-1].mod(8).div(4).intVar(),"=",0).post();
+		//condition with west neighbor
+		//model.arithm(pieces[this.grid.height-1][this.grid.width-1].div(8).intVar(),"*",pieces[this.grid.height-1][this.grid.width-2].mod(8).mod(4).div(2).intVar(),"=",0).post();
+
+		
+		//Constraints for border pieces north and south
+		for (int j = 1; j < this.grid.width-1; j++) {
+			//North border
+			//condition with south neighbor
+			model.arithm(pieces[0][j].mod(8).div(4).intVar(),"*",pieces[1][j].mod(2).intVar(),"=",0).post();
+			//condition with east neighbor
+			model.arithm(pieces[0][j].mod(8).mod(4).div(2).intVar(),"*",pieces[0][j+1].div(8).intVar(),"=",0).post();
+			//condition with west neighbor
+			//model.arithm(pieces[0][j].div(8).intVar(),"!=",pieces[0][j-1].mod(8).mod(4).div(2).intVar()).post();
+			
+			//South border
+			//condition with north neighbor
+			//model.arithm(pieces[this.grid.height-1][j].mod(2).intVar(),"!=",pieces[this.grid.height-2][j].mod(8).div(4).intVar()).post();
+			//condition with east neighbor
+			model.arithm(pieces[this.grid.height-1][j].mod(8).mod(4).div(2).intVar(),"*",pieces[this.grid.height-1][j+1].div(8).intVar(),"=",0).post();
+			//condition with west neighbor
+			//model.arithm(pieces[this.grid.height-1][j].div(8).intVar(),"!=",pieces[this.grid.height-1][j-1].mod(8).mod(4).div(2).intVar()).post();	
+		}
+		
+		//Constraints for west and east borders
+		for (int i = 1; i < this.grid.height-1; i++) {
+			//West border
+			//condition with north neighbor
+			//model.arithm(pieces[i][0].mod(2).intVar(),"!=",pieces[i-1][0].mod(8).div(4).intVar()).post();
+			//condition with east neighbor
+			model.arithm(pieces[i][0].mod(8).mod(4).div(2).intVar(),"*",pieces[i][1].div(8).intVar(),"=",0).post();
+			//condition with south neighbor
+			model.arithm(pieces[i][0].mod(8).div(4).intVar(),"*",pieces[i+1][0].mod(2).intVar(),"=",0).post();
+			
+			//East border
+			//condition with north neighbor
+			//model.arithm(pieces[i][this.grid.width-1].mod(2).intVar(),"=",pieces[i-1][this.grid.width-1].mod(8).div(4).intVar()).post();
+			//condition with south neighbor
+			model.arithm(pieces[i][this.grid.width-1].mod(8).div(4).intVar(),"*",pieces[i+1][this.grid.width-1].mod(2).intVar(),"=",0).post();
+			//condition with west neighbor
+			//model.arithm(pieces[i][this.grid.width-1].div(8).intVar(),"!=",pieces[i][this.grid.width-2].mod(8).mod(4).div(2).intVar()).post();
+		}
+		
+		//Constraints for others pieces in the grid
+		for (int i = 1; i < this.grid.height-1; i++) {
+			for (int j = 1; j < this.grid.width-1; j++) {				
+				//condition with north neighbor
+				//model.arithm(pieces[i][j].mod(2).intVar(),"!=",pieces[i-1][j].mod(8).div(4).intVar()).post();
+				//condition with east neighbor
+				model.arithm(pieces[i][j].mod(8).mod(4).div(2).intVar(),"*",pieces[i][j+1].div(8).intVar(),"=",0).post();
+				//condition with south neighbor
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"*",pieces[i+1][j].mod(2).intVar(),"=",0).post();
+				//condition with west neighbor
+				//model.arithm(pieces[i][j].div(8).intVar(),"!=",pieces[i][j-1].mod(8).mod(4).div(2).intVar()).post();	
+			}
+		}
+		Solver solver = model.getSolver();
+		boolean resolution = solver.solve();	
+		this.translate(pieces);
+		return resolution;
+	}
+	
 
 	/**
-	 * Method to traduce the piece values to cases of the grid 
+	 * Method to translate the piece values to cases of the grid 
 	 * Value 0 : Type 0
 	 * Value 1 : Type 1 orientation 0
 	 * Value 2 : Type 1 orientation 1
@@ -385,7 +523,7 @@ public class LevelSolverIA {
 		test.buildSolution();
 		test.shuffleSolution();
 		LevelSolverIA sol = new LevelSolverIA(test.grid);
-		System.out.println("Solution after solver : " + sol.solve());
+		System.out.println("Solution after solver : " + sol.nosolve());
 		//sol.grid.displayInConsole();
 		LevelDisplay display = new LevelDisplay(test, sol.grid);
 

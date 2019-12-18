@@ -224,5 +224,154 @@ public class Grid  extends Observable {
 			reader.close();	
 		return grid;
 	}
+	
+	/**
+	 * detect if for a dim 1*l or h*1 the pieces are only type 0
+	 * detect if the sum of all the links are even in other case its impossible to have a solution
+	 * @return
+	 */
+	public boolean detectImpossible() {
+		int count = 0;
+		for (Piece[] l : this.cases) {
+			for (Piece p : l) {
+				count+=p.nbneighbors;
+			}
+		}
+		return count%2 == 0;
+	}
+	
+	public boolean detectCircledByType0() {
+		for (int i = 0; i<this.height; i++) {
+			for (int j = 0; j<this.width; j++) {
+				if (northWestSide(i,j)) {
+					if(cases[i][j].type != 0 && cases[i][j+1].type == 0 && cases[i+1][j].type == 0) {
+						return false;
+					}
+				}
+				if (northEastSide(i,j)) {
+					if (cases[i][j].type != 0 && cases[i][j-1].type == 0 && cases[i+1][j].type == 0) {
+						return false;
+					}
+				}
+				if (southWestSide(i,j)) {
+					if (cases[i][j].type != 0 && cases[i][j+1].type == 0 && cases[i-1][j].type == 0) {
+						return false;
+					}
+				}
+				if (southEastSide(i,j)){
+					if (cases[i][j].type != 0 && cases[i][j-1].type == 0 && cases[i-1][j].type == 0) {
+						return false;
+					}
+				}
+				if (northBorder(i) && !northEastSide(i,j) && !northWestSide(i,j)) {
+					if (cases[i][j].type != 0 && cases[i][j-1].type == 0 && cases[i][j+1].type == 0 && cases[i+1][j].type == 0) {
+						return false;
+					}
+				}
+				if (southBorder(i) && !southEastSide(i,j) && !southWestSide(i,j)) {
+					if (cases[i][j].type != 0 && cases[i][j-1].type == 0 && cases[i][j+1].type == 0 && cases[i-1][j].type == 0) {
+						return false;
+					}
+				}
+				if (westBorder(j) && !northWestSide(i,j) && !southWestSide(i,j)) {
+					if (cases[i][j].type != 0 && cases[i+1][j].type == 0 && cases[i][j+1].type == 0 && cases[i-1][j].type == 0) {
+						return false;
+					}
+				}
+				if (eastBorder(j) && !northEastSide(i,j) && !southEastSide(i,j)) { 
+					if (cases[i][j].type != 0 && cases[i+1][j].type == 0 && cases[i][j-1].type == 0 && cases[i-1][j].type == 0) {
+						return false;
+					}
+				}
+				if (!northBorder(i) && !southBorder(i) && !westBorder(j) && !eastBorder(j) 
+				&& !northWestSide(i,j) && !southWestSide(i,j) && !northEastSide(i,j) && !southEastSide(i,j)) {
+					if (cases[i][j].type != 0 && cases[i+1][j].type == 0 && cases[i-1][j].type == 0 && cases[i][j-1].type == 0 && cases[i][j+1].type == 0) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * Says if a piece in the north west side of the grid
+	 * @param x
+	 * @param y
+	 * @return true if in the north west
+	 */
+	public boolean northWestSide(int i, int j) {
+		return ( i==0 && j==0 );		
+	}
+
+	/**
+	 * Says if a piece in the north east side of the grid
+	 * @param x
+	 * @param y
+	 * @return true if in the north east
+	 */
+	public boolean northEastSide(int i, int j) {
+		return ( i==0 && j==this.width-1 );		
+	}
+	
+	/**
+	 * Says if a piece in the south west side of the grid
+	 * @param x
+	 * @param y
+	 * @return true if in the south west
+	 */
+	public boolean southWestSide(int i, int j) {
+		return ( i==this.height-1 && j==0 );		
+	}
+	
+	/**
+	 * Says if a piece in the south east side of the grid
+	 * @param x
+	 * @param y
+	 * @return true if in the south east
+	 */
+	public boolean southEastSide(int i, int j) {
+		return ( i==this.height-1 && j==this.width-1 );		
+	}
+	
+	/**
+	 * Says if a piece in the west border of the grid
+	 * @param x
+	 * @param y
+	 * @return true if in the west border
+	 */
+	public boolean westBorder(int j) {
+		return ( j==0 );		
+	}	
+	
+	/**
+	 * Says if a piece in the east border of the grid
+	 * @param x
+	 * @param y
+	 * @return true if in the east border
+	 */
+	public boolean eastBorder(int j) {
+		return ( j==this.width-1 );		
+	}	
+	
+	/**
+	 * Says if a piece in the north border of the grid
+	 * @param x
+	 * @param y
+	 * @return true if in the north border
+	 */
+	public boolean northBorder(int i) {
+		return ( i==0 );		
+	}
+	
+	/**
+	 * Says if a piece in the south border of the grid
+	 * @param x
+	 * @param y
+	 * @return true if in the south border
+	 */
+	public boolean southBorder(int i) {
+		return ( i==this.height-1 );		
+	}
 
 }

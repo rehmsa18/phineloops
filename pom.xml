@@ -40,7 +40,7 @@
 	  <configuration>
 	  	<archive>
 	    	<manifest>
-		    	<mainClass>fr.dauphine.javaavance.phineloops.Main</mainClass>
+		    	<mainClass>fr.dauphine.javaavance.phineloops.main.Main</mainClass>
 	        </manifest>
 	    </archive>
 	    <descriptorRefs>

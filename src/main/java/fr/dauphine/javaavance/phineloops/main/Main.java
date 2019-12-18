@@ -1,4 +1,4 @@
-package fr.dauphine.javaavancee.phineloops.main; 
+package fr.dauphine.javaavance.phineloops.main; 
 
 import java.io.IOException;
 

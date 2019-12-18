@@ -15,17 +15,18 @@ public class GridPanel extends JPanel implements Observer {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	final static int DIM = 30;
+	int DIM;
 	int width;
 	int height;
 	Piece cases[][];
 	Grid grid;
 
-	public GridPanel(Grid grid) {
+	public GridPanel(Grid grid, int DIM) {
 		height = grid.height;
 		width = grid.width;
 		cases = grid.cases;
 		grid.addObserver(this);
+		this.DIM = DIM;
 	}
 	
 	protected void paintComponent(Graphics g) {
@@ -41,7 +42,7 @@ public class GridPanel extends JPanel implements Observer {
 			 for(int j=0; j<width; j++) {
 				 cases[i][j].gridX = j*DIM;
 				 cases[i][j].gridY = i*DIM;
-				 cases[i][j].draw(g);
+				 cases[i][j].draw(g, DIM);
 			}
 		}
     }
@@ -52,7 +53,7 @@ public class GridPanel extends JPanel implements Observer {
 		Graphics g = this.getGraphics();    
 		for(int i=0; i<height; i++) {
 			for(int j=0; j<width; j++) {
-				cases[i][j].draw(g);
+				cases[i][j].draw(g, DIM);
 			}
 		}
 		

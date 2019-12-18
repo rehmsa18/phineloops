@@ -434,6 +434,7 @@ public class LevelSolverIA {
 					this.grid.cases[i][j].orientation = 3;
 					break;
 				}
+				this.grid.cases[i][j].defineLinks();
 			}
 		}
 	}
@@ -522,8 +523,11 @@ public class LevelSolverIA {
 		LevelGenerator test = new LevelGenerator(20, 20);
 		test.buildSolution();
 		test.shuffleSolution();
+		long debut = System.currentTimeMillis();
 		LevelSolverIA sol = new LevelSolverIA(test.grid);
-		System.out.println("Solution after solver : " + sol.nosolve());
+		System.out.println("Solution after solver : " + sol.solve());
+		long fin = System.currentTimeMillis();
+		System.out.println(fin-debut);
 		//sol.grid.displayInConsole();
 		LevelDisplay display = new LevelDisplay(test, sol.grid);
 

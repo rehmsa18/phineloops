@@ -1,5 +1,6 @@
 package fr.dauphine.javaavance.phineloops;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 public class DrawablePiece {
@@ -7,12 +8,13 @@ public class DrawablePiece {
 	Piece p;
 	int x;
 	int y;
-	int DIM = 30;
+	int DIM;
 	
-    public DrawablePiece(Piece p) {
+    public DrawablePiece(Piece p, int DIM) {
 		this.p = p;
 		this.x = p.gridX;
 		this.y = p.gridY;
+		this.DIM = DIM;
 	}
 
     /**
@@ -20,6 +22,11 @@ public class DrawablePiece {
      * @param g
      */
 	public void paintComponent(Graphics g) {
+		
+		if(p.lock==0)
+		   	 g.setColor(Color.green);
+		else
+		   	 g.setColor(Color.blue);
 		
 		if (p.type==1) {
 			if(p.orientation==0) {

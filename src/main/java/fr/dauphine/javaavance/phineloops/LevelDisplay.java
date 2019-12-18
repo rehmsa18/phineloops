@@ -12,10 +12,12 @@ public class LevelDisplay extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	int DIM = 30;
+	int DIM = 20;
+	int dimension;
 
-	public LevelDisplay(LevelGenerator generator, Grid grid) {
-		GridPanel gridPanel = new GridPanel(grid);
+	public LevelDisplay(LevelGenerator generator, Grid grid) {	    
+		
+		GridPanel gridPanel = new GridPanel(grid, DIM);
 		grid.addObserver(gridPanel);
 		MouseController mc = new MouseController(gridPanel, this);
 		this.addMouseListener(mc);
@@ -28,7 +30,7 @@ public class LevelDisplay extends JFrame {
 	    container.add(buttonPanel, BorderLayout.SOUTH);
 	    
 		this.setTitle("Infinity loop");
-		this.setSize(new Dimension(grid.width*DIM + 1*DIM, grid.height*DIM + 3*DIM));
+		this.setSize(new Dimension(grid.width*DIM + 1*DIM, grid.height*DIM + 4*DIM));
 		this.setVisible(true);
 		this.setLocationRelativeTo(null); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

@@ -5,7 +5,7 @@ import java.awt.event.MouseListener;
 
 public class MouseController implements MouseListener{
 
-	private static final int DIM  = 30;
+	int DIM;
 	Piece cases[][];
 	GridPanel gridPanel;
 	LevelDisplay levelDisplay;
@@ -13,6 +13,7 @@ public class MouseController implements MouseListener{
 	public MouseController(GridPanel gridPanel, LevelDisplay levelDisplay) {
 		this.gridPanel = gridPanel;
 		this.levelDisplay = levelDisplay;
+		this.DIM = levelDisplay.DIM;
 		cases = gridPanel.cases;
 	}
 

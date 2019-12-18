@@ -634,7 +634,7 @@ public class LevelSolverIAHex {
 		grid.add(new PieceHex(1,1,8,0));
 		
 		LevelSolverIAHex sol = new LevelSolverIAHex(grid);
-		System.out.println("Solution after solver : " + sol.nosolve());
+		System.out.println("Solution after solver : " + sol.solve());
 
 	}
 }	

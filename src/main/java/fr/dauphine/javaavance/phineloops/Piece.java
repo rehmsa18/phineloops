@@ -1,6 +1,7 @@
 package fr.dauphine.javaavance.phineloops;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Piece {
@@ -14,6 +15,9 @@ public class Piece {
 	int connectedComponent;
 	int gridX;
 	int gridY;
+	int nbRotation; 
+	ArrayList <Integer> possibleOrientations;
+	int fixe = 0;
 	
 	public Piece() {
 		this.x = -1;
@@ -25,17 +29,7 @@ public class Piece {
 		this.orientation = orientation;
 		this.defineLinks();
 		this.defineNbNeighbors();
-		if ( (this.type == 0) || (this.type == 4) ) { //this kind of piece will never move
-			this.lock = 1; 
-		}
-	}
-	
-	public Piece(int x, int y, int type) {
-		this.x = x;
-		this.y = y;
-		this.type = type;
-		this.defineLinks();
-		this.defineNbNeighbors();
+		this.defineNbRotation();
 		if ( (this.type == 0) || (this.type == 4) ) { //this kind of piece will never move
 			this.lock = 1; 
 		}
@@ -48,6 +42,7 @@ public class Piece {
 		this.type = type;
 		this.defineLinks();
 		this.defineNbNeighbors();
+		this.defineNbRotation();
 		if ( (this.type == 0) || (this.type == 4) ) { //this kind of piece will never move
 			this.lock = 1; 
 		}
@@ -431,11 +426,60 @@ public class Piece {
 	 * Draw piece on graphic interface
 	 * @param g
 	 */
-	public void draw(Graphics g) {
+	public void draw(Graphics g, int DIM) {
 		// TODO Auto-generated method stub
-		DrawablePiece dp=new DrawablePiece(this);
+		DrawablePiece dp=new DrawablePiece(this, DIM);
 		dp.paintComponent(g);
 	}
+	
+	/**
+	 * Says true if two pieces are neighbours are linked or they are no neighbor
+	 * @param Piece p
+	 * @return true if they are linked
+	 */
+	public boolean linkedNeighborOrNoNeighbor(Piece p) {
+		int pos = this.isNeighbor(p);
+		switch (pos) {
+		case 0 :
+			return p.links[2] == this.links[0] ;
+		case 1 :
+			return p.links[3]== this.links[1] ;
+		case 2 :
+			return p.links[0]== this.links[2] ;
+		case 3 :
+			return p.links[1]== this.links[3] ;
+		case -1 :
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Number of rotation possible for a piece
+	 */
+	public void defineNbRotation() {
+		switch (this.type) {
+			case 0  : 
+				nbRotation = 0;
+				break;
+			case 1  : 
+				nbRotation = 4;
+				break;
+			case 2  : 
+				nbRotation = 2;
+				break;
+			case 3  : 
+				nbRotation = 4;
+				break;
+			case 4  : 
+				nbRotation = 0;
+				break;
+			case 5  : 
+				nbRotation = 4;
+				break;
+			}
+	}
+	
 	
 	
 }

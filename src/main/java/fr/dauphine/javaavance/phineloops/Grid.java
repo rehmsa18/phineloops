@@ -373,5 +373,40 @@ public class Grid  extends Observable {
 	public boolean southBorder(int i) {
 		return ( i==this.height-1 );		
 	}
+	
+	/**
+	 * Says if a piece is linked to a lockeded piece 
+	 * @param p
+	 * @return true if no link respected
+	 */
+	public boolean noRespectedLockPiece(Piece p) {
+		if( p.x > 0 ) {
+			if( this.cases[p.x-1][p.y].lock == 1 && this.cases[p.x-1][p.y].links[2] != p.links[0]) {
+				//System.out.println("a" + " "+ this.cases[p.x-1][p.y] +" "+this.cases[p.x-1][p.y].links[2] +" "+ p.links[0]);
+				return true;
+			}
+		}
+		if( p.x < this.height-1 ) {
+			if( this.cases[p.x+1][p.y].lock == 1 && this.cases[p.x+1][p.y].links[0] != p.links[2]) {
+				//System.out.println("b" + " " + this.cases[p.x+1][p.y] +" "+this.cases[p.x+1][p.y].links[0] + " "+ p.links[2]);
+				return true;
+			}
+				
+		}
+		if( p.y > 0 ) {
+			if( this.cases[p.x][p.y-1].lock == 1 && this.cases[p.x][p.y-1].links[1] != p.links[3] ) {
+				//System.out.println("c"+" " + this.cases[p.x][p.y-1] +" "+this.cases[p.x][p.y-1].links[1] +" "+ p.links[3]);
+				return true;
+			}
+		}
+		if( p.y < this.width-1 ) {
+			if( this.cases[p.x][p.y+1].lock == 1 && this.cases[p.x][p.y+1].links[3] != p.links[1] ) {
+				//System.out.println("d"+ " " +this.cases[p.x][p.y+1] +" "+this.cases[p.x][p.y+1].links[3] +" "+p.links[1]);
+				return true;
+			}
+				
+		}
+		return false;
+	}
 
 }

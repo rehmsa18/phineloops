@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.io.IOException;
 import javax.swing.JFrame;
 
+import fr.dauphine.javaavance.phineloops.model.Grid;
+
 public class LevelDisplay extends JFrame {
 	
 	/**
@@ -30,7 +32,7 @@ public class LevelDisplay extends JFrame {
 	    container.add(buttonPanel, BorderLayout.SOUTH);
 	    
 		this.setTitle("Infinity loop");
-		this.setSize(new Dimension(grid.width*DIM + 1*DIM, grid.height*DIM + 4*DIM));
+		this.setSize(new Dimension(grid.getWidth()*DIM + 1*DIM, grid.getHeight()*DIM + 4*DIM));
 		this.setVisible(true);
 		this.setLocationRelativeTo(null); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

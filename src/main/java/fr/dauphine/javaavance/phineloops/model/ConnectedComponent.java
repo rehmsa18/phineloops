@@ -1,16 +1,32 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.model;
 
 import java.util.ArrayList;
 
 public class ConnectedComponent {
 
-	int nbLinkPossible;
-	ArrayList<Piece> pieces;
+	private int nbLinkPossible;
+	private ArrayList<Piece> pieces;
 
 	public ConnectedComponent() {
 		pieces = new ArrayList<>();
 	}
 	
+	public int getNbLinkPossible() {
+		return nbLinkPossible;
+	}
+
+	public void setNbLinkPossible(int nbLinkPossible) {
+		this.nbLinkPossible = nbLinkPossible;
+	}
+
+	public ArrayList<Piece> getPieces() {
+		return pieces;
+	}
+
+	public void setPieces(ArrayList<Piece> pieces) {
+		this.pieces = pieces;
+	}
+
 	/**
 	 * 
 	 * @return the number of pieces
@@ -61,8 +77,8 @@ public class ConnectedComponent {
 	public void nbLink() {
 		nbLinkPossible = 0;
 		for(Piece piece : pieces) {
-			nbLinkPossible = nbLinkPossible + piece.links[1] + piece.links[2];
-			nbLinkPossible = nbLinkPossible - piece.links[0] - piece.links[3];
+			nbLinkPossible = nbLinkPossible + piece.getLinks()[1] + piece.getLinks()[2];
+			nbLinkPossible = nbLinkPossible - piece.getLinks()[0] - piece.getLinks()[3];
 		}
 	}
 	

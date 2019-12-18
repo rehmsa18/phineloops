@@ -9,6 +9,8 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import fr.dauphine.javaavance.phineloops.model.Grid;
+
 
 
 public class ButtonPanel extends JPanel {

@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+import fr.dauphine.javaavance.phineloops.model.ConnectedComponent;
+import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.model.Piece;
+
 public class LevelGenerator {
 	
 	protected Grid grid;
@@ -66,13 +70,13 @@ public class LevelGenerator {
 		//for piece not in the west border 
 		//the piece on its west side need to have the same value for the link west-east
 		if( j > 0 ) {
-			if( p.links[3] != grid.getCase()[i][j-1].links[1] )
+			if( p.getLinks()[3] != grid.getCase()[i][j-1].getLinks()[1] )
 				return false;
 		}
 		//for piece not in the north border 
 		//the piece on its north side need to have the same value for the link north-south
 		if( i > 0) {
-			if( p.links[0] != grid.getCase()[i-1][j].links[2] )
+			if( p.getLinks()[0] != grid.getCase()[i-1][j].getLinks()[2] )
 				return false;
 		}
 		return true;
@@ -88,12 +92,12 @@ public class LevelGenerator {
 	public boolean pieceType1Neighbors(int i, int j, Piece p) {	
 		//the piece and its west neighbor can not be of the type 1 to avoid too much connected component in the grid
 		if( j > 0 ) {
-			if( (p.type == 1) && (grid.getCase()[i][j-1].type == 1) )
+			if( (p.getType() == 1) && (grid.getCase()[i][j-1].getType() == 1) )
 				return true;
 		}
 	    //the piece and its north neighbor can not be of the type 1 to avoid too much connected component in the grid
 		if( i > 0) {
-			if( (p.type == 1) && (grid.getCase()[i-1][j].type == 1) )
+			if( (p.getType() == 1) && (grid.getCase()[i-1][j].getType() == 1) )
 				return true;
 		}
 		return false;
@@ -282,8 +286,8 @@ public class LevelGenerator {
 		if( (maxConnectedComponent-nbConnectedComponent) == 1) {		
 			Collections.shuffle(piecesPossible);
 			for(Piece piece : piecesPossible){
-				if( piece.links[1]==1 || piece.links[2]==1)
-					chosenPiece = new Piece(i, j, piece.type, piece.orientation);	
+				if( piece.getLinks()[1]==1 || piece.getLinks()[2]==1)
+					chosenPiece = new Piece(i, j, piece.getType(), piece.getOrientation());	
 			}
 		}
 		
@@ -292,14 +296,14 @@ public class LevelGenerator {
 		// Choose piece of type 1
 		if( (maxConnectedComponent-nbConnectedComponent) > 1 ){
 			for(Piece piece : piecesPossible){
-				if( piece.type == 1 && piece.orientation == 1 )
-					chosenPiece = new Piece(i, j, piece.type, piece.orientation);
-				else if(piece.type == 1 && piece.orientation == 3)
-					chosenPiece = new Piece(i, j, piece.type, piece.orientation);
-				else if(piece.type == 1 && piece.orientation == 2)
-					chosenPiece = new Piece(i, j, piece.type, piece.orientation);
-				else if(piece.type == 1 && piece.orientation == 0)
-					chosenPiece = new Piece(i, j, piece.type, piece.orientation);			
+				if( piece.getType() == 1 && piece.getOrientation() == 1 )
+					chosenPiece = new Piece(i, j, piece.getType(), piece.getOrientation());
+				else if(piece.getType() == 1 && piece.getOrientation() == 3)
+					chosenPiece = new Piece(i, j, piece.getType(), piece.getOrientation());
+				else if(piece.getType() == 1 && piece.getOrientation() == 2)
+					chosenPiece = new Piece(i, j, piece.getType(), piece.getOrientation());
+				else if(piece.getType() == 1 && piece.getOrientation() == 0)
+					chosenPiece = new Piece(i, j, piece.getType(), piece.getOrientation());			
 			}
 		}
         
@@ -314,9 +318,9 @@ public class LevelGenerator {
         // if the piece is linked on its north side with its neighbor
         // then add in its connected component, all pieces from its neighbor's connected component  
         // delete the neighbor's connected component
-        if(chosenPiece.links[0]==1) {
+        if(chosenPiece.getLinks()[0]==1) {
         	for(int k=0; k<connectedComponents.size(); k++) {
-        		if(connectedComponents.get(k).contains(grid.cases[i-1][j]) && connectedComponents.get(k)!=connectedComponents.get(connectedComponents.size()-1)  ) {
+        		if(connectedComponents.get(k).contains(grid.getCases()[i-1][j]) && connectedComponents.get(k)!=connectedComponents.get(connectedComponents.size()-1)  ) {
         			connectedComponents.get(connectedComponents.size()-1).addAll(connectedComponents.get(k));
         			connectedComponents.remove(connectedComponents.get(k));
         		}
@@ -326,9 +330,9 @@ public class LevelGenerator {
         // if the piece is linked on its west side with its neighbor
         // then add in its connected component, all pieces from its neighbor's connected component  
         // delete the neighbor's connected component
-        if(chosenPiece.links[3]==1) {
+        if(chosenPiece.getLinks()[3]==1) {
         	for(int k=0; k<connectedComponents.size(); k++) {
-        		if(connectedComponents.get(k).contains(grid.cases[i][j-1]) && connectedComponents.get(k)!=connectedComponents.get(connectedComponents.size()-1)) {
+        		if(connectedComponents.get(k).contains(grid.getCases()[i][j-1]) && connectedComponents.get(k)!=connectedComponents.get(connectedComponents.size()-1)) {
         			connectedComponents.get(connectedComponents.size()-1).addAll(connectedComponents.get(k));
         			connectedComponents.remove(connectedComponents.get(k));
         		}
@@ -338,7 +342,7 @@ public class LevelGenerator {
         // if a connected component can no longer be linked to another piece
         // then the number of real connected component increments
         for(int k=0; k<connectedComponents.size(); k++) {
-        	if(connectedComponents.get(k).nbLinkPossible == 0) {
+        	if(connectedComponents.get(k).getNbLinkPossible() == 0) {
         		connectedComponents.remove(connectedComponents.get(k));
         		nbConnectedComponent++;
         	}
@@ -362,7 +366,7 @@ public class LevelGenerator {
 		// choose randomly a piece among the possibilities
 		Random rand = new Random(); 
 		Piece chosenPiece = piecesPossible.get(rand.nextInt(piecesPossible.size())); 
-        chosenPiece = new Piece(i, j, chosenPiece.type, chosenPiece.orientation);     
+        chosenPiece = new Piece(i, j, chosenPiece.getType(), chosenPiece.getOrientation());     
 
         if(connectedComponentIndicated == true) {       	
         	chosenPiece = respectNumberConnectedComponents(i, j, chosenPiece, piecesPossible);
@@ -394,7 +398,7 @@ public class LevelGenerator {
 	public void shuffleSolution() {
 		for(int i=0; i<height; i++) {
 			for(int j=0; j<width; j++) {
-				grid.cases[i][j].shufflePiece();
+				grid.getCases()[i][j].shufflePiece();
 			}		
 		}
 		//System.out.println("Solution after shuffle");

@@ -9,6 +9,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import fr.dauphine.javaavance.phineloops.model.Grid;
+
 public class Main {
     private static String inputFile = null;  
     private static String outputFile = null;
@@ -56,7 +58,7 @@ public class Main {
     
     private static void gui(String inputFile) throws IOException{
 		Grid grid = Grid.readFile(inputFile);
-		LevelGenerator generator = new LevelGenerator(grid.height, grid.width);
+		LevelGenerator generator = new LevelGenerator(grid.getHeight(), grid.getWidth());
 		generator.grid = grid;
 		@SuppressWarnings("unused")
 		LevelDisplay ld = new LevelDisplay(generator, grid);

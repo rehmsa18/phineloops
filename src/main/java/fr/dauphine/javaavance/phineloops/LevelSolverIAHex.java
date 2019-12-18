@@ -4,7 +4,7 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 
-import fr.dauphine.javaavance.phineloops.Grid;
+import fr.dauphine.javaavance.phineloops.model.Grid;
 
 public class LevelSolverIAHex {
 	GridHex grid;

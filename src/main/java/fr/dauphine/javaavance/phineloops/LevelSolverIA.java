@@ -1,15 +1,23 @@
 package fr.dauphine.javaavance.phineloops;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
+import org.chocosolver.solver.ICause;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 
-import fr.dauphine.javaavance.phineloops.Grid;
+import fr.dauphine.javaavance.phineloops.model.Grid;
 
 public class LevelSolverIA {
 	Grid grid;
+	int totalPiece;
+	int lockedPiece = 0;
+	int mobilePiece = 0;
 	public LevelSolverIA(Grid grid) {
 		this.grid = grid;
+		this.totalPiece = grid.getHeight()*grid.getWidth();
 	}
 	
 	/** Solve grid with chocosolver
@@ -44,123 +52,190 @@ public class LevelSolverIA {
 		if (!this.grid.detectCircledByType0()) {
 			return false;
 		}
+		int tmp = -1;
+		while(lockedPiece!= tmp){
+			tmp = lockedPiece;
+			lockedPiece = this.lockPiece();
+		}
+
+		if( lockedPiece == totalPiece ) {
+			return true;
+		}
 		Model model = new Model("choco solver");		
-		IntVar[][]pieces = new IntVar[this.grid.height][this.grid.width];
+		IntVar[][]pieces = new IntVar[this.grid.getHeight()][this.grid.getWidth()];
 		//init variables to IntVar 
-		for (int i = 0; i < this.grid.height; i++) {
-			for (int j = 0; j < this.grid.width; j++) {
+		for (int i = 0; i < this.grid.getHeight(); i++) {
+			for (int j = 0; j < this.grid.getWidth(); j++) {
 				//define possible values considering type and postion on the grid of a piece
-				switch(this.grid.cases[i][j].type) {
+				switch(this.grid.getCases()[i][j].getType()) {
 				case 0 :
 					pieces[i][j] = model.intVar(new int[] {0});
 					break;
 				case 1 :
-					if (this.northWestSide(i, j)) {
+					if (this.grid.getCases()[i][j].getLock() == 1) {
+						switch(this.grid.getCases()[i][j].getOrientation()) {
+						case 0 : 
+							pieces[i][j] = model.intVar(new int[] {1});
+							break;
+						case 1 : 
+							pieces[i][j] = model.intVar(new int[] {2});
+							break;
+						case 2 : 
+							pieces[i][j] = model.intVar(new int[] {4});
+							break;
+						case 3 : 
+							pieces[i][j] = model.intVar(new int[] {8});
+							break;
+						}
+					}
+					if (this.grid.northWestSide(i, j)) {
 						pieces[i][j] = model.intVar(new int[] {2,4});
 						break;
 					}
-					if (this.northEastSide(i, j)) {
+					if (this.grid.northEastSide(i, j)) {
 						pieces[i][j] = model.intVar(new int[] {4,8});
 						break;
 					}
-					if (this.southWestSide(i, j)) {
+					if (this.grid.southWestSide(i, j)) {
 						pieces[i][j] = model.intVar(new int[] {1,2});
 						break;
 					}
-					if (this.southEastSide(i, j)) {
+					if (this.grid.southEastSide(i, j)) {
 						pieces[i][j] = model.intVar(new int[] {1,8});
 						break;
 					}
-					if (this.northBorder(i)) {
+					if (this.grid.northBorder(i)) {
 						pieces[i][j] = model.intVar(new int[] {2,4,8});
 						break;
 					}
-					if (this.southBorder(i)) {
+					if (this.grid.southBorder(i)) {
 						pieces[i][j] = model.intVar(new int[] {1,2,8});
 						break;
 					}
-					if (this.westBorder(j)) {
+					if (this.grid.westBorder(j)) {
 						pieces[i][j] = model.intVar(new int[] {1,2,4});
 						break;
 					}
-					if (this.eastBorder(j)) {
+					if (this.grid.eastBorder(j)) {
 						pieces[i][j] = model.intVar(new int[] {1,4,8});
 						break;
 					}
 					pieces[i][j] = model.intVar(new int[] {1,2,4,8});
 					break;
 				case 2 :
-					if (this.northWestSide(i, j)||this.northEastSide(i, j)||this.southWestSide(i, j)||this.southEastSide(i, j)) {
+					if (this.grid.getCases()[i][j].getLock() == 1) {
+						switch(this.grid.getCases()[i][j].getOrientation()) {
+						case 0 : 
+							pieces[i][j] = model.intVar(new int[] {5});
+							break;
+						case 1 : 
+							pieces[i][j] = model.intVar(new int[] {10});
+							break;
+						}
+					}
+					if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
 						return false;
 					}
-					if (this.northBorder(i)||this.southBorder(i)) {
+					if (this.grid.northBorder(i)||this.grid.southBorder(i)) {
 						pieces[i][j] = model.intVar(new int[] {10});
 						break;
 					}
-					if (this.westBorder(j)||this.eastBorder(j)) {
+					if (this.grid.westBorder(j)||this.grid.eastBorder(j)) {
 						pieces[i][j] = model.intVar(new int[] {5});
 						break;
 					}
 					pieces[i][j] = model.intVar(new int[] {5,10});
 					break;
 				case 3 :
-					if (this.northWestSide(i, j)||this.northEastSide(i, j)||this.southWestSide(i, j)||this.southEastSide(i, j)) {
+					if (this.grid.getCases()[i][j].getLock() == 1) {
+						switch(this.grid.getCases()[i][j].getOrientation()) {
+						case 0 : 
+							pieces[i][j] = model.intVar(new int[] {11});
+							break;
+						case 1 : 
+							pieces[i][j] = model.intVar(new int[] {7});
+							break;
+						case 2 : 
+							pieces[i][j] = model.intVar(new int[] {14});
+							break;
+						case 3 : 
+							pieces[i][j] = model.intVar(new int[] {13});
+							break;
+						}
+					}
+					if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
 						return false;
 					}
-					if (this.northBorder(i)) {
+					if (this.grid.northBorder(i)) {
 						pieces[i][j] = model.intVar(new int[] {14});
 						break;
 					}
-					if (this.southBorder(i)) {
+					if (this.grid.southBorder(i)) {
 						pieces[i][j] = model.intVar(new int[] {11});
 						break;
 					}
-					if (this.westBorder(j)) {
+					if (this.grid.westBorder(j)) {
 						pieces[i][j] = model.intVar(new int[] {7});
 						break;
 					}
-					if (this.eastBorder(j)) {
+					if (this.grid.eastBorder(j)) {
 						pieces[i][j] = model.intVar(new int[] {13});
 						break;
 					}
 					pieces[i][j] = model.intVar(new int[] {7,14,13,11});
 					break;
 				case 4 :
-					if (this.northWestSide(i, j)||this.northEastSide(i, j)||this.southWestSide(i, j)||this.southEastSide(i, j)) {
+					if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
 						return false;
 					}
 					pieces[i][j] = model.intVar(new int[] {15});
 					break;
 				case 5 :
-					if (this.northWestSide(i, j)) {
+					if (this.grid.getCases()[i][j].getLock() == 1) {
+						switch(this.grid.getCases()[i][j].getOrientation()) {
+						case 0 : 
+							pieces[i][j] = model.intVar(new int[] {3});
+							break;
+						case 1 : 
+							pieces[i][j] = model.intVar(new int[] {6});
+							break;
+						case 2 : 
+							pieces[i][j] = model.intVar(new int[] {12});
+							break;
+						case 3 : 
+							pieces[i][j] = model.intVar(new int[] {9});
+							break;
+						}
+					}
+					if (this.grid.northWestSide(i, j)) {
 						pieces[i][j] = model.intVar(new int[] {6});
 						break;
 					}
-					if (this.northEastSide(i, j)) {
+					if (this.grid.northEastSide(i, j)) {
 						pieces[i][j] = model.intVar(new int[] {12});
 						break;
 					}
-					if (this.southWestSide(i, j)) {
+					if (this.grid.southWestSide(i, j)) {
 						pieces[i][j] = model.intVar(new int[] {3});
 						break;
 					}
-					if (this.southEastSide(i, j)) {
+					if (this.grid.southEastSide(i, j)) {
 						pieces[i][j] = model.intVar(new int[] {9});
 						break;
 					}
-					if (this.northBorder(i)) {
+					if (this.grid.northBorder(i)) {
 						pieces[i][j] = model.intVar(new int[] {6,12});
 						break;
 					}
-					if (this.southBorder(i)) {
+					if (this.grid.southBorder(i)) {
 						pieces[i][j] = model.intVar(new int[] {3,9});
 						break;
 					}
-					if (this.westBorder(j)) {
+					if (this.grid.westBorder(j)) {
 						pieces[i][j] = model.intVar(new int[] {3,6});
 						break;
 					}
-					if (this.eastBorder(j)) {
+					if (this.grid.eastBorder(j)) {
 						pieces[i][j] = model.intVar(new int[] {12,9});
 						break;
 					}
@@ -188,7 +263,7 @@ public class LevelSolverIA {
 		
 		// Piece corner NE
 		//condition with south neighbor
-		model.arithm(pieces[0][this.grid.width-1].mod(8).div(4).intVar(),"=",pieces[1][this.grid.width-1].mod(2).intVar()).post();
+		model.arithm(pieces[0][this.grid.getWidth()-1].mod(8).div(4).intVar(),"=",pieces[1][this.grid.getWidth()-1].mod(2).intVar()).post();
 		//condition with west neighbor
 		//model.arithm(pieces[0][this.grid.width-1].div(8).intVar(),"=",pieces[0][this.grid.width-2].mod(8).mod(4).div(2).intVar()).post();
 		
@@ -196,17 +271,17 @@ public class LevelSolverIA {
 		//condition with north neighbor
 		//model.arithm(pieces[this.grid.height-1][0].mod(2).intVar(),"=",pieces[this.grid.height-2][0].mod(8).div(4).intVar()).post();
 		//condition with east neighbor
-		model.arithm(pieces[this.grid.height-1][0].mod(8).mod(4).div(2).intVar(),"=",pieces[this.grid.height-1][1].div(8).intVar()).post();
+		model.arithm(pieces[this.grid.getHeight()-1][0].mod(8).mod(4).div(2).intVar(),"=",pieces[this.grid.getHeight()-1][1].div(8).intVar()).post();
 		
 		// Piece corner SE
 		//condition with north neighbor
-		model.arithm(pieces[this.grid.height-1][this.grid.width-1].mod(2).intVar(),"=",pieces[this.grid.height-2][this.grid.width-1].mod(8).div(4).intVar()).post();
+		model.arithm(pieces[this.grid.getHeight()-1][this.grid.getWidth()-1].mod(2).intVar(),"=",pieces[this.grid.getHeight()-2][this.grid.getWidth()-1].mod(8).div(4).intVar()).post();
 		//condition with west neighbor
 		//model.arithm(pieces[this.grid.height-1][this.grid.width-1].div(8).intVar(),"=",pieces[this.grid.height-1][this.grid.width-2].mod(8).mod(4).div(2).intVar()).post();
 
 		
 		//Constraints for border pieces north and south
-		for (int j = 1; j < this.grid.width-1; j++) {
+		for (int j = 1; j < this.grid.getWidth()-1; j++) {
 			//North border
 			//condition with south neighbor
 			model.arithm(pieces[0][j].mod(8).div(4).intVar(),"=",pieces[1][j].mod(2).intVar()).post();
@@ -219,13 +294,13 @@ public class LevelSolverIA {
 			//condition with north neighbor
 			//model.arithm(pieces[this.grid.height-1][j].mod(2).intVar(),"=",pieces[this.grid.height-2][j].mod(8).div(4).intVar()).post();
 			//condition with east neighbor
-			model.arithm(pieces[this.grid.height-1][j].mod(8).mod(4).div(2).intVar(),"=",pieces[this.grid.height-1][j+1].div(8).intVar()).post();
+			model.arithm(pieces[this.grid.getHeight()-1][j].mod(8).mod(4).div(2).intVar(),"=",pieces[this.grid.getHeight()-1][j+1].div(8).intVar()).post();
 			//condition with west neighbor
 			//model.arithm(pieces[this.grid.height-1][j].div(8).intVar(),"=",pieces[this.grid.height-1][j-1].mod(8).mod(4).div(2).intVar()).post();	
 		}
 		
 		//Constraints for west and east borders
-		for (int i = 1; i < this.grid.height-1; i++) {
+		for (int i = 1; i < this.grid.getHeight()-1; i++) {
 			//West border
 			//condition with north neighbor
 			//model.arithm(pieces[i][0].mod(2).intVar(),"=",pieces[i-1][0].mod(8).div(4).intVar()).post();
@@ -238,14 +313,14 @@ public class LevelSolverIA {
 			//condition with north neighbor
 			//model.arithm(pieces[i][this.grid.width-1].mod(2).intVar(),"=",pieces[i-1][this.grid.width-1].mod(8).div(4).intVar()).post();
 			//condition with south neighbor
-			model.arithm(pieces[i][this.grid.width-1].mod(8).div(4).intVar(),"=",pieces[i+1][this.grid.width-1].mod(2).intVar()).post();
+			model.arithm(pieces[i][this.grid.getWidth()-1].mod(8).div(4).intVar(),"=",pieces[i+1][this.grid.getWidth()-1].mod(2).intVar()).post();
 			//condition with west neighbor
 			//model.arithm(pieces[i][this.grid.width-1].div(8).intVar(),"=",pieces[i][this.grid.width-2].mod(8).mod(4).div(2).intVar()).post();
 		}
 		
 		//Constraints for others pieces in the grid
-		for (int i = 1; i < this.grid.height-1; i++) {
-			for (int j = 1; j < this.grid.width-1; j++) {				
+		for (int i = 1; i < this.grid.getHeight()-1; i++) {
+			for (int j = 1; j < this.grid.getWidth()-1; j++) {				
 				//condition with north neighbor
 				//model.arithm(pieces[i][j].mod(2).intVar(),"=",pieces[i-1][j].mod(8).div(4).intVar()).post();
 				//condition with east neighbor
@@ -268,12 +343,12 @@ public class LevelSolverIA {
 	 */
 	public boolean nosolve() {
 		Model model = new Model("choco no solver");		
-		IntVar[][]pieces = new IntVar[this.grid.height][this.grid.width];
+		IntVar[][]pieces = new IntVar[this.grid.getHeight()][this.grid.getWidth()];
 		//init variables to IntVar 
-		for (int i = 0; i < this.grid.height; i++) {
-			for (int j = 0; j < this.grid.width; j++) {
+		for (int i = 0; i < this.grid.getHeight(); i++) {
+			for (int j = 0; j < this.grid.getWidth(); j++) {
 				//define possible values considering type and postion on the grid of a piece
-				switch(this.grid.cases[i][j].type) {
+				switch(this.grid.getCases()[i][j].getType()) {
 				case 0 :
 					pieces[i][j] = model.intVar(new int[] {0});
 					break;
@@ -320,7 +395,7 @@ public class LevelSolverIA {
 		//condition with north neighbor
 		//model.arithm(pieces[0][this.grid.width-1].mod(2).intVar(), "=", 0).post();
 		//condition with south neighbor
-		model.arithm(pieces[0][this.grid.width-1].mod(8).div(4).intVar(),"*",pieces[1][this.grid.width-1].mod(2).intVar(),"=",0).post();
+		model.arithm(pieces[0][this.grid.getWidth()-1].mod(8).div(4).intVar(),"*",pieces[1][this.grid.getWidth()-1].mod(2).intVar(),"=",0).post();
 		//condition with west neighbor
 		//model.arithm(pieces[0][this.grid.width-1].div(8).intVar(),"*",pieces[0][this.grid.width-2].mod(8).mod(4).div(2).intVar(),"=",0).post();
 		
@@ -328,7 +403,7 @@ public class LevelSolverIA {
 		//condition with north neighbor
 		//model.arithm(pieces[this.grid.height-1][0].mod(2).intVar(),"*",pieces[this.grid.height-2][0].mod(8).div(4).intVar(),"=",0).post();
 		//condition with east neighbor
-		model.arithm(pieces[this.grid.height-1][0].mod(8).mod(4).div(2).intVar(),"*",pieces[this.grid.height-1][1].div(8).intVar(),"=",0).post();
+		model.arithm(pieces[this.grid.getHeight()-1][0].mod(8).mod(4).div(2).intVar(),"*",pieces[this.grid.getHeight()-1][1].div(8).intVar(),"=",0).post();
 		
 		// Piece corner SE
 		//condition with north neighbor
@@ -338,7 +413,7 @@ public class LevelSolverIA {
 
 		
 		//Constraints for border pieces north and south
-		for (int j = 1; j < this.grid.width-1; j++) {
+		for (int j = 1; j < this.grid.getWidth()-1; j++) {
 			//North border
 			//condition with south neighbor
 			model.arithm(pieces[0][j].mod(8).div(4).intVar(),"*",pieces[1][j].mod(2).intVar(),"=",0).post();
@@ -351,13 +426,13 @@ public class LevelSolverIA {
 			//condition with north neighbor
 			//model.arithm(pieces[this.grid.height-1][j].mod(2).intVar(),"!=",pieces[this.grid.height-2][j].mod(8).div(4).intVar()).post();
 			//condition with east neighbor
-			model.arithm(pieces[this.grid.height-1][j].mod(8).mod(4).div(2).intVar(),"*",pieces[this.grid.height-1][j+1].div(8).intVar(),"=",0).post();
+			model.arithm(pieces[this.grid.getHeight()-1][j].mod(8).mod(4).div(2).intVar(),"*",pieces[this.grid.getHeight()-1][j+1].div(8).intVar(),"=",0).post();
 			//condition with west neighbor
 			//model.arithm(pieces[this.grid.height-1][j].div(8).intVar(),"!=",pieces[this.grid.height-1][j-1].mod(8).mod(4).div(2).intVar()).post();	
 		}
 		
 		//Constraints for west and east borders
-		for (int i = 1; i < this.grid.height-1; i++) {
+		for (int i = 1; i < this.grid.getHeight()-1; i++) {
 			//West border
 			//condition with north neighbor
 			//model.arithm(pieces[i][0].mod(2).intVar(),"!=",pieces[i-1][0].mod(8).div(4).intVar()).post();
@@ -370,14 +445,14 @@ public class LevelSolverIA {
 			//condition with north neighbor
 			//model.arithm(pieces[i][this.grid.width-1].mod(2).intVar(),"=",pieces[i-1][this.grid.width-1].mod(8).div(4).intVar()).post();
 			//condition with south neighbor
-			model.arithm(pieces[i][this.grid.width-1].mod(8).div(4).intVar(),"*",pieces[i+1][this.grid.width-1].mod(2).intVar(),"=",0).post();
+			model.arithm(pieces[i][this.grid.getWidth()-1].mod(8).div(4).intVar(),"*",pieces[i+1][this.grid.getWidth()-1].mod(2).intVar(),"=",0).post();
 			//condition with west neighbor
 			//model.arithm(pieces[i][this.grid.width-1].div(8).intVar(),"!=",pieces[i][this.grid.width-2].mod(8).mod(4).div(2).intVar()).post();
 		}
 		
 		//Constraints for others pieces in the grid
-		for (int i = 1; i < this.grid.height-1; i++) {
-			for (int j = 1; j < this.grid.width-1; j++) {				
+		for (int i = 1; i < this.grid.getHeight()-1; i++) {
+			for (int j = 1; j < this.grid.getWidth()-1; j++) {				
 				//condition with north neighbor
 				//model.arithm(pieces[i][j].mod(2).intVar(),"!=",pieces[i-1][j].mod(8).div(4).intVar()).post();
 				//condition with east neighbor
@@ -416,119 +491,128 @@ public class LevelSolverIA {
 	 */
 
 	public void translate(IntVar[][]pieces) {
-		for (int i = 0; i < this.grid.height; i++) {
-			for (int j = 0; j < this.grid.width; j++) {
+		for (int i = 0; i < this.grid.getHeight(); i++) {
+			for (int j = 0; j < this.grid.getWidth(); j++) {
 				switch(pieces[i][j].getValue()) {
 				case 0 : case 15 :
 					break;
 				case 1 : case 5 : case 11 : case 3 :
-					this.grid.cases[i][j].orientation = 0;
+					this.grid.getCases()[i][j].setOrientation(0);
 					break;
 				case 2 : case 10 : case 7 : case 6 :
-					this.grid.cases[i][j].orientation = 1;
+					this.grid.getCases()[i][j].setOrientation(1);
 					break;
 				case 4 : case 14 : case 12 :
-					this.grid.cases[i][j].orientation = 2;
+					this.grid.getCases()[i][j].setOrientation(2);
 					break;
 				case 8 : case 13 : case 9 :
-					this.grid.cases[i][j].orientation = 3;
+					this.grid.getCases()[i][j].setOrientation(3);
 					break;
 				}
-				this.grid.cases[i][j].defineLinks();
+				this.grid.getCases()[i][j].defineLinks();
 			}
 		}
 	}
 	
-	/**
-	 * Says if a piece in the north west side of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the north west
-	 */
-	public boolean northWestSide(int i, int j) {
-		return ( i==0 && j==0 );		
-	}
+	public int lockPiece() {
+		int countLockedPiece = 0;	
+		for (int i = 0; i < this.grid.getHeight(); i++) {
+			for (int j = 0; j < this.grid.getWidth(); j++) {
+		
+				if(grid.getCases()[i][j].getLock()==0) {
 
-	/**
-	 * Says if a piece in the north east side of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the north east
-	 */
-	public boolean northEastSide(int i, int j) {
-		return ( i==0 && j==this.grid.width-1 );		
+					ArrayList<Integer> orientationPossible = new ArrayList<>();
+					
+					if (grid.northWestSide(i, j)) {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) { 
+							if( grid.getCases()[i][j].getLinks()[0]==0 && grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}	
+					else if (grid.northEastSide(i, j)) {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[0]==0 && grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}					
+					else if (grid.southWestSide(i, j)) {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[2]==0 && grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}
+					else if (grid.southEastSide(i, j)) {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[2]==0 && grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}			
+					else if (grid.northBorder(i)) {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[0]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}
+					else if (grid.southBorder(i)) {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[2]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}
+					else if (grid.westBorder(j)) {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}	
+					else if (grid.eastBorder(j)) {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}
+					else {
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if(!grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
+						}
+					}
+					if( orientationPossible.size() == 1) {
+						grid.getCases()[i][j].setOrientation(orientationPossible.get(0));
+						grid.getCases()[i][j].defineLinks();
+						grid.getCases()[i][j].setLock(1);
+					}
+					else 
+						grid.getCases()[i][j].setPossibleOrientations(orientationPossible);	
+				}
+				countLockedPiece += grid.getCases()[i][j].getLock();
+			}			
+		}
+		return countLockedPiece;
 	}
 	
-	/**
-	 * Says if a piece in the south west side of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the south west
-	 */
-	public boolean southWestSide(int i, int j) {
-		return ( i==this.grid.height-1 && j==0 );		
-	}
-	
-	/**
-	 * Says if a piece in the south east side of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the south east
-	 */
-	public boolean southEastSide(int i, int j) {
-		return ( i==this.grid.height-1 && j==this.grid.width-1 );		
-	}
-	
-	/**
-	 * Says if a piece in the west border of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the west border
-	 */
-	public boolean westBorder(int j) {
-		return ( j==0 );		
-	}	
-	
-	/**
-	 * Says if a piece in the east border of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the east border
-	 */
-	public boolean eastBorder(int j) {
-		return ( j==this.grid.width-1 );		
-	}	
-	
-	/**
-	 * Says if a piece in the north border of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the north border
-	 */
-	public boolean northBorder(int i) {
-		return ( i==0 );		
-	}
-	
-	/**
-	 * Says if a piece in the south border of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the south border
-	 */
-	public boolean southBorder(int i) {
-		return ( i==this.grid.height-1 );		
-	}
-	
-	public static void main(String[] args) {
-		LevelGenerator test = new LevelGenerator(20, 20);
+	public static void main(String[] args) throws IOException {
+		LevelGenerator test = new LevelGenerator(25, 25);
 		test.buildSolution();
 		test.shuffleSolution();
+		//Grid grid = test.grid;
+		//grid.writeFile("file5");
+	   	//Grid grid2 = Grid.readFile("file5");
 		long debut = System.currentTimeMillis();
 		LevelSolverIA sol = new LevelSolverIA(test.grid);
 		System.out.println("Solution after solver : " + sol.solve());
 		long fin = System.currentTimeMillis();
 		System.out.println(fin-debut);
-		//sol.grid.displayInConsole();
+		sol.grid.displayInConsole();
 		LevelDisplay display = new LevelDisplay(test, sol.grid);
 
 	}

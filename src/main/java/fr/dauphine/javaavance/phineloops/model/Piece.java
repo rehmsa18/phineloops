@@ -1,27 +1,29 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.model;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
+import fr.dauphine.javaavance.phineloops.DrawablePiece;
+
 public class Piece {
-	int x;
-	int y;
-	int orientation = 0; //depends of piece between 0 and 3
-	int type; //kind of piece 0,1,2,3,4,5
-	int lock = 0; //indicate if we can move a piece, it is lock if = 1
-	int links[] = {0,0,0,0}; //tab to define where the piece makes a link with value 1 {North,East,South,West}
-	int nbneighbors = 0;
-	int connectedComponent;
-	int gridX;
-	int gridY;
-	int nbRotation; 
-	ArrayList <Integer> possibleOrientations;
-	int fixe = 0;
+	private int getI;
+	private int j;
+	private int orientation = 0; //depends of piece between 0 and 3
+	private int type; //kind of piece 0,1,2,3,4,5
+	private int lock = 0; //indicate if we can move a piece, it is lock if = 1
+	private int links[] = {0,0,0,0}; //tab to define where the piece makes a link with value 1 {North,East,South,West}
+	private int nbneighbors = 0;
+	private int connectedComponent;
+	private int gridX;
+	private int gridY;
+	private int nbRotation; 
+	private ArrayList <Integer> possibleOrientations;
+	private int fixe = 0;
 	
 	public Piece() {
-		this.x = -1;
-		this.y = -1;
+		this.getI = -1;
+		this.j = -1;
 	}
 	
 	public Piece(int type, int orientation) {
@@ -35,9 +37,9 @@ public class Piece {
 		}
 	}
 
-	public Piece(int x, int y, int type, int orientation) {
-		this.x = x;
-		this.y = y;
+	public Piece(int i, int j, int type, int orientation) {
+		this.getI = i;
+		this.j = j;
 		this.orientation = orientation;
 		this.type = type;
 		this.defineLinks();
@@ -48,6 +50,106 @@ public class Piece {
 		}
 	}
 	
+	public int getI() {
+		return getI;
+	}
+
+	public void setI(int i) {
+		this.getI = i;
+	}
+
+	public int getJ() {
+		return j;
+	}
+
+	public void setJ(int j) {
+		this.j = j;
+	}
+
+	public int getOrientation() {
+		return orientation;
+	}
+
+	public void setOrientation(int orientation) {
+		this.orientation = orientation;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public int getLock() {
+		return lock;
+	}
+
+	public void setLock(int lock) {
+		this.lock = lock;
+	}
+
+	public int[] getLinks() {
+		return links;
+	}
+
+	public void setLinks(int[] links) {
+		this.links = links;
+	}
+
+	public int getNbneighbors() {
+		return nbneighbors;
+	}
+
+	public void setNbneighbors(int nbneighbors) {
+		this.nbneighbors = nbneighbors;
+	}
+
+	public int getGridX() {
+		return gridX;
+	}
+
+	public void setGridX(int gridX) {
+		this.gridX = gridX;
+	}
+
+	public int getGridY() {
+		return gridY;
+	}
+
+	public void setGridY(int gridY) {
+		this.gridY = gridY;
+	}
+
+	public int getNbRotation() {
+		return nbRotation;
+	}
+
+	public void setNbRotation(int nbRotation) {
+		this.nbRotation = nbRotation;
+	}
+
+	public ArrayList<Integer> getPossibleOrientations() {
+		return possibleOrientations;
+	}
+
+	public void setPossibleOrientations(ArrayList<Integer> possibleOrientations) {
+		this.possibleOrientations = possibleOrientations;
+	}
+
+	public int getFixe() {
+		return fixe;
+	}
+
+	public void setFixe(int fixe) {
+		this.fixe = fixe;
+	}
+
+	public void setConnectedComponent(int connectedComponent) {
+		this.connectedComponent = connectedComponent;
+	}
+
 	public void defineNbNeighbors() {
 		switch (this.type) {
 			case 1 : 
@@ -262,19 +364,19 @@ public class Piece {
 	 * @return -1 not neighbors, 0 p is at North, 1 at East, 2 at South, 3 at West
 	 */
 	public int isNeighbor(Piece p) {
-		if ( (this.x == p.x + 1) && (this.y == p.y)) {
+		if ( (this.getI == p.getI + 1) && (this.j == p.j)) {
 			return 0;
 		}
 		
-		if ( (this.x == p.x - 1) && (this.y == p.y)) {
+		if ( (this.getI == p.getI - 1) && (this.j == p.j)) {
 			return 2;
 		}
 		
-		if ( (this.y == p.y - 1) && (this.x == p.x)) {
+		if ( (this.j == p.j - 1) && (this.getI == p.getI)) {
 			return 1;
 		}
 		
-		if ( (this.y == p.y + 1) && (this.x == p.x)) {
+		if ( (this.j == p.j + 1) && (this.getI == p.getI)) {
 			return 3;
 		}
 		return -1;
@@ -336,7 +438,7 @@ public class Piece {
 	 * Display the type and orientation of the piece, place in grid, and unicode shape
 	 */
 	public String toString() {
-		return "(" + x + "," + y + ") " +type + " " + orientation + " " + this.unicode();
+		return "(" + getI + "," + j + ") " +type + " " + orientation + " " + this.unicode();
 	}
 	
 	/**

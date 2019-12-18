@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.model.Piece;
+
 public class LevelSolverThread {
 	
 	Grid grid;
@@ -13,7 +16,7 @@ public class LevelSolverThread {
 		
 	public LevelSolverThread(Grid grid) {
 		this.grid = grid;
-		this.totalPiece = grid.height*grid.width;
+		this.totalPiece = grid.getHeight()*grid.getWidth();
 	}	
 	
 	public Stack<Stack<Piece>> sorting(Stack<Stack<Piece>> original) {
@@ -31,85 +34,85 @@ public class LevelSolverThread {
 	
 	public int lockPiece() {
 		int countLockedPiece = 0;	
-		for (int i = 0; i < this.grid.height; i++) {
-			for (int j = 0; j < this.grid.width; j++) {
+		for (int i = 0; i < this.grid.getHeight(); i++) {
+			for (int j = 0; j < this.grid.getWidth(); j++) {
 		
-				if(grid.cases[i][j].lock==0) {
+				if(grid.getCases()[i][j].getLock()==0) {
 
 					ArrayList<Integer> orientationPossible = new ArrayList<>();
 					
 					if (grid.northWestSide(i, j)) {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) { 
-							if( grid.cases[i][j].links[0]==0 && grid.cases[i][j].links[3]==0 && !grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) { 
+							if( grid.getCases()[i][j].getLinks()[0]==0 && grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}	
 					else if (grid.northEastSide(i, j)) {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) {
-							if( grid.cases[i][j].links[0]==0 && grid.cases[i][j].links[1]==0 && !grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[0]==0 && grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}					
 					else if (grid.southWestSide(i, j)) {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) {
-							if( grid.cases[i][j].links[2]==0 && grid.cases[i][j].links[3]==0 && !grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[2]==0 && grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}
 					else if (grid.southEastSide(i, j)) {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) {
-							if( grid.cases[i][j].links[2]==0 && grid.cases[i][j].links[1]==0 && !grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[2]==0 && grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}			
 					else if (grid.northBorder(i)) {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) {
-							if( grid.cases[i][j].links[0]==0 && !grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[0]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}
 					else if (grid.southBorder(i)) {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) {
-							if( grid.cases[i][j].links[2]==0 && !grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[2]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}
 					else if (grid.westBorder(j)) {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) {
-							if( grid.cases[i][j].links[3]==0 && !grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}	
 					else if (grid.eastBorder(j)) {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) {
-							if( grid.cases[i][j].links[1]==0 && !grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if( grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}
 					else {
-						for(int k=0; k<grid.cases[i][j].nbRotation; k++) {
-							if(!grid.noRespectedLockPiece(grid.cases[i][j])) 
-								orientationPossible.add(grid.cases[i][j].orientation);
-							grid.cases[i][j].rotatePiece();
+						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
+							if(!grid.noRespectedLockPiece(grid.getCases()[i][j])) 
+								orientationPossible.add(grid.getCases()[i][j].getOrientation());
+							grid.getCases()[i][j].rotatePiece();
 						}
 					}
 					if( orientationPossible.size() == 1) {
-						grid.cases[i][j].orientation = orientationPossible.get(0);
-						grid.cases[i][j].defineLinks();
-						grid.cases[i][j].lock = 1;
+						grid.getCases()[i][j].setOrientation(orientationPossible.get(0));
+						grid.getCases()[i][j].defineLinks();
+						grid.getCases()[i][j].setLock(1);
 					}
 					else 
-						grid.cases[i][j].possibleOrientations = orientationPossible;	
+						grid.getCases()[i][j].setPossibleOrientations(orientationPossible);	
 				}
-				countLockedPiece += grid.cases[i][j].lock;
+				countLockedPiece += grid.getCases()[i][j].getLock();
 			}			
 		}
 		return countLockedPiece;
@@ -118,13 +121,13 @@ public class LevelSolverThread {
 	
 	public boolean depthFirstOrder(){ // visit the node farthest from the root node => visit branch by branch
 		Stack<Stack<Piece>> stacks = new Stack<>();
-		for( int i = this.grid.height-1; i >= 0 ; i-- ) {
-			for( int j = this.grid.width-1; j >= 0 ; j-- ) {
-				if(grid.cases[i][j].lock==0) {
+		for( int i = this.grid.getHeight()-1; i >= 0 ; i-- ) {
+			for( int j = this.grid.getWidth()-1; j >= 0 ; j-- ) {
+				if(grid.getCases()[i][j].getLock()==0) {
 					//System.out.println(grid.cases[i][j] + " " +grid.cases[i][j].possibleOrientations);
 					Stack<Piece> stack = new Stack<>();
-					for (int k = grid.cases[i][j].possibleOrientations.size()-1; k >= 0; k--) {
-						Piece p = new Piece(i,j, grid.cases[i][j].type, grid.cases[i][j].possibleOrientations.get(k));
+					for (int k = grid.getCases()[i][j].getPossibleOrientations().size()-1; k >= 0; k--) {
+						Piece p = new Piece(i,j, grid.getCases()[i][j].getType(), grid.getCases()[i][j].getPossibleOrientations().get(k));
 						stack.push(p);
 					}
 					stacks.push(stack);
@@ -146,7 +149,7 @@ public class LevelSolverThread {
 		
 		while(root.child!=null) {
 			Piece p = root.getLeafNode().getPiece();
-			grid.cases[p.x][p.y] = p;
+			grid.getCases()[p.getI()][p.getJ()] = p;
 			root.leafDelete(root); 
 		}	
 		
@@ -180,7 +183,7 @@ public class LevelSolverThread {
 	
 
 	public static void main(String[] args) throws IOException {
-		LevelGenerator test = new LevelGenerator(30, 30);
+		LevelGenerator test = new LevelGenerator(25, 25);
 		test.buildSolution();
 		test.shuffleSolution();
 		//Grid grid = test.grid;

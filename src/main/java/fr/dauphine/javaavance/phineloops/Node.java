@@ -2,6 +2,8 @@ package fr.dauphine.javaavance.phineloops;
 
 import java.util.Stack;
 
+import fr.dauphine.javaavance.phineloops.model.Piece;
+
 public class Node {
 	//https://www.javagists.com/java-tree-data-structure
 

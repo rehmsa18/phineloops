@@ -3,6 +3,8 @@ package fr.dauphine.javaavance.phineloops;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import fr.dauphine.javaavance.phineloops.model.Piece;
+
 public class MouseController implements MouseListener{
 
 	int DIM;

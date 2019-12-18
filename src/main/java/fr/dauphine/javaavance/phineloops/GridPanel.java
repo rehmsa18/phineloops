@@ -8,6 +8,9 @@ import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JPanel;
 
+import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.model.Piece;
+
 
 public class GridPanel extends JPanel implements Observer {
 	
@@ -22,9 +25,9 @@ public class GridPanel extends JPanel implements Observer {
 	Grid grid;
 
 	public GridPanel(Grid grid, int DIM) {
-		height = grid.height;
-		width = grid.width;
-		cases = grid.cases;
+		height = grid.getHeight();
+		width = grid.getWidth();
+		cases = grid.getCases();
 		grid.addObserver(this);
 		this.DIM = DIM;
 	}
@@ -40,8 +43,8 @@ public class GridPanel extends JPanel implements Observer {
     	
 		 for(int i=0; i<height; i++) {
 			 for(int j=0; j<width; j++) {
-				 cases[i][j].gridX = j*DIM;
-				 cases[i][j].gridY = i*DIM;
+				 cases[i][j].setGridX(j*DIM);
+				 cases[i][j].setGridY(i*DIM);
 				 cases[i][j].draw(g, DIM);
 			}
 		}

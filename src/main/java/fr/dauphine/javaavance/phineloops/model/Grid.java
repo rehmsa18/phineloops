@@ -1,4 +1,4 @@
-package fr.dauphine.javaavance.phineloops;
+package fr.dauphine.javaavance.phineloops.model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.Observable;
 
 public class Grid  extends Observable {
-	int height;
-	int width;
-	Piece cases[][];
+	private int height;
+	private int width;
+	private Piece cases[][];
 	
 	public Grid(int height, int width){
 		this.height = height;
@@ -18,14 +18,38 @@ public class Grid  extends Observable {
 		cases = new Piece[this.height][this.width];
 	}
 	
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public Piece[][] getCases() {
+		return cases;
+	}
+
+	public void setCases(Piece[][] cases) {
+		this.cases = cases;
+	}
+
 	/**
 	 * Says if a piece can exists in the case considering the grid
 	 * @param x
 	 * @param y
 	 * @return true if the piece can exists
 	 */
-	public boolean existsPiece(int x, int y) {
-		return ( (x >= 0) && (y >= 0) && (x < this.height) && (y < this.width) );	
+	public boolean existsPiece(int i, int j) {
+		return ( (i >= 0) && (j >= 0) && (i < this.height) && (j < this.width) );	
 	}
 	
 	/**
@@ -33,7 +57,7 @@ public class Grid  extends Observable {
 	 * @param Piece p
 	 */
 	public void add (Piece p) {
-		cases[p.x][p.y] = p;
+		cases[p.getI()][p.getJ()] = p;
 	}
 	
 
@@ -55,31 +79,31 @@ public class Grid  extends Observable {
 	public boolean allLinked(Piece p) {
 		int cpt = 0;
 		
-		if ( (p.links[0] == 1) && this.existsPiece(p.x-1,p.y) ){
-				if (p.isLinked(this.cases[p.x-1][p.y])){
+		if ( (p.getLinks()[0] == 1) && this.existsPiece(p.getI()-1,p.getJ()) ){
+				if (p.isLinked(this.getCases()[p.getI()-1][p.getJ()])){
 					cpt++;
 				}
 		}
 		
-		if ( (p.links[2] == 1) && this.existsPiece(p.x+1,p.y) ){
-			if (p.isLinked(this.cases[p.x+1][p.y])){
+		if ( (p.getLinks()[2] == 1) && this.existsPiece(p.getI()+1,p.getJ()) ){
+			if (p.isLinked(this.getCases()[p.getI()+1][p.getJ()])){
 				cpt++;
 			}
 		}
 
 		
-		if ( (p.links[1] == 1) && this.existsPiece(p.x,p.y+1) ){
-			if (p.isLinked(this.cases[p.x][p.y+1])){
+		if ( (p.getLinks()[1] == 1) && this.existsPiece(p.getI(),p.getJ()+1) ){
+			if (p.isLinked(this.cases[p.getI()][p.getJ()+1])){
 				cpt++;
 			}
 		}
 		
-		if ( (p.links[3] == 1) && this.existsPiece(p.x,p.y-1) ){
-			if (p.isLinked(this.cases[p.x][p.y-1])){
+		if ( (p.getLinks()[3] == 1) && this.existsPiece(p.getI(),p.getJ()-1) ){
+			if (p.isLinked(this.cases[p.getI()][p.getJ()-1])){
 				cpt++;
 			}
 		}
-		return (cpt == p.nbneighbors);
+		return (cpt == p.getNbneighbors());
 	}
 
 	/**
@@ -103,81 +127,6 @@ public class Grid  extends Observable {
 	 */
 	public Piece[][] getCase() {
 		return cases;
-	}
-	
-	/** 
-	 * Lock pieces that will never move considered their position on the side of the grid and affect the good orientation as well
-	 */
-	public void defaultLock() {
-		if (this.cases[0][0].type == 5) {
-			this.cases[0][0].orientation = 1;
-			this.cases[0][0].lock = 1;
-		}
-		
-		if (this.cases[0][this.width-1].type == 5) {
-			this.cases[0][this.width-1].orientation = 2;
-			this.cases[0][this.width-1].lock = 1;
-		}
-		
-		if (this.cases[this.height-1][0].type == 5) {
-			this.cases[this.height-1][0].orientation = 0;
-			this.cases[this.height-1][0].lock = 1;
-		}
-		this.cases[this.height-1][0].toString();
-		
-		if (this.cases[this.height-1][this.width-1].type == 5) {
-			this.cases[this.height-1][this.width-1].orientation = 3;
-			this.cases[this.height-1][this.width-1].lock = 1;
-		}
-		
-		for (int i = 1; i < this.height-1; i++) {
-			switch (this.cases[i][0].type) {
-				case 2 : 
-					this.cases[i][0].orientation = 1;
-					this.cases[i][0].lock = 1;
-					break;
-				case 3 : 
-					this.cases[i][0].orientation = 2;
-					this.cases[i][0].lock = 1;
-					break;
-			}
-			
-			switch (this.cases[i][this.width-1].type) {
-				case 2 : 
-					this.cases[i][this.width-1].orientation = 1;
-					this.cases[i][this.width-1].lock = 1;
-					break;
-				case 3 : 
-					this.cases[i][this.width-1].orientation = 0;
-					this.cases[i][this.width-1].lock = 1;
-					break;
-			}
-		}
-		
-		for (int j = 1; j < this.width-1; j++) {
-			switch (this.cases[0][j].type) {
-				case 2 : 
-					this.cases[0][j].orientation = 0;
-					this.cases[0][j].lock = 1;
-					break;
-				case 3 : 
-					this.cases[0][j].orientation = 1;
-					this.cases[0][j].lock = 1;
-					break;
-			}
-			
-			switch (this.cases[this.height-1][j].type) {
-				case 2 : 
-					this.cases[this.height-1][j].orientation = 0;
-					this.cases[this.height-1][j].lock = 1;
-					break;
-				case 3 : 
-					this.cases[this.height-1][j].orientation = 3;
-					this.cases[this.height-1][j].lock = 1;
-					break;
-			}
-		}
-		
 	}
 	
 	/**
@@ -234,7 +183,7 @@ public class Grid  extends Observable {
 		int count = 0;
 		for (Piece[] l : this.cases) {
 			for (Piece p : l) {
-				count+=p.nbneighbors;
+				count+=p.getNbneighbors();
 			}
 		}
 		return count%2 == 0;
@@ -244,48 +193,48 @@ public class Grid  extends Observable {
 		for (int i = 0; i<this.height; i++) {
 			for (int j = 0; j<this.width; j++) {
 				if (northWestSide(i,j)) {
-					if(cases[i][j].type != 0 && cases[i][j+1].type == 0 && cases[i+1][j].type == 0) {
+					if(cases[i][j].getType() != 0 && cases[i][j+1].getType() == 0 && cases[i+1][j].getType() == 0) {
 						return false;
 					}
 				}
 				if (northEastSide(i,j)) {
-					if (cases[i][j].type != 0 && cases[i][j-1].type == 0 && cases[i+1][j].type == 0) {
+					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i+1][j].getType() == 0) {
 						return false;
 					}
 				}
 				if (southWestSide(i,j)) {
-					if (cases[i][j].type != 0 && cases[i][j+1].type == 0 && cases[i-1][j].type == 0) {
+					if (cases[i][j].getType() != 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
 				if (southEastSide(i,j)){
-					if (cases[i][j].type != 0 && cases[i][j-1].type == 0 && cases[i-1][j].type == 0) {
+					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
 				if (northBorder(i) && !northEastSide(i,j) && !northWestSide(i,j)) {
-					if (cases[i][j].type != 0 && cases[i][j-1].type == 0 && cases[i][j+1].type == 0 && cases[i+1][j].type == 0) {
+					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i+1][j].getType() == 0) {
 						return false;
 					}
 				}
 				if (southBorder(i) && !southEastSide(i,j) && !southWestSide(i,j)) {
-					if (cases[i][j].type != 0 && cases[i][j-1].type == 0 && cases[i][j+1].type == 0 && cases[i-1][j].type == 0) {
+					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
 				if (westBorder(j) && !northWestSide(i,j) && !southWestSide(i,j)) {
-					if (cases[i][j].type != 0 && cases[i+1][j].type == 0 && cases[i][j+1].type == 0 && cases[i-1][j].type == 0) {
+					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
 				if (eastBorder(j) && !northEastSide(i,j) && !southEastSide(i,j)) { 
-					if (cases[i][j].type != 0 && cases[i+1][j].type == 0 && cases[i][j-1].type == 0 && cases[i-1][j].type == 0) {
+					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i][j-1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
 				if (!northBorder(i) && !southBorder(i) && !westBorder(j) && !eastBorder(j) 
 				&& !northWestSide(i,j) && !southWestSide(i,j) && !northEastSide(i,j) && !southEastSide(i,j)) {
-					if (cases[i][j].type != 0 && cases[i+1][j].type == 0 && cases[i-1][j].type == 0 && cases[i][j-1].type == 0 && cases[i][j+1].type == 0) {
+					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i-1][j].getType() == 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0) {
 						return false;
 					}
 				}
@@ -296,8 +245,8 @@ public class Grid  extends Observable {
 	
 	/**
 	 * Says if a piece in the north west side of the grid
-	 * @param x
-	 * @param y
+	 * @param i
+	 * @param j
 	 * @return true if in the north west
 	 */
 	public boolean northWestSide(int i, int j) {
@@ -306,8 +255,8 @@ public class Grid  extends Observable {
 
 	/**
 	 * Says if a piece in the north east side of the grid
-	 * @param x
-	 * @param y
+	 * @param i
+	 * @param j
 	 * @return true if in the north east
 	 */
 	public boolean northEastSide(int i, int j) {
@@ -316,8 +265,8 @@ public class Grid  extends Observable {
 	
 	/**
 	 * Says if a piece in the south west side of the grid
-	 * @param x
-	 * @param y
+	 * @param i
+	 * @param j
 	 * @return true if in the south west
 	 */
 	public boolean southWestSide(int i, int j) {
@@ -326,8 +275,8 @@ public class Grid  extends Observable {
 	
 	/**
 	 * Says if a piece in the south east side of the grid
-	 * @param x
-	 * @param y
+	 * @param i
+	 * @param j
 	 * @return true if in the south east
 	 */
 	public boolean southEastSide(int i, int j) {
@@ -336,8 +285,8 @@ public class Grid  extends Observable {
 	
 	/**
 	 * Says if a piece in the west border of the grid
-	 * @param x
-	 * @param y
+	 * @param i
+	 * @param j
 	 * @return true if in the west border
 	 */
 	public boolean westBorder(int j) {
@@ -346,8 +295,8 @@ public class Grid  extends Observable {
 	
 	/**
 	 * Says if a piece in the east border of the grid
-	 * @param x
-	 * @param y
+	 * @param i
+	 * @param j
 	 * @return true if in the east border
 	 */
 	public boolean eastBorder(int j) {
@@ -356,8 +305,8 @@ public class Grid  extends Observable {
 	
 	/**
 	 * Says if a piece in the north border of the grid
-	 * @param x
-	 * @param y
+	 * @param i
+	 * @param j
 	 * @return true if in the north border
 	 */
 	public boolean northBorder(int i) {
@@ -366,8 +315,8 @@ public class Grid  extends Observable {
 	
 	/**
 	 * Says if a piece in the south border of the grid
-	 * @param x
-	 * @param y
+	 * @param i
+	 * @param j
 	 * @return true if in the south border
 	 */
 	public boolean southBorder(int i) {
@@ -375,32 +324,32 @@ public class Grid  extends Observable {
 	}
 	
 	/**
-	 * Says if a piece is linked to a lockeded piece 
+	 * Says if a piece is linked to a locked piece 
 	 * @param p
 	 * @return true if no link respected
 	 */
 	public boolean noRespectedLockPiece(Piece p) {
-		if( p.x > 0 ) {
-			if( this.cases[p.x-1][p.y].lock == 1 && this.cases[p.x-1][p.y].links[2] != p.links[0]) {
+		if( p.getI() > 0 ) {
+			if( this.cases[p.getI()-1][p.getJ()].getLock() == 1 && this.cases[p.getI()-1][p.getJ()].getLinks()[2] != p.getLinks()[0]) {
 				//System.out.println("a" + " "+ this.cases[p.x-1][p.y] +" "+this.cases[p.x-1][p.y].links[2] +" "+ p.links[0]);
 				return true;
 			}
 		}
-		if( p.x < this.height-1 ) {
-			if( this.cases[p.x+1][p.y].lock == 1 && this.cases[p.x+1][p.y].links[0] != p.links[2]) {
+		if( p.getI() < this.height-1 ) {
+			if( this.cases[p.getI()+1][p.getJ()].getLock() == 1 && this.cases[p.getI()+1][p.getJ()].getLinks()[0] != p.getLinks()[2]) {
 				//System.out.println("b" + " " + this.cases[p.x+1][p.y] +" "+this.cases[p.x+1][p.y].links[0] + " "+ p.links[2]);
 				return true;
 			}
 				
 		}
-		if( p.y > 0 ) {
-			if( this.cases[p.x][p.y-1].lock == 1 && this.cases[p.x][p.y-1].links[1] != p.links[3] ) {
+		if( p.getJ() > 0 ) {
+			if( this.cases[p.getI()][p.getJ()-1].getLock() == 1 && this.cases[p.getI()][p.getJ()-1].getLinks()[1] != p.getLinks()[3] ) {
 				//System.out.println("c"+" " + this.cases[p.x][p.y-1] +" "+this.cases[p.x][p.y-1].links[1] +" "+ p.links[3]);
 				return true;
 			}
 		}
-		if( p.y < this.width-1 ) {
-			if( this.cases[p.x][p.y+1].lock == 1 && this.cases[p.x][p.y+1].links[3] != p.links[1] ) {
+		if( p.getJ() < this.width-1 ) {
+			if( this.cases[p.getI()][p.getJ()+1].getLock() == 1 && this.cases[p.getI()][p.getJ()+1].getLinks()[3] != p.getLinks()[1] ) {
 				//System.out.println("d"+ " " +this.cases[p.x][p.y+1] +" "+this.cases[p.x][p.y+1].links[3] +" "+p.links[1]);
 				return true;
 			}

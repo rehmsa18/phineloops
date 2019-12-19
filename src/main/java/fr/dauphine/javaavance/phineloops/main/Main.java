@@ -21,7 +21,7 @@ public class Main {
     private static Integer width = -1;
     private static Integer height = -1;
     private static Integer maxcc = -1; 
-    
+    private static Integer threads = -1;
 
     private static void generate(int width, int height, String outputFile) throws IOException{
 	// generate grid and store it to outputFile...
@@ -41,10 +41,10 @@ public class Main {
 		grid.writeFile(outputFile);
     }
 
-    private static boolean solve(String inputFile, String outputFile) throws IOException{
+    private static boolean solve(String inputFile, String outputFile, int threads) throws IOException{
 	// load grid from inputFile, solve it and store result to outputFile...
     	Grid grid = Grid.readFile(inputFile);
-		LevelSolverIA sol = new LevelSolverIA(grid);
+		LevelSolverIA sol = new LevelSolverIA(grid, threads);
 		sol.solve();
 		Grid grid2 = sol.getGrid();
 		grid2.writeFile(outputFile);
@@ -116,7 +116,10 @@ public class Main {
 				inputFile = cmd.getOptionValue( "s" );
 				if(! cmd.hasOption("o")) throw new ParseException("Missing mandatory --output argument.");      
 				outputFile = cmd.getOptionValue( "o" );
-				boolean solved = solve(inputFile, outputFile); 
+				if( cmd.hasOption( "t" ) ) {
+					threads = Integer.parseInt(cmd.getOptionValue( "t" )); 
+				}
+				boolean solved = solve(inputFile, outputFile, threads); 
 				System.out.println("SOLVED: " + solved);            
 		    } 
 		    

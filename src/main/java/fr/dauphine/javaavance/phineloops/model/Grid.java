@@ -180,6 +180,15 @@ public class Grid  extends Observable {
 	 * @return
 	 */
 	public boolean detectImpossible() {
+		if (this.getHeight() == 1 && this.getWidth() == 1 && this.getCase()[0][0].getType()!= 0) {
+			return false;
+		}
+		if (this.getHeight() == 1  && this.getWidth() == 2 && (this.getCase()[0][0].getType() > 1 || this.getCase()[0][1].getType() > 1)) {
+			return false;
+		}
+		if (this.getHeight() == 2  && this.getWidth() == 1 && (this.getCase()[0][0].getType() > 1 || this.getCase()[1][0].getType() > 1)) {
+			return false;
+		}
 		int count = 0;
 		for (Piece[] l : this.cases) {
 			for (Piece p : l) {
@@ -190,6 +199,7 @@ public class Grid  extends Observable {
 	}
 	
 	public boolean detectCircledByType0() {
+		if (this.getWidth() >=2 && this.getHeight() >=2) {
 		for (int i = 0; i<this.height; i++) {
 			for (int j = 0; j<this.width; j++) {
 				if (northWestSide(i,j)) {
@@ -197,48 +207,49 @@ public class Grid  extends Observable {
 						return false;
 					}
 				}
-				if (northEastSide(i,j)) {
+				else if (northEastSide(i,j)) {
 					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i+1][j].getType() == 0) {
 						return false;
 					}
 				}
-				if (southWestSide(i,j)) {
+				else if (southWestSide(i,j)) {
 					if (cases[i][j].getType() != 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
-				if (southEastSide(i,j)){
+				else if (southEastSide(i,j)){
 					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
-				if (northBorder(i) && !northEastSide(i,j) && !northWestSide(i,j)) {
+				else if (northBorder(i) && !northEastSide(i,j) && !northWestSide(i,j)) {
 					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i+1][j].getType() == 0) {
 						return false;
 					}
 				}
-				if (southBorder(i) && !southEastSide(i,j) && !southWestSide(i,j)) {
+				else if (southBorder(i) && !southEastSide(i,j) && !southWestSide(i,j)) {
 					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
-				if (westBorder(j) && !northWestSide(i,j) && !southWestSide(i,j)) {
+				else if (westBorder(j) && !northWestSide(i,j) && !southWestSide(i,j)) {
 					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
-				if (eastBorder(j) && !northEastSide(i,j) && !southEastSide(i,j)) { 
+				else if (eastBorder(j) && !northEastSide(i,j) && !southEastSide(i,j)) { 
 					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i][j-1].getType() == 0 && cases[i-1][j].getType() == 0) {
 						return false;
 					}
 				}
-				if (!northBorder(i) && !southBorder(i) && !westBorder(j) && !eastBorder(j) 
+				else if (!northBorder(i) && !southBorder(i) && !westBorder(j) && !eastBorder(j) 
 				&& !northWestSide(i,j) && !southWestSide(i,j) && !northEastSide(i,j) && !southEastSide(i,j)) {
 					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i-1][j].getType() == 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0) {
 						return false;
 					}
 				}
 			}
+		}
 		}
 		return true;
 	}

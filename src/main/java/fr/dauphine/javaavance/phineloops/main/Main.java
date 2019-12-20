@@ -13,6 +13,8 @@ import fr.dauphine.javaavance.phineloops.levelFunctions.LevelChecker;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverIA;
 import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.utils.Read;
+import fr.dauphine.javaavance.phineloops.utils.Write;
 import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class Main {
@@ -29,7 +31,7 @@ public class Main {
 		generator.buildSolution();
 		generator.shuffleSolution();
 		Grid grid = generator.getGrid();
-		grid.writeFile(outputFile);
+		Write.writeFile(outputFile, grid);
     }
     
     private static void generate(int width, int height, String outputFile, int maxcc) throws IOException{
@@ -38,30 +40,30 @@ public class Main {
 		generator.buildSolution();
 		generator.shuffleSolution();
 		Grid grid = generator.getGrid();
-		grid.writeFile(outputFile);
+		Write.writeFile(outputFile, grid);
     }
 
     private static boolean solve(String inputFile, String outputFile, int threads) throws IOException{
 	// load grid from inputFile, solve it and store result to outputFile...
-    	Grid grid = Grid.readFile(inputFile);
+    	Grid grid = Read.readFile(inputFile);
 		LevelSolverIA sol = new LevelSolverIA(grid, threads);
 		sol.solve();
 		Grid grid2 = sol.getGrid();
-		grid2.writeFile(outputFile);
-		
+		Write.writeFile(outputFile, grid2);
+
     	return sol.solve();
     }
 
     private static boolean check(String inputFile) throws IOException{
 	// load grid from inputFile and check if it is solved... 
-    	Grid grid = Grid.readFile(inputFile);
+    	Grid grid = Read.readFile(inputFile);
     	LevelChecker levelChecker = new LevelChecker(grid);
     	
     	return levelChecker.check();
     }
     
     private static void gui(String inputFile) throws IOException{
-		Grid grid = Grid.readFile(inputFile);
+		Grid grid = Read.readFile(inputFile);
 		LevelGenerator generator = new LevelGenerator(grid.getHeight(), grid.getWidth());
 		generator.setGrid(grid);
 		@SuppressWarnings("unused")

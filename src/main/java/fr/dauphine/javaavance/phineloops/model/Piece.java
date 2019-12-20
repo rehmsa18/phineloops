@@ -18,8 +18,9 @@ public class Piece {
 	private int gridX;
 	private int gridY;
 	private int nbRotation; 
-	private ArrayList <Integer> possibleOrientations;
 	private int fixe = 0;
+	private int index = 0;
+	private ArrayList <Integer> possibleOrientations;
 	
 	public Piece() {
 		this.i = -1;
@@ -438,7 +439,7 @@ public class Piece {
 	 * Display the type and orientation of the piece, place in grid, and unicode shape
 	 */
 	public String toString() {
-		return "(" + i + "," + j + ") " +type + " " + orientation + " " + this.unicode();
+		return "(" + i + "," + j + ") " +type + " " + orientation + " " + this.unicode() + " " +possibleOrientations + " " +index;
 	}
 	
 	/**
@@ -581,7 +582,36 @@ public class Piece {
 				break;
 			}
 	}
+
+	/**
+	 * initialize to 0 the position in the list of possible orientations of a piece
+	 */
+	public void initializeIndex() {
+		index = 0;
+	}
 	
+	/**
+	 * the position in the list of possible orientations of a piece
+	 * @return index
+	 */
+	public int getIndex() {
+		return index;
+	}
 	
+	/**
+	 * get the position in which is the piece
+	 * @return int
+	 */
+	public int getIndexOrientation() {
+		return possibleOrientations.indexOf(orientation)+1;
+	}
 	
+	/**
+	 * rotate piece depending the possible orientations
+	 */
+	public void rotatePossibleOrientation() {
+		index++;
+		this.orientation = this.possibleOrientations.get(index);
+		this.defineLinks();
+	}
 }

@@ -365,9 +365,9 @@ public class LevelSolverIA {
 		ParallelPortfolio portfolio = new ParallelPortfolio();
 		portfolio.addModel(model);
 		int nbmodels = 1;
-		if (this.threads > 1) {
+		/*if (this.threads > 1) {
 			nbmodels = this.threads;
-		}
+		}*/
 		for (int k=1; k<nbmodels; k++) {
 			Model modelnew = new Model();
 			modelnew = model;
@@ -599,9 +599,9 @@ public class LevelSolverIA {
 							grid.getCases()[i][j].rotatePiece();
 						}
 					}
-					System.out.println(orientationPossible.size());
+					//System.out.println(orientationPossible.size());
 					if( orientationPossible.size() == 1) {
-						System.out.println(orientationPossible.get(0));
+						//System.out.println(orientationPossible.get(0));
 						this.grid.getCases()[i][j].setOrientation(orientationPossible.get(0));
 						this.grid.getCases()[i][j].defineLinks();
 						this.grid.getCases()[i][j].setLock(1);

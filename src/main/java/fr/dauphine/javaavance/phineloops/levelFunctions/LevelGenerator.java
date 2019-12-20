@@ -134,13 +134,13 @@ public class LevelGenerator {
 		//for piece not in the west border 
 		//the piece on its west side need to have the same value for the link west-east
 		if( j > 0 ) {
-			if( p.getLinks()[3] != grid.getCase()[i][j-1].getLinks()[1] )
+			if( p.getLinks()[3] != grid.getCases()[i][j-1].getLinks()[1] )
 				return false;
 		}
 		//for piece not in the north border 
 		//the piece on its north side need to have the same value for the link north-south
 		if( i > 0) {
-			if( p.getLinks()[0] != grid.getCase()[i-1][j].getLinks()[2] )
+			if( p.getLinks()[0] != grid.getCases()[i-1][j].getLinks()[2] )
 				return false;
 		}
 		return true;
@@ -156,12 +156,12 @@ public class LevelGenerator {
 	public boolean pieceType1Neighbors(int i, int j, Piece p) {	
 		//the piece and its west neighbor can not be of the type 1 to avoid too much connected component in the grid
 		if( j > 0 ) {
-			if( (p.getType() == 1) && (grid.getCase()[i][j-1].getType() == 1) )
+			if( (p.getType() == 1) && (grid.getCases()[i][j-1].getType() == 1) )
 				return true;
 		}
 	    //the piece and its north neighbor can not be of the type 1 to avoid too much connected component in the grid
 		if( i > 0) {
-			if( (p.getType() == 1) && (grid.getCase()[i-1][j].getType() == 1) )
+			if( (p.getType() == 1) && (grid.getCases()[i-1][j].getType() == 1) )
 				return true;
 		}
 		return false;

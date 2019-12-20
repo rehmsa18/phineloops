@@ -122,71 +122,18 @@ public class Grid  extends Observable {
 	}
 	
 	/**
-	 * 
-	 * @return all pieces of the grid
-	 */
-	public Piece[][] getCase() {
-		return cases;
-	}
-	
-	/**
-	 * Write the grid in a file
-	 * @param filename
-	 * @throws IOException
-	 */
-	public void writeFile(String filename) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-			writer.write(Integer.toString(height));
-			writer.newLine();
-			writer.write(Integer.toString(width));
-			writer.newLine();
-			for(int i=0; i<height; i++) {
-				for(int j=0; j<width; j++) {
-					writer.write(cases[i][j].toString2());
-					writer.newLine();
-				}
-			}
-			writer.close();	
-	}
-	
-	/**
-	 * Read a file and get the grid
-	 * @param filename
-	 * @throws IOException
-	 * @return Grid
-	 */
-	public static Grid readFile(String filename) throws IOException {
-		BufferedReader reader = new BufferedReader(new FileReader(filename));
-			int height = Integer.parseInt(reader.readLine());
-			int width = Integer.parseInt(reader.readLine());
-
-			Grid grid = new Grid(height, width);
-			
-			for(int i=0; i<height; i++) {
-				for(int j=0; j<width; j++) {
-					String s = reader.readLine();
-					int x = Integer.parseInt(s.split(" ")[0]);
-					int y = Integer.parseInt(s.split(" ")[1]);
-					grid.add(new Piece(i,j,x,y)); 
-				}
-			}
-			reader.close();	
-		return grid;
-	}
-	
-	/**
 	 * detect if for a dim 1*l or h*1 the pieces are only type 0
 	 * detect if the sum of all the links are even in other case its impossible to have a solution
 	 * @return
 	 */
 	public boolean detectImpossible() {
-		if (this.getHeight() == 1 && this.getWidth() == 1 && this.getCase()[0][0].getType()!= 0) {
+		if (this.getHeight() == 1 && this.getWidth() == 1 && this.getCases()[0][0].getType()!= 0) {
 			return false;
 		}
-		if (this.getHeight() == 1  && this.getWidth() == 2 && (this.getCase()[0][0].getType() > 1 || this.getCase()[0][1].getType() > 1)) {
+		if (this.getHeight() == 1  && this.getWidth() == 2 && (this.getCases()[0][0].getType() > 1 || this.getCases()[0][1].getType() > 1)) {
 			return false;
 		}
-		if (this.getHeight() == 2  && this.getWidth() == 1 && (this.getCase()[0][0].getType() > 1 || this.getCase()[1][0].getType() > 1)) {
+		if (this.getHeight() == 2  && this.getWidth() == 1 && (this.getCases()[0][0].getType() > 1 || this.getCases()[1][0].getType() > 1)) {
 			return false;
 		}
 		int count = 0;

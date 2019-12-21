@@ -7,14 +7,6 @@ import fr.dauphine.javaavance.phineloops.model.Grid;
 public class LevelChecker {
 	
 	private Grid grid;
-	
-	public Grid getGrid() {
-		return grid;
-	}
-
-	public void setGrid(Grid grid) {
-		this.grid = grid;
-	}
 
 	public LevelChecker(Grid grid) {
 		this.grid = grid;

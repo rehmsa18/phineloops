@@ -15,26 +15,6 @@ public class ConnectedComponent {
 		return nbLinkPossible;
 	}
 
-	public void setNbLinkPossible(int nbLinkPossible) {
-		this.nbLinkPossible = nbLinkPossible;
-	}
-
-	public ArrayList<Piece> getPieces() {
-		return pieces;
-	}
-
-	public void setPieces(ArrayList<Piece> pieces) {
-		this.pieces = pieces;
-	}
-
-	/**
-	 * 
-	 * @return the number of pieces
-	 */
-	public int size() {
-		return pieces.size();
-	}
-
 	/**
 	 * Add piece to the connected component 
 	 * @param piece

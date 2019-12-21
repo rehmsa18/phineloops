@@ -1,7 +1,6 @@
 package fr.dauphine.javaavance.phineloops.view;
  
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.io.IOException;
@@ -19,25 +18,9 @@ public class LevelDisplay extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private int DIM = 20;
-	private int dimension;
 
 	public int getDIM() {
 		return DIM;
-	}
-
-
-	public void setDIM(int dIM) {
-		DIM = dIM;
-	}
-
-
-	public int getDimension() {
-		return dimension;
-	}
-
-
-	public void setDimension(int dimension) {
-		this.dimension = dimension;
 	}
 
 
@@ -62,7 +45,6 @@ public class LevelDisplay extends JFrame {
 		
 	}
 	
-
     public static void main(String[] args) throws IOException {
     	
     	int width = 25;

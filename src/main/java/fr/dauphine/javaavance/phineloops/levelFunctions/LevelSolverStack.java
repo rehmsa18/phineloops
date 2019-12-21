@@ -3,8 +3,6 @@ package fr.dauphine.javaavance.phineloops.levelFunctions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Stack;
 
 import fr.dauphine.javaavance.phineloops.model.Grid;
@@ -16,40 +14,8 @@ public class LevelSolverStack {
 	private Grid grid;
 	private int totalPiece;
 	private int lockedPiece = 0;
-	private int mobilePiece = 0;
+	//private int mobilePiece = 0; just use for println not used now
 	private boolean argumentGiven;
-		
-	public Grid getGrid() {
-		return grid;
-	}
-
-	public void setGrid(Grid grid) {
-		this.grid = grid;
-	}
-
-	public int getTotalPiece() {
-		return totalPiece;
-	}
-
-	public void setTotalPiece(int totalPiece) {
-		this.totalPiece = totalPiece;
-	}
-
-	public int getLockedPiece() {
-		return lockedPiece;
-	}
-
-	public void setLockedPiece(int lockedPiece) {
-		this.lockedPiece = lockedPiece;
-	}
-
-	public int getMobilePiece() {
-		return mobilePiece;
-	}
-
-	public void setMobilePiece(int mobilePiece) {
-		this.mobilePiece = mobilePiece;
-	}
 
 	public LevelSolverStack(Grid grid, boolean argumentGiven) {
 		this.grid = grid;
@@ -64,11 +30,11 @@ public class LevelSolverStack {
 	 * @return true if the links with others pieces are respected
 	 */
 	public boolean respectAncestors(Piece child, Stack<Piece> pieces) {
-		for(int i=0; i<pieces.size();i++) {
+		for(int i=0; i<pieces.size(); i++) {
     	   if( !child.linkedNeighborOrNoNeighbor(pieces.get(i) )) {
 				return false;
     	   }
-       } 
+        } 
 		return true;	
 	}
 	
@@ -122,102 +88,6 @@ public class LevelSolverStack {
 		}
 		return chosenPiece;
 	}
-
-	/**
-	 * Lock the max pieces possible
-	 * @return number of fixed pieces
-	 */
-	public int lockPiece() {
-		int countLockedPiece = 0;	
-		for (int i = 0; i < this.grid.getHeight(); i++) {
-			for (int j = 0; j < this.grid.getWidth(); j++) {
-		
-				if(grid.getCases()[i][j].getLock()==0) {
-
-					ArrayList<Integer> orientationPossible = new ArrayList<>();
-					
-					if (grid.northWestSide(i, j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) { 
-							if( grid.getCases()[i][j].getLinks()[0]==0 && grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}	
-					else if (grid.northEastSide(i, j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[0]==0 && grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}					
-					else if (grid.southWestSide(i, j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[2]==0 && grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					else if (grid.southEastSide(i, j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[2]==0 && grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}			
-					else if (grid.northBorder(i)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[0]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					else if (grid.southBorder(i)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[2]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					else if (grid.westBorder(j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}	
-					else if (grid.eastBorder(j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					else {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if(!grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					if( orientationPossible.size() == 1) {
-						grid.getCases()[i][j].setOrientation(orientationPossible.get(0));
-						grid.getCases()[i][j].defineLinks();
-						grid.getCases()[i][j].setLock(1);
-					}
-					else if (orientationPossible.size() == 0) {
-						countLockedPiece = -2;
-						return countLockedPiece;
-					}
-					else 
-						grid.getCases()[i][j].setPossibleOrientations(orientationPossible);	
-				}
-				countLockedPiece += grid.getCases()[i][j].getLock();
-			}			
-		}
-		return countLockedPiece;
-	}
-	
-	
 	
 	/**
 	 * Says if a solution is found
@@ -236,7 +106,7 @@ public class LevelSolverStack {
 				finalStack.push(p);
 			}
 			else {	
-				boolean stop =false;
+				boolean stop = false;
 				originalStack.add(p);
 				while (!stop && !finalStack.isEmpty()) {
 					originalStack.peek().initializeIndex();
@@ -262,16 +132,23 @@ public class LevelSolverStack {
 	 * @return true if a solution found
 	 */
 	public boolean solve() {
+		if (!this.grid.detectImpossible()) {
+			return false;
+		}
+		if (!this.grid.detectCircledByType0()) {
+			return false;
+		}
+
 		int tmp = -1;
 		while(lockedPiece!= tmp){
 			tmp = lockedPiece;
-			lockedPiece = this.lockPiece();
+			lockedPiece = this.grid.lockPiece();
 			if (lockedPiece == -2) {
 				return false;
 			}
 		}
 		
-		mobilePiece = totalPiece - lockedPiece;
+		//mobilePiece = totalPiece - lockedPiece;
 
 	    //System.out.println("total pieces : " + totalPiece + "\n");
 		//System.out.println("locked pieces : " + lockedPiece + "\n");
@@ -335,8 +212,9 @@ public class LevelSolverStack {
 		}		
 	}
 	
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-		LevelGenerator test = new LevelGenerator(70,70);
+		LevelGenerator test = new LevelGenerator(250,250);
 		test.buildSolution();
 		test.shuffleSolution();
 		Grid grid = test.getGrid();

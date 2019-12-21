@@ -28,62 +28,6 @@ public class LevelGenerator {
 		this.grid = grid;
 	}
 
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public ArrayList<Piece> getPieces() {
-		return pieces;
-	}
-
-	public void setPieces(ArrayList<Piece> pieces) {
-		this.pieces = pieces;
-	}
-
-	public ArrayList<ConnectedComponent> getConnectedComponents() {
-		return connectedComponents;
-	}
-
-	public void setConnectedComponents(ArrayList<ConnectedComponent> connectedComponents) {
-		this.connectedComponents = connectedComponents;
-	}
-
-	public int getMaxConnectedComponent() {
-		return maxConnectedComponent;
-	}
-
-	public void setMaxConnectedComponent(int maxConnectedComponent) {
-		this.maxConnectedComponent = maxConnectedComponent;
-	}
-
-	public int getNbConnectedComponent() {
-		return nbConnectedComponent;
-	}
-
-	public void setNbConnectedComponent(int nbConnectedComponent) {
-		this.nbConnectedComponent = nbConnectedComponent;
-	}
-
-	public boolean isConnectedComponentIndicated() {
-		return connectedComponentIndicated;
-	}
-
-	public void setConnectedComponentIndicated(boolean connectedComponentIndicated) {
-		this.connectedComponentIndicated = connectedComponentIndicated;
-	}
-
 	public LevelGenerator(int height, int width) {
 		this.width = width;
 		this.height = height;
@@ -168,87 +112,6 @@ public class LevelGenerator {
 	}
 
 	/**
-	 * Says if a piece in the north west side of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the north west
-	 */
-	public boolean northWestSide(int i, int j) {
-		return ( i==0 && j==0 );		
-	}
-
-	/**
-	 * Says if a piece in the north east side of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the north east
-	 */
-	public boolean northEastSide(int i, int j) {
-		return ( i==0 && j==width-1 );		
-	}
-	
-	/**
-	 * Says if a piece in the south west side of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the south west
-	 */
-	public boolean southWestSide(int i, int j) {
-		return ( i==height-1 && j==0 );		
-	}
-	
-	/**
-	 * Says if a piece in the south east side of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the south east
-	 */
-	public boolean southEastSide(int i, int j) {
-		return ( i==height-1 && j==width-1 );		
-	}
-	
-	/**
-	 * Says if a piece in the west border of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the west border
-	 */
-	public boolean westBorder(int j) {
-		return ( j==0 );		
-	}	
-	
-	/**
-	 * Says if a piece in the east border of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the east border
-	 */
-	public boolean eastBorder(int j) {
-		return ( j==width-1 );		
-	}	
-	
-	/**
-	 * Says if a piece in the north border of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the north border
-	 */
-	public boolean northBorder(int i) {
-		return ( i==0 );		
-	}
-	
-	/**
-	 * Says if a piece in the south border of the grid
-	 * @param x
-	 * @param y
-	 * @return true if in the south border
-	 */
-	public boolean southBorder(int i) {
-		return ( i==height-1 );		
-	}	
-	
-	
-	/**
 	 * Get the alternatives of a piece depending on its position in the grid
 	 * @param i
 	 * @param j
@@ -257,65 +120,92 @@ public class LevelGenerator {
 	public ArrayList<Piece> pieceAlternative(int i, int j){
 		
 		ArrayList<Piece> piecesPossible = new ArrayList<Piece>();
+		ArrayList<Piece> piecesChoice = new ArrayList<Piece>();
+		if (this.grid.getHeight() == 1 && this.grid.getWidth() == 1) {
+			piecesPossible.add(pieces.get(0));
+			return piecesPossible;
+		}
 		
-		if( northWestSide(i,j) ){
-			for(Piece p : pieces ) {
+		if (this.grid.getHeight() == 1 && this.grid.getWidth() == 2) {
+			//piecesChoice.add(pieces.get(0));
+			piecesChoice.add(pieces.get(1));
+			piecesChoice.add(pieces.get(3));
+		}
+		
+		else if (this.grid.getHeight() == 2 && this.grid.getWidth() == 1) {
+			//piecesChoice.add(pieces.get(0));
+			piecesChoice.add(pieces.get(2));
+			piecesChoice.add(pieces.get(4));
+		}
+		else {
+			piecesChoice = pieces;
+			/*piecesChoice.add(pieces.get(0));
+			piecesChoice.add(pieces.get(1));
+			piecesChoice.add(pieces.get(2));
+			piecesChoice.add(pieces.get(3));
+			piecesChoice.add(pieces.get(4));
+			piecesChoice.add(pieces.get(15));*/
+			
+		}
+		
+		if( this.grid.northWestSide(i,j) ){
+			for(Piece p : piecesChoice ) {
 				if( p.noLinkNorth() && p.noLinkWest() && this.respectLinkNeighbors(i, j, p)) {
 					piecesPossible.add(p);
 				}	
 			}
 		}
 		
-		else if( northEastSide(i,j) ){
-			for(Piece p : pieces ) {
+		else if( this.grid.northEastSide(i,j) ){
+			for(Piece p : piecesChoice ) {
 				if( p.noLinkNorth() && p.noLinkEast() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}		
 			}		
 		}
 		
-		else if( southWestSide(i,j) ){
-			for(Piece p : pieces ) {
+		else if( this.grid.southWestSide(i,j) ){
+			for(Piece p : piecesChoice ) {
 				if( p.noLinkSouth() && p.noLinkWest() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}		
 			}
 		}
 		
-		else if( southEastSide(i,j) ){
-			for(Piece p : pieces ) {
+		else if( this.grid.southEastSide(i,j) ){
+			for(Piece p : piecesChoice ) {
 				if( p.noLinkSouth() && p.noLinkEast() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}	
 			}
 		}
 		
-		else if( westBorder(j) ){
-			for(Piece p : pieces ) {
+		else if( this.grid.westBorder(j) ){
+			for(Piece p : piecesChoice ) {
 				if( p.noLinkWest() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}		
 			}
 		}
 		
-		else if( eastBorder(j) ){
-			for(Piece p : pieces ) {
+		else if( this.grid.eastBorder(j) ){
+			for(Piece p : piecesChoice ) {
 				if( p.noLinkEast() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}		
 			}
 		}
 		
-		else if( northBorder(i) ){
-			for(Piece p : pieces ) {
+		else if( this.grid.northBorder(i) ){
+			for(Piece p : piecesChoice ) {
 				if( p.noLinkNorth() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}	
 			}
 		}
 		
-		else if( southBorder(i) ){
-			for(Piece p : pieces ) {
+		else if( this.grid.southBorder(i) ){
+			for(Piece p : piecesChoice ) {
 				if( p.noLinkSouth() && this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}	
@@ -323,7 +213,7 @@ public class LevelGenerator {
 		}
 	
 		else {	
-			for(Piece p : pieces ) {
+			for(Piece p : piecesChoice ) {
 				if( this.respectLinkNeighbors(i, j, p) ) {
 					piecesPossible.add(p);
 				}	
@@ -451,11 +341,8 @@ public class LevelGenerator {
 				grid.add(chosenPiece);
 			}	
 		}
-		//System.out.println("Solution generated before shuffle");
-		//grid.displayInConsole();
 	}
 	
-
 	/**
 	 * Shuffle the generated grid
 	 */
@@ -463,10 +350,11 @@ public class LevelGenerator {
 		for(int i=0; i<height; i++) {
 			for(int j=0; j<width; j++) {
 				grid.getCases()[i][j].shufflePiece();
+				if (this.grid.getCases()[i][j].getType()!=4 && this.grid.getCases()[i][j].getType()!=0) {
+					this.grid.getCases()[i][j].setLock(0);
+				}
 			}		
 		}
-		//System.out.println("Solution after shuffle");
-		//grid.displayInConsole();
 	}
 
 }

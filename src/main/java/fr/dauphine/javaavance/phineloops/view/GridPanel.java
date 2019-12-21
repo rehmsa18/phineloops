@@ -22,7 +22,6 @@ public class GridPanel extends JPanel implements Observer {
 	private int width;
 	private int height;
 	private Piece cases[][];
-	private Grid grid;
 
 	public GridPanel(Grid grid, int DIM) {
 		height = grid.getHeight();
@@ -31,37 +30,9 @@ public class GridPanel extends JPanel implements Observer {
 		grid.addObserver(this);
 		this.DIM = DIM;
 	}
-	
-	public int getDIM() {
-		return DIM;
-	}
-
-	public void setDIM(int dIM) {
-		DIM = dIM;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
 
 	public Piece[][] getCases() {
 		return cases;
-	}
-
-	public void setCases(Piece[][] cases) {
-		this.cases = cases;
-	}
-
-	public Grid getGrid() {
-		return grid;
-	}
-
-	public void setGrid(Grid grid) {
-		this.grid = grid;
 	}
 
 	protected void paintComponent(Graphics g) {

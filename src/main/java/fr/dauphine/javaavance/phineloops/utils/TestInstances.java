@@ -2,11 +2,8 @@ package fr.dauphine.javaavance.phineloops.utils;
 
 import java.io.File;
 import java.io.IOException;
-import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverIA;
-import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverStack;
 import fr.dauphine.javaavance.phineloops.model.Grid;
-import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class TestInstances {
 

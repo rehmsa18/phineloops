@@ -1,20 +1,20 @@
 package fr.dauphine.javaavance.phineloops.model;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observable;
 
 public class Grid  extends Observable {
-	private int height;
-	private int width;
+	private int height = 0;
+	private int width = 0;
 	private Piece cases[][];
 	
 	public Grid(int height, int width){
-		this.height = height;
-		this.width = width;
+		if (height > 0) {
+			this.height = height;
+		}
+		if (width > 0) {
+			this.width = width;
+		}
 		cases = new Piece[this.height][this.width];
 	}
 	
@@ -22,24 +22,12 @@ public class Grid  extends Observable {
 		return height;
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
 	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
 	public Piece[][] getCases() {
 		return cases;
-	}
-
-	public void setCases(Piece[][] cases) {
-		this.cases = cases;
 	}
 
 	/**
@@ -60,25 +48,13 @@ public class Grid  extends Observable {
 		cases[p.getI()][p.getJ()] = p;
 	}
 	
-
-	/**
-	 * Find a piece with its coordinates
-	 * @param x
-	 * @param y
-	 * @return Piece
-	 */
-	public Piece find(int x, int y) {
-		return this.cases[x][y];
-	}
-	
 	/**
 	 * Says if a piece has all its links linked to theirs neighbors
 	 * @param Piece p
 	 * @return true if it is linked
 	 */
 	public boolean allLinked(Piece p) {
-		int cpt = 0;
-		
+		int cpt = 0;	
 		if ( (p.getLinks()[0] == 1) && this.existsPiece(p.getI()-1,p.getJ()) ){
 				if (p.isLinked(this.getCases()[p.getI()-1][p.getJ()])){
 					cpt++;
@@ -91,7 +67,6 @@ public class Grid  extends Observable {
 			}
 		}
 
-		
 		if ( (p.getLinks()[1] == 1) && this.existsPiece(p.getI(),p.getJ()+1) ){
 			if (p.isLinked(this.cases[p.getI()][p.getJ()+1])){
 				cpt++;
@@ -122,7 +97,7 @@ public class Grid  extends Observable {
 	}
 	
 	/**
-	 * detect if for a dim 1*l or h*1 the pieces are only type 0
+	 * detect if for a dim 1*2 or 2*1 the pieces are only type 0 or 1 and type 0 for 1*1
 	 * detect if the sum of all the links are even in other case its impossible to have a solution
 	 * @return
 	 */
@@ -146,57 +121,56 @@ public class Grid  extends Observable {
 	}
 	
 	public boolean detectCircledByType0() {
-		if (this.getWidth() >=2 && this.getHeight() >=2) {
-		for (int i = 0; i<this.height; i++) {
-			for (int j = 0; j<this.width; j++) {
-				if (northWestSide(i,j)) {
-					if(cases[i][j].getType() != 0 && cases[i][j+1].getType() == 0 && cases[i+1][j].getType() == 0) {
-						return false;
+		if (this.getWidth() >= 2 && this.getHeight() >= 2) {
+			for (int i = 0; i<this.height; i++) {
+				for (int j = 0; j<this.width; j++) {
+					if (northWestSide(i,j)) {
+						if(cases[i][j].getType() != 0 && cases[i][j+1].getType() == 0 && cases[i+1][j].getType() == 0) {
+							return false;
+						}
 					}
-				}
-				else if (northEastSide(i,j)) {
-					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i+1][j].getType() == 0) {
-						return false;
+					else if (northEastSide(i,j)) {
+						if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i+1][j].getType() == 0) {
+							return false;
+						}
 					}
-				}
-				else if (southWestSide(i,j)) {
-					if (cases[i][j].getType() != 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
-						return false;
+					else if (southWestSide(i,j)) {
+						if (cases[i][j].getType() != 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
+							return false;
+						}
 					}
-				}
-				else if (southEastSide(i,j)){
-					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i-1][j].getType() == 0) {
-						return false;
+					else if (southEastSide(i,j)){
+						if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i-1][j].getType() == 0) {
+							return false;
+						}
 					}
-				}
-				else if (northBorder(i) && !northEastSide(i,j) && !northWestSide(i,j)) {
-					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i+1][j].getType() == 0) {
-						return false;
+					else if (northBorder(i)) {
+						if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i+1][j].getType() == 0) {
+							return false;
+						}
 					}
-				}
-				else if (southBorder(i) && !southEastSide(i,j) && !southWestSide(i,j)) {
-					if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
-						return false;
+					else if (southBorder(i)) {
+						if (cases[i][j].getType() != 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
+							return false;
+						}
 					}
-				}
-				else if (westBorder(j) && !northWestSide(i,j) && !southWestSide(i,j)) {
-					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
-						return false;
+					else if (westBorder(j)) {
+						if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i][j+1].getType() == 0 && cases[i-1][j].getType() == 0) {
+							return false;
+						}
 					}
-				}
-				else if (eastBorder(j) && !northEastSide(i,j) && !southEastSide(i,j)) { 
-					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i][j-1].getType() == 0 && cases[i-1][j].getType() == 0) {
-						return false;
+					else if (eastBorder(j)) { 
+						if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i][j-1].getType() == 0 && cases[i-1][j].getType() == 0) {
+							return false;
+						}
 					}
-				}
-				else if (!northBorder(i) && !southBorder(i) && !westBorder(j) && !eastBorder(j) 
-				&& !northWestSide(i,j) && !southWestSide(i,j) && !northEastSide(i,j) && !southEastSide(i,j)) {
-					if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i-1][j].getType() == 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0) {
-						return false;
+					else {
+						if (cases[i][j].getType() != 0 && cases[i+1][j].getType() == 0 && cases[i-1][j].getType() == 0 && cases[i][j-1].getType() == 0 && cases[i][j+1].getType() == 0) {
+							return false;
+						}
 					}
 				}
 			}
-		}
 		}
 		return true;
 	}
@@ -297,8 +271,7 @@ public class Grid  extends Observable {
 			if( this.cases[p.getI()+1][p.getJ()].getLock() == 1 && this.cases[p.getI()+1][p.getJ()].getLinks()[0] != p.getLinks()[2]) {
 				//System.out.println("b" + " " + this.cases[p.x+1][p.y] +" "+this.cases[p.x+1][p.y].links[0] + " "+ p.links[2]);
 				return true;
-			}
-				
+			}		
 		}
 		if( p.getJ() > 0 ) {
 			if( this.cases[p.getI()][p.getJ()-1].getLock() == 1 && this.cases[p.getI()][p.getJ()-1].getLinks()[1] != p.getLinks()[3] ) {
@@ -310,10 +283,103 @@ public class Grid  extends Observable {
 			if( this.cases[p.getI()][p.getJ()+1].getLock() == 1 && this.cases[p.getI()][p.getJ()+1].getLinks()[3] != p.getLinks()[1] ) {
 				//System.out.println("d"+ " " +this.cases[p.x][p.y+1] +" "+this.cases[p.x][p.y+1].links[3] +" "+p.links[1]);
 				return true;
-			}
-				
+			}		
 		}
 		return false;
+	}
+	
+	/**
+	 * Lock the max pieces possible
+	 * @return number of fixed pieces
+	 */
+	public int lockPiece() {
+		int countLockedPiece = 0;	
+		for (int i = 0; i < this.getHeight(); i++) {
+			for (int j = 0; j < this.getWidth(); j++) {
+		
+				if(this.getCases()[i][j].getLock()==0) {
+
+					ArrayList<Integer> orientationPossible = new ArrayList<>();
+					
+					if (this.northWestSide(i, j)) {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) { 
+							if( this.getCases()[i][j].getLinks()[0]==0 && this.getCases()[i][j].getLinks()[3]==0 && !this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}	
+					else if (this.northEastSide(i, j)) {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) {
+							if( this.getCases()[i][j].getLinks()[0]==0 && this.getCases()[i][j].getLinks()[1]==0 && !this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}					
+					else if (this.southWestSide(i, j)) {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) {
+							if( this.getCases()[i][j].getLinks()[2]==0 && this.getCases()[i][j].getLinks()[3]==0 && !this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}
+					else if (this.southEastSide(i, j)) {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) {
+							if( this.getCases()[i][j].getLinks()[2]==0 && this.getCases()[i][j].getLinks()[1]==0 && !this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}			
+					else if (this.northBorder(i)) {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) {
+							if( this.getCases()[i][j].getLinks()[0]==0 && !this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}
+					else if (this.southBorder(i)) {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) {
+							if( this.getCases()[i][j].getLinks()[2]==0 && !this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}
+					else if (this.westBorder(j)) {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) {
+							if( this.getCases()[i][j].getLinks()[3]==0 && !this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}	
+					else if (this.eastBorder(j)) {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) {
+							if( this.getCases()[i][j].getLinks()[1]==0 && !this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}
+					else {
+						for(int k=0; k<this.getCases()[i][j].getNbRotation(); k++) {
+							if(!this.noRespectedLockPiece(this.getCases()[i][j])) 
+								orientationPossible.add(this.getCases()[i][j].getOrientation());
+							this.getCases()[i][j].rotatePiece();
+						}
+					}
+					if( orientationPossible.size() == 1) {
+						this.getCases()[i][j].setOrientation(orientationPossible.get(0));
+						this.getCases()[i][j].defineLinks();
+						this.getCases()[i][j].setLock(1);
+					}
+					else if (orientationPossible.size() == 0) {
+						countLockedPiece = -2;
+						return countLockedPiece;
+					}
+					else 
+						this.getCases()[i][j].setPossibleOrientations(orientationPossible);	
+				}
+				countLockedPiece += this.getCases()[i][j].getLock();
+			}			
+		}
+		return countLockedPiece;
 	}
 
 }

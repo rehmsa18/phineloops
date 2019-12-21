@@ -14,11 +14,9 @@ public class Piece {
 	private int lock = 0; //indicate if we can move a piece, it is lock if = 1
 	private int links[] = {0,0,0,0}; //tab to define where the piece makes a link with value 1 {North,East,South,West}
 	private int nbneighbors = 0;
-	private int connectedComponent;
 	private int gridX;
 	private int gridY;
 	private int nbRotation; 
-	private int fixe = 0;
 	private int index = 0;
 	private ArrayList <Integer> possibleOrientations;
 	
@@ -55,16 +53,8 @@ public class Piece {
 		return i;
 	}
 
-	public void setI(int i) {
-		this.i = i;
-	}
-
 	public int getJ() {
 		return j;
-	}
-
-	public void setJ(int j) {
-		this.j = j;
 	}
 
 	public int getOrientation() {
@@ -95,16 +85,8 @@ public class Piece {
 		return links;
 	}
 
-	public void setLinks(int[] links) {
-		this.links = links;
-	}
-
 	public int getNbneighbors() {
 		return nbneighbors;
-	}
-
-	public void setNbneighbors(int nbneighbors) {
-		this.nbneighbors = nbneighbors;
 	}
 
 	public int getGridX() {
@@ -127,28 +109,12 @@ public class Piece {
 		return nbRotation;
 	}
 
-	public void setNbRotation(int nbRotation) {
-		this.nbRotation = nbRotation;
-	}
-
 	public ArrayList<Integer> getPossibleOrientations() {
 		return possibleOrientations;
 	}
 
 	public void setPossibleOrientations(ArrayList<Integer> possibleOrientations) {
 		this.possibleOrientations = possibleOrientations;
-	}
-
-	public int getFixe() {
-		return fixe;
-	}
-
-	public void setFixe(int fixe) {
-		this.fixe = fixe;
-	}
-
-	public void setConnectedComponent(int connectedComponent) {
-		this.connectedComponent = connectedComponent;
 	}
 
 	public void defineNbNeighbors() {
@@ -392,13 +358,13 @@ public class Piece {
 		int pos = this.isNeighbor(p);
 		switch (pos) {
 		case 0 :
-			return p.links[2]==1;
+			return p.links[2]==1 && this.links[0]==1;
 		case 1 :
-			return p.links[3]==1;
+			return p.links[3]==1 && this.links[1]==1;
 		case 2 :
-			return p.links[0]==1;
+			return p.links[0]==1 && this.links[2]==1;
 		case 3 :
-			return p.links[1]==1;
+			return p.links[1]==1 && this.links[3]==1;
 		}
 		return false;
 	}
@@ -447,13 +413,6 @@ public class Piece {
 	 */
 	public String toString2() {
 		return type + " " + orientation;
-	}
-	
-	/**
-	 * Display the connectedComponent of the piece
-	 */
-	public int getConnectedComponent() {
-		return connectedComponent;
 	}
 	
 	/**
@@ -516,7 +475,6 @@ public class Piece {
 	public void shufflePiece() {
 		int orientations[] = {0,1,2,3};
 		int temp;
-		
 		do {
 			temp = orientations[new Random().nextInt(orientations.length)];
 		}while( !isOrientationChoice( temp ) );
@@ -536,7 +494,7 @@ public class Piece {
 	}
 	
 	/**
-	 * Says true if two pieces are neighbours are linked or they are no neighbor
+	 * Says true if two pieces are neighbors, ig they have same value of their link or if they are not neighbors
 	 * @param Piece p
 	 * @return true if they are linked
 	 */
@@ -555,7 +513,7 @@ public class Piece {
 			return true;
 		}
 		return false;
-	}
+	}	
 	
 	/**
 	 * Number of rotation possible for a piece

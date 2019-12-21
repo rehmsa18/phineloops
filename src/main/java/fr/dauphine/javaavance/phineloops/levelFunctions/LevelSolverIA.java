@@ -1,15 +1,14 @@
 package fr.dauphine.javaavance.phineloops.levelFunctions;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
-import org.chocosolver.solver.ICause;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.ParallelPortfolio;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 
 import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.model.Piece;
+import fr.dauphine.javaavance.phineloops.utils.Read;
 import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class LevelSolverIA {
@@ -17,31 +16,7 @@ public class LevelSolverIA {
 	private int totalPiece;
 	private int lockedPiece = 0;
 	private int threads = 1;
-	
-	public Grid getGrid() {
-		return grid;
-	}
 
-	public void setGrid(Grid grid) {
-		this.grid = grid;
-	}
-
-	public int getTotalPiece() {
-		return totalPiece;
-	}
-
-	public void setTotalPiece(int totalPiece) {
-		this.totalPiece = totalPiece;
-	}
-
-	public int getLockedPiece() {
-		return lockedPiece;
-	}
-
-	public void setLockedPiece(int lockedPiece) {
-		this.lockedPiece = lockedPiece;
-	}
-	
 	public LevelSolverIA(Grid grid) {
 		this.grid = grid;
 		this.totalPiece = grid.getHeight()*grid.getWidth();
@@ -53,6 +28,10 @@ public class LevelSolverIA {
 		this.totalPiece = grid.getHeight()*grid.getWidth();
 	}
 	
+	public Grid getGrid() {
+		return grid;
+	}
+
 	/** Solve grid with chocosolver
 	 * Define a variable for each piece which has a value between 0 and 15
 	 * It corresponds to a bit code where : 
@@ -85,299 +64,54 @@ public class LevelSolverIA {
 		if (!this.grid.detectCircledByType0()) {
 			return false;
 		}
+
 		int tmp = -1;
 		while(lockedPiece!= tmp){
 			tmp = lockedPiece;
-			lockedPiece = this.lockPiece();
+			lockedPiece = this.grid.lockPiece();
 			if (lockedPiece == -2) {
 				return false;
 			}
 		}
-
 		if( lockedPiece == totalPiece ) {
 			return true;
 		}
 		
 		IntVar[][]pieces = new IntVar[this.grid.getHeight()][this.grid.getWidth()];
-		//for (int k=0; k<nbmodels; k++) {
-		Model model = new Model("choco solver");		
-		//init variables to IntVar 
-		for (int i = 0; i < this.grid.getHeight(); i++) {
-			for (int j = 0; j < this.grid.getWidth(); j++) {
-				//define possible values considering type and postion on the grid of a piece
-				switch(this.grid.getCases()[i][j].getType()) {
-				case 0 :
-					pieces[i][j] = model.intVar(new int[] {0});
-					break;
-				case 1 :
-					if (this.grid.getCases()[i][j].getLock() == 1) {
-						switch(this.grid.getCases()[i][j].getOrientation()) {
-						case 0 : 
-							pieces[i][j] = model.intVar(new int[] {1});
-							break;
-						case 1 : 
-							pieces[i][j] = model.intVar(new int[] {2});
-							break;
-						case 2 : 
-							pieces[i][j] = model.intVar(new int[] {4});
-							break;
-						case 3 : 
-							pieces[i][j] = model.intVar(new int[] {8});
-							break;
-						}
-					}
-					if (this.grid.northWestSide(i, j)) {
-						pieces[i][j] = model.intVar(new int[] {2,4});
-						break;
-					}
-					if (this.grid.northEastSide(i, j)) {
-						pieces[i][j] = model.intVar(new int[] {4,8});
-						break;
-					}
-					if (this.grid.southWestSide(i, j)) {
-						pieces[i][j] = model.intVar(new int[] {1,2});
-						break;
-					}
-					if (this.grid.southEastSide(i, j)) {
-						pieces[i][j] = model.intVar(new int[] {1,8});
-						break;
-					}
-					if (this.grid.northBorder(i)) {
-						pieces[i][j] = model.intVar(new int[] {2,4,8});
-						break;
-					}
-					if (this.grid.southBorder(i)) {
-						pieces[i][j] = model.intVar(new int[] {1,2,8});
-						break;
-					}
-					if (this.grid.westBorder(j)) {
-						pieces[i][j] = model.intVar(new int[] {1,2,4});
-						break;
-					}
-					if (this.grid.eastBorder(j)) {
-						pieces[i][j] = model.intVar(new int[] {1,4,8});
-						break;
-					}
-					pieces[i][j] = model.intVar(new int[] {1,2,4,8});
-					break;
-					
-				case 2 :
-					if (this.grid.getCases()[i][j].getLock() == 1) {
-						switch(this.grid.getCases()[i][j].getOrientation()) {
-						case 0 : 
-							pieces[i][j] = model.intVar(new int[] {5});
-							break;
-						case 1 : 
-							pieces[i][j] = model.intVar(new int[] {10});
-							break;
-						}
-					}
-					if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
-						return false;
-					}
-					if (this.grid.northBorder(i)||this.grid.southBorder(i)) {
-						pieces[i][j] = model.intVar(new int[] {10});
-						break;
-					}
-					if (this.grid.westBorder(j)||this.grid.eastBorder(j)) {
-						pieces[i][j] = model.intVar(new int[] {5});
-						break;
-					}
-					pieces[i][j] = model.intVar(new int[] {5,10});
-					break;
-
-				case 3 :
-					if (this.grid.getCases()[i][j].getLock() == 1) {
-						switch(this.grid.getCases()[i][j].getOrientation()) {
-						case 0 : 
-							pieces[i][j] = model.intVar(new int[] {11});
-							break;
-						case 1 : 
-							pieces[i][j] = model.intVar(new int[] {7});
-							break;
-						case 2 : 
-							pieces[i][j] = model.intVar(new int[] {14});
-							break;
-						case 3 : 
-							pieces[i][j] = model.intVar(new int[] {13});
-							break;
-						}
-					}
-					if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
-						return false;
-					}
-					if (this.grid.northBorder(i)) {
-						pieces[i][j] = model.intVar(new int[] {14});
-						break;
-					}
-					if (this.grid.southBorder(i)) {
-						pieces[i][j] = model.intVar(new int[] {11});
-						break;
-					}
-					if (this.grid.westBorder(j)) {
-						pieces[i][j] = model.intVar(new int[] {7});
-						break;
-					}
-					if (this.grid.eastBorder(j)) {
-						pieces[i][j] = model.intVar(new int[] {13});
-						break;
-					}
-					pieces[i][j] = model.intVar(new int[] {7,14,13,11});
-					break;
-					
-				case 4 :
-					if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
-						return false;
-					}
-					pieces[i][j] = model.intVar(new int[] {15});
-					break;
-				case 5 :
-					if (this.grid.getCases()[i][j].getLock() == 1) {
-						switch(this.grid.getCases()[i][j].getOrientation()) {
-						case 0 : 
-							pieces[i][j] = model.intVar(new int[] {3});
-							break;
-						case 1 : 
-							pieces[i][j] = model.intVar(new int[] {6});
-							break;
-						case 2 : 
-							pieces[i][j] = model.intVar(new int[] {12});
-							break;
-						case 3 : 
-							pieces[i][j] = model.intVar(new int[] {9});
-							break;
-						}
-					}
-					if (this.grid.northWestSide(i, j)) {
-						pieces[i][j] = model.intVar(new int[] {6});
-						break;
-					}
-					if (this.grid.northEastSide(i, j)) {
-						pieces[i][j] = model.intVar(new int[] {12});
-						break;
-					}
-					if (this.grid.southWestSide(i, j)) {
-						pieces[i][j] = model.intVar(new int[] {3});
-						break;
-					}
-					if (this.grid.southEastSide(i, j)) {
-						pieces[i][j] = model.intVar(new int[] {9});
-						break;
-					}
-					if (this.grid.northBorder(i)) {
-						pieces[i][j] = model.intVar(new int[] {6,12});
-						break;
-					}
-					if (this.grid.southBorder(i)) {
-						pieces[i][j] = model.intVar(new int[] {3,9});
-						break;
-					}
-					if (this.grid.westBorder(j)) {
-						pieces[i][j] = model.intVar(new int[] {3,6});
-						break;
-					}
-					if (this.grid.eastBorder(j)) {
-						pieces[i][j] = model.intVar(new int[] {12,9});
-						break;
-					}
-					pieces[i][j] = model.intVar(new int[] {3,6,12,9});
-					break;
-				}
-			}			
-		}
-		
-		//Constraints : check two neighbors have to be linked considered their values
-		// For that we just have to check bit value of the piece and the bit value corresponding
-		//to the link with the right neighbor
-		// North : value % 2
-		//East : value % 4 / 2
-		//South : value % 8 / 4
-		//West : value / 8 
-		
-		//Constraints for corner pieces
-		
-		// Piece corner NW
-		//condition with south neighbor
-		if (this.grid.getHeight() >=2) {
-			model.arithm(pieces[0][0].mod(8).div(4).intVar(),"=",pieces[1][0].mod(2).intVar()).post();
-		}
-		//condition with east neighbor
-		if (this.grid.getWidth() >=2) {
-			model.arithm(pieces[0][0].mod(4).div(2).intVar(),"=",pieces[0][1].div(8).intVar()).post();
-		}
-		// Piece corner NE
-		//condition with south neighbor
-		if (this.grid.getHeight() >=2) {
-			model.arithm(pieces[0][this.grid.getWidth()-1].mod(8).div(4).intVar(),"=",pieces[1][this.grid.getWidth()-1].mod(2).intVar()).post();
-		}
-		// Piece corner SW
-		//condition with east neighbor
-		if (this.grid.getWidth() >=2) {
-			model.arithm(pieces[this.grid.getHeight()-1][0].mod(4).div(2).intVar(),"=",pieces[this.grid.getHeight()-1][1].div(8).intVar()).post();
-		}
-		// Piece corner SE
-		//condition with north neighbor
-		//model.arithm(pieces[this.grid.getHeight()-1][this.grid.getWidth()-1].mod(2).intVar(),"=",pieces[this.grid.getHeight()-2][this.grid.getWidth()-1].mod(8).div(4).intVar()).post();
-		
-		//Constraints for border pieces north and south
-		for (int j = 1; j < this.grid.getWidth()-1; j++) {
-			//North border
-			//condition with south neighbor
-			if (this.grid.getHeight() >=2) {
-				model.arithm(pieces[0][j].mod(8).div(4).intVar(),"=",pieces[1][j].mod(2).intVar()).post();
-			}
-			//condition with east neighbor
-			if (this.grid.getWidth() >=2) {
-				model.arithm(pieces[0][j].mod(4).div(2).intVar(),"=",pieces[0][j+1].div(8).intVar()).post();
-			}
-			//South border
-			//condition with east neighbor
-			if (this.grid.getWidth() >=2) {
-				model.arithm(pieces[this.grid.getHeight()-1][j].mod(4).div(2).intVar(),"=",pieces[this.grid.getHeight()-1][j+1].div(8).intVar()).post();
-			}
-		}
-		
-		//Constraints for west and east borders
-		for (int i = 1; i < this.grid.getHeight()-1; i++) {
-			//West border
-			//condition with east neighbor
-			if (this.grid.getWidth() >=2) {
-				model.arithm(pieces[i][0].mod(4).div(2).intVar(),"=",pieces[i][1].div(8).intVar()).post();
-			}
-			//condition with south neighbor
-			if (this.grid.getHeight() >=2) {
-				model.arithm(pieces[i][0].mod(8).div(4).intVar(),"=",pieces[i+1][0].mod(2).intVar()).post();
-			}
-			//East border
-			//condition with south neighbor
-			model.arithm(pieces[i][this.grid.getWidth()-1].mod(8).div(4).intVar(),"=",pieces[i+1][this.grid.getWidth()-1].mod(2).intVar()).post();
-		}
-		
-		//Constraints for others pieces in the grid
-		for (int i = 1; i < this.grid.getHeight()-1; i++) {
-			for (int j = 1; j < this.grid.getWidth()-1; j++) {
-				//condition with east neighbor
-				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"=",pieces[i][j+1].div(8).intVar()).post();
-				//condition with south neighbor
-				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"=",pieces[i+1][j].mod(2).intVar()).post();
-			}
-		}
 		ParallelPortfolio portfolio = new ParallelPortfolio();
-		portfolio.addModel(model);
+
 		int nbmodels = 1;
-		/*if (this.threads > 1) {
+		if (this.threads > 1) {
 			nbmodels = this.threads;
-		}*/
-		for (int k=1; k<nbmodels; k++) {
-			Model modelnew = new Model();
-			modelnew = model;
-			portfolio.addModel(modelnew);
 		}
-		boolean resolution = portfolio.solve();
-		//Solver solver = model.getSolver();
-		//boolean resolution = solver.solve();	
-		this.translate(pieces);
-		return resolution;
+		for (int k=0; k<nbmodels; k++) {
+			Model model = new Model("choco solver");		
+			//init variables to IntVar 
+			for (int i = 0; i < this.grid.getHeight(); i++) {
+				for (int j = 0; j < this.grid.getWidth(); j++) {
+					pieces[i][j] = this.defineDomain(this.grid.getCases()[i][j], i, j, model);
+					if (pieces[i][j] == null) {
+						return false;
+					}
+				}			
+			}
+			
+			for (int i = 0; i < this.grid.getHeight(); i++) {
+				for (int j = 0; j < this.grid.getWidth(); j++) {
+					this.defineConstraintsSolve(pieces, i, j, model);
+				}
+			}
+			portfolio.addModel(model);
+		}
+		if (portfolio.solve()) {
+			for (int i = 0; i < this.totalPiece; i++) {
+				pieces[i/this.grid.getHeight()][i % this.grid.getWidth()] = (IntVar) portfolio.getBestModel().getVar(i);
+				this.translate(pieces);
+			}
+			this.translate(pieces);
+			return true;	
+		}
+		return false;
 	}
 	
 	/**
@@ -391,99 +125,355 @@ public class LevelSolverIA {
 		for (int i = 0; i < this.grid.getHeight(); i++) {
 			for (int j = 0; j < this.grid.getWidth(); j++) {
 				//define possible values considering type and postion on the grid of a piece
-				switch(this.grid.getCases()[i][j].getType()) {
-				case 0 :
-					pieces[i][j] = model.intVar(new int[] {0});
-					break;
-				case 1 :
-					pieces[i][j] = model.intVar(new int[] {1,2,4,8});
-					break;
-				case 2 :
-					pieces[i][j] = model.intVar(new int[] {5,10});
-					break;
-				case 3 :
-					pieces[i][j] = model.intVar(new int[] {7,14,13,11});
-					break;
-				case 4 :
-					pieces[i][j] = model.intVar(new int[] {15});
-					break;
-				case 5 :
-					pieces[i][j] = model.intVar(new int[] {3,6,12,9});
-					break;
-				}
+				pieces[i][j] = this.defineDomain(this.grid.getCases()[i][j], -1, -1, model);	
 			}			
 		}
-		
-		//Constraints : check two neighbors have to be linked considered their values
-		// For that we just have to check bit value of the piece and the bit value corresponding
-		//to the link with the right neighbor
-		// North : value % 2
-		//East : value % 4 / 2
-		//South : value % 8 / 4
-		//West : value / 8 
-		
-		//Constraints for corner pieces
-		
-		// Piece corner NW
-		//condition with east neighbor
-		model.arithm(pieces[0][0].mod(4).div(2).intVar(),"*",pieces[0][1].div(8).intVar(),"=",0).post();
-		//condition with south neighbor
-		model.arithm(pieces[0][0].mod(8).div(4).intVar(),"*",pieces[1][0].mod(2).intVar(),"=",0).post();
-
-		
-		// Piece corner NE
-		//condition with south neighbor
-		model.arithm(pieces[0][this.grid.getWidth()-1].mod(8).div(4).intVar(),"*",pieces[1][this.grid.getWidth()-1].mod(2).intVar(),"=",0).post();
-
-		// Piece corner SW
-		//condition with east neighbor
-		model.arithm(pieces[this.grid.getHeight()-1][0].mod(4).div(2).intVar(),"*",pieces[this.grid.getHeight()-1][1].div(8).intVar(),"=",0).post();
-		
-		// Piece corner SE
-
-		//Constraints for border pieces north and south
-		for (int j = 1; j < this.grid.getWidth()-1; j++) {
-			//North border
-			//condition with south neighbor
-			model.arithm(pieces[0][j].mod(8).div(4).intVar(),"*",pieces[1][j].mod(2).intVar(),"=",0).post();
-			//condition with east neighbor
-			model.arithm(pieces[0][j].mod(4).div(2).intVar(),"*",pieces[0][j+1].div(8).intVar(),"=",0).post();
-
-			//South border
-			//condition with east neighbor
-			model.arithm(pieces[this.grid.getHeight()-1][j].mod(4).div(2).intVar(),"*",pieces[this.grid.getHeight()-1][j+1].div(8).intVar(),"=",0).post();	
-		}
-		
-		//Constraints for west and east borders
-		for (int i = 1; i < this.grid.getHeight()-1; i++) {
-			//West border
-			//condition with east neighbor
-			model.arithm(pieces[i][0].mod(4).div(2).intVar(),"*",pieces[i][1].div(8).intVar(),"=",0).post();
-			//condition with south neighbor
-			model.arithm(pieces[i][0].mod(8).div(4).intVar(),"*",pieces[i+1][0].mod(2).intVar(),"=",0).post();
-			
-			//East border
-			//condition with south neighbor
-			model.arithm(pieces[i][this.grid.getWidth()-1].mod(8).div(4).intVar(),"*",pieces[i+1][this.grid.getWidth()-1].mod(2).intVar(),"=",0).post();
-		}
-		
-		//Constraints for others pieces in the grid
-		for (int i = 1; i < this.grid.getHeight()-1; i++) {
-			for (int j = 1; j < this.grid.getWidth()-1; j++) {
-				//condition with east neighbor
-				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"*",pieces[i][j+1].div(8).intVar(),"=",0).post();
-				//condition with south neighbor
-				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"*",pieces[i+1][j].mod(2).intVar(),"=",0).post();
+		for (int i = 0; i < this.grid.getHeight(); i++) {
+			for (int j = 0; j < this.grid.getWidth(); j++) {
+				this.defineConstraintsNoSolve(pieces, i, j, model);
 			}
 		}
-		
 		Solver solver = model.getSolver();
 		boolean resolution = solver.solve();	
 		this.translate(pieces);
 		return resolution;
 	}
 	
+	/**
+	 * Define a domain of a piece considered its type if its locked and considered its orientation
+	 * for nosolve method just put i =-1 and j = -1 to define domain
+	 * @param p
+	 * @param i	
+	 * @param j
+	 * @param model
+	 * @return the domain or null if its a case of impossible solve
+	 */
+	public IntVar defineDomain (Piece p, int i, int j, Model model) {
+		switch(p.getType()) {
+		case 0 :
+			return model.intVar(new int[] {0});
+		case 1 :
+			if (p.getLock() == 1) {
+				switch(p.getOrientation()) {
+				case 0 : 
+					return model.intVar(new int[] {1});
+				case 1 : 
+					return model.intVar(new int[] {2});
+				case 2 : 
+					return model.intVar(new int[] {4});
+				case 3 : 
+					return model.intVar(new int[] {8});
+				}
+			}
+			if (this.grid.getHeight() == 2 && this.grid.getWidth() == 1) {
+				if (this.grid.northWestSide(i, j)) {
+					return model.intVar(new int[] {4});
+				}
+				
+				if (this.grid.southWestSide(i, j)) {
+					return model.intVar(new int[] {1});
+				}				
+			}
+			
+			if (this.grid.getWidth() == 2 && this.grid.getHeight() == 1) {
+				if (this.grid.northWestSide(i, j)) {
+					return model.intVar(new int[] {2});
+				}
+				
+				if (this.grid.northEastSide(i, j)) {
+					return model.intVar(new int[] {8});
+				}
+				
+			}
+			if (this.grid.northWestSide(i, j)) {
+				return model.intVar(new int[] {2,4});
+			}
+			if (this.grid.northEastSide(i, j)) {
+				return model.intVar(new int[] {4,8});
+			}
+			if (this.grid.southWestSide(i, j)) {
+				return model.intVar(new int[] {1,2});
+			}
+			if (this.grid.southEastSide(i, j)) {
+				return model.intVar(new int[] {1,8});
+			}
+			if (this.grid.northBorder(i)) {
+				return model.intVar(new int[] {2,4,8});
+			}
+			if (this.grid.southBorder(i)) {
+				return model.intVar(new int[] {1,2,8});
+			}
+			if (this.grid.westBorder(j)) {
+				return model.intVar(new int[] {1,2,4});
+			}
+			if (this.grid.eastBorder(j)) {
+				return model.intVar(new int[] {1,4,8});
+			}
+			return model.intVar(new int[] {1,2,4,8});
+			
+		case 2 :
+			if (p.getLock() == 1) {
+				switch(p.getOrientation()) {
+				case 0 : 
+					return model.intVar(new int[] {5});
+				case 1 : 
+					return model.intVar(new int[] {10});
+				}
+			}
+			if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
+				return null;
+			}
+			if (this.grid.northBorder(i)||this.grid.southBorder(i)) {
+				return model.intVar(new int[] {10});
+			}
+			if (this.grid.westBorder(j)||this.grid.eastBorder(j)) {
+				return model.intVar(new int[] {5});
+			}
+			return model.intVar(new int[] {5,10});
 
+		case 3 :
+			if (p.getLock() == 1) {
+				switch(p.getOrientation()) {
+				case 0 : 
+					return model.intVar(new int[] {11});
+				case 1 : 
+					return model.intVar(new int[] {7});
+				case 2 : 
+					return model.intVar(new int[] {14});
+				case 3 : 
+					return model.intVar(new int[] {13});
+				}
+			}
+			if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
+				return null;
+			}
+			if (this.grid.northBorder(i)) {
+				return model.intVar(new int[] {14});
+			}
+			if (this.grid.southBorder(i)) {
+				return model.intVar(new int[] {11});
+			}
+			if (this.grid.westBorder(j)) {
+				return model.intVar(new int[] {7});
+			}
+			if (this.grid.eastBorder(j)) {
+				return model.intVar(new int[] {13});
+			}
+			return model.intVar(new int[] {7,14,13,11});
+			
+		case 4 :
+			if (this.grid.northWestSide(i, j)||this.grid.northEastSide(i, j)||this.grid.southWestSide(i, j)||this.grid.southEastSide(i, j)) {
+				return null;
+			}
+			return model.intVar(new int[] {15});
+		case 5 :
+			if (p.getLock() == 1) {
+				switch(p.getOrientation()) {
+				case 0 : 
+					return model.intVar(new int[] {3});
+				case 1 : 
+					return model.intVar(new int[] {6});
+				case 2 : 
+					return model.intVar(new int[] {12});
+				case 3 : 
+					return model.intVar(new int[] {9});
+				}
+			}
+			if (this.grid.northWestSide(i, j)) {
+				return model.intVar(new int[] {6});
+			}
+			if (this.grid.northEastSide(i, j)) {
+				return model.intVar(new int[] {12});
+			}
+			if (this.grid.southWestSide(i, j)) {
+				return model.intVar(new int[] {3});
+			}
+			if (this.grid.southEastSide(i, j)) {
+				return model.intVar(new int[] {9});
+			}
+			if (this.grid.northBorder(i)) {
+				return model.intVar(new int[] {6,12});
+			}
+			if (this.grid.southBorder(i)) {
+				return model.intVar(new int[] {3,9});
+			}
+			if (this.grid.westBorder(j)) {
+				return model.intVar(new int[] {3,6});
+			}
+			if (this.grid.eastBorder(j)) {
+				return model.intVar(new int[] {12,9});
+			}
+			return model.intVar(new int[] {3,6,12,9});
+		}
+		return null;
+	}
+	
+	/**
+	 * Define constraints to check if two neighbors have to be linked considered their values
+	 * For that we just have to check bit value of the piece and the bit value corresponding to the link with the right neighbor
+	 * North : value % 2
+	 * East : value % 4 / 2
+	 * South : value % 8 / 4
+	 * West : value / 8 
+	 * @param pieces
+	 * @param i
+	 * @param j
+	 */
+	public void defineConstraintsSolve (IntVar[][] pieces, int i, int j, Model model) {
+		if (this.grid.northWestSide(i, j)) {
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"=",pieces[i+1][j].mod(2).intVar()).post();
+			}
+			//condition with east neighbor
+			if (this.grid.getWidth() >=2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"=",pieces[i][j+1].div(8).intVar()).post();
+			}
+			return;
+		}
+		if (this.grid.northEastSide(i, j)) {
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"=",pieces[i+1][j].mod(2).intVar()).post();
+			}
+			return;
+		}
+		if (this.grid.southWestSide(i, j)) {
+			//condition with east neighbor
+			if (this.grid.getWidth() >=2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"=",pieces[i][j+1].div(8).intVar()).post();
+			}
+			return;
+		}
+		if (this.grid.southEastSide(i, j)) {
+			return;
+		}
+		if (this.grid.northBorder(i)) {
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"=",pieces[i+1][j].mod(2).intVar()).post();
+			}
+			//condition with east neighbor
+			if (this.grid.getWidth() >=2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"=",pieces[i][j+1].div(8).intVar()).post();
+			}
+			return;
+		}
+		if (this.grid.southBorder(i)) {
+			//condition with east neighbor
+			if (this.grid.getWidth() >= 2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"=",pieces[i][j+1].div(8).intVar()).post();
+			}
+			return;
+		}
+		if (this.grid.westBorder(j)) {
+			//condition with east neighbor
+			if (this.grid.getWidth() >=2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"=",pieces[i][j+1].div(8).intVar()).post();
+			}
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"=",pieces[i+1][j].mod(2).intVar()).post();
+			}
+			return;
+		}
+		if (this.grid.eastBorder(j)) {
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"=",pieces[i+1][j].mod(2).intVar()).post();
+			}
+			return;
+		}
+		//condition with east neighbor
+		model.arithm(pieces[i][j].mod(4).div(2).intVar(),"=",pieces[i][j+1].div(8).intVar()).post();
+		//condition with south neighbor
+		model.arithm(pieces[i][j].mod(8).div(4).intVar(),"=",pieces[i+1][j].mod(2).intVar()).post();
+		return;
+	}
+	
+	/**
+	 * Define constraints to check if two neighbors are not linked considered their values
+	 * For that we just have to check bit value of the piece and the bit value corresponding to the link with the right neighbor
+	 * North : value % 2
+	 * East : value % 4 / 2
+	 * South : value % 8 / 4
+	 * West : value / 8 
+	 * @param pieces
+	 * @param i
+	 * @param j
+	 */
+	public void defineConstraintsNoSolve (IntVar[][] pieces, int i, int j, Model model) {
+		if (this.grid.northWestSide(i, j)) {
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"*",pieces[i+1][j].mod(2).intVar(),"=",0).post();
+			}
+			//condition with east neighbor
+			if (this.grid.getWidth() >=2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"*",pieces[i][j+1].div(8).intVar(),"=",0).post();
+			}
+			return;
+		}
+		if (this.grid.northEastSide(i, j)) {
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"*",pieces[i+1][j].mod(2).intVar(),"=",0).post();
+			}
+			return;
+		}
+		if (this.grid.southWestSide(i, j)) {
+			//condition with east neighbor
+			if (this.grid.getWidth() >=2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"*",pieces[i][j+1].div(8).intVar(),"=",0).post();
+			}
+			return;
+		}
+		if (this.grid.southEastSide(i, j)) {
+			return;
+		}
+		if (this.grid.northBorder(i)) {
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"*",pieces[i+1][j].mod(2).intVar(),"=",0).post();
+			}
+			//condition with east neighbor
+			if (this.grid.getWidth() >=2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"*",pieces[i][j+1].div(8).intVar(),"=",0).post();
+			}
+			return;
+		}
+		if (this.grid.southBorder(i)) {
+			//condition with east neighbor
+			if (this.grid.getWidth() >= 2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"*",pieces[i][j+1].div(8).intVar(),"=",0).post();
+			}
+			return;
+		}
+		if (this.grid.westBorder(j)) {
+			//condition with east neighbor
+			if (this.grid.getWidth() >=2) {
+				model.arithm(pieces[i][j].mod(4).div(2).intVar(),"*",pieces[i][j+1].div(8).intVar(),"=",0).post();
+			}
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"*",pieces[i+1][j].mod(2).intVar(),"=",0).post();
+			}
+			return;
+		}
+		if (this.grid.eastBorder(j)) {
+			//condition with south neighbor
+			if (this.grid.getHeight() >=2) {
+				model.arithm(pieces[i][j].mod(8).div(4).intVar(),"*",pieces[i+1][j].mod(2).intVar(),"=",0).post();
+			}
+			return;
+		}
+		//condition with east neighbor
+		model.arithm(pieces[i][j].mod(4).div(2).intVar(),"*",pieces[i][j+1].div(8).intVar(),"=",0).post();
+		//condition with south neighbor
+		model.arithm(pieces[i][j].mod(8).div(4).intVar(),"*",pieces[i+1][j].mod(2).intVar(),"=",0).post();
+		return;
+	}
+		
 	/**
 	 * Method to translate the piece values to cases of the grid 
 	 * Value 0 : Type 0
@@ -503,7 +493,6 @@ public class LevelSolverIA {
 	 * Value 12 : Type 5 orientation 2
 	 * Value 9 : Type 5 orientation 3
 	 */
-
 	public void translate(IntVar[][]pieces) {
 		for (int i = 0; i < this.grid.getHeight(); i++) {
 			for (int j = 0; j < this.grid.getWidth(); j++) {
@@ -528,107 +517,17 @@ public class LevelSolverIA {
 		}
 	}
 	
-	public int lockPiece() {
-		int countLockedPiece = 0;
-		for (int i = 0; i < this.grid.getHeight(); i++) {
-			for (int j = 0; j < this.grid.getWidth(); j++) {
-				if(grid.getCases()[i][j].getLock()==0) {
-
-					ArrayList<Integer> orientationPossible = new ArrayList<>();
-					
-					if (grid.northWestSide(i, j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) { 
-							if( grid.getCases()[i][j].getLinks()[0]==0 && grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}	
-					else if (grid.northEastSide(i, j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[0]==0 && grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}					
-					else if (grid.southWestSide(i, j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[2]==0 && grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					else if (grid.southEastSide(i, j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[2]==0 && grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}			
-					else if (grid.northBorder(i)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[0]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					else if (grid.southBorder(i)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[2]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					else if (grid.westBorder(j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[3]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}	
-					else if (grid.eastBorder(j)) {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if( grid.getCases()[i][j].getLinks()[1]==0 && !grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					else {
-						for(int k=0; k<grid.getCases()[i][j].getNbRotation(); k++) {
-							if(!grid.noRespectedLockPiece(grid.getCases()[i][j])) 
-								orientationPossible.add(grid.getCases()[i][j].getOrientation());
-							grid.getCases()[i][j].rotatePiece();
-						}
-					}
-					//System.out.println(orientationPossible.size());
-					if( orientationPossible.size() == 1) {
-						//System.out.println(orientationPossible.get(0));
-						this.grid.getCases()[i][j].setOrientation(orientationPossible.get(0));
-						this.grid.getCases()[i][j].defineLinks();
-						this.grid.getCases()[i][j].setLock(1);
-					}
-					else if (orientationPossible.size() == 0) {
-						countLockedPiece = -2;
-						return countLockedPiece;
-					}
-					else 
-						grid.getCases()[i][j].setPossibleOrientations(orientationPossible);	
-				}
-				countLockedPiece += grid.getCases()[i][j].getLock();
-			}			
-		}
-		return countLockedPiece;
-	}
-	
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-		LevelGenerator test = new LevelGenerator(25, 25);
-		test.buildSolution();
-		test.shuffleSolution();
+		LevelGenerator test = new LevelGenerator(100, 100);
+		//test.buildSolution();
+		//test.shuffleSolution();
 		//Grid grid = test.getGrid();
-		//grid.writeFile("file5");
-	   	//Grid grid2 = Grid.readFile("file5");
+		//Write.writeFile("file5", grid);
+	   	Grid grid2 = Read.readFile("file5");
 		long debut = System.currentTimeMillis();
-		LevelSolverIA sol = new LevelSolverIA(test.getGrid(), 1);
-		//LevelSolverIA sol = new LevelSolverIA(grid2, 1);
+		//LevelSolverIA sol = new LevelSolverIA(test.getGrid(), 3);
+		LevelSolverIA sol = new LevelSolverIA(grid2, 1);
 		System.out.println("Solution after solver : " + sol.solve());
 		//System.out.println(sol.grid.getCases()[0][0].toString());
 		long fin = System.currentTimeMillis();

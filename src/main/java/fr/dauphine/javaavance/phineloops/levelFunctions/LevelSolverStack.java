@@ -3,10 +3,13 @@ package fr.dauphine.javaavance.phineloops.levelFunctions;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Stack;
 
 import fr.dauphine.javaavance.phineloops.model.Grid;
 import fr.dauphine.javaavance.phineloops.model.Piece;
+import fr.dauphine.javaavance.phineloops.utils.Read;
+import fr.dauphine.javaavance.phineloops.utils.Write;
 import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class LevelSolverStack {
@@ -22,6 +25,32 @@ public class LevelSolverStack {
 		this.totalPiece = grid.getHeight()*grid.getWidth();
 		this.argumentGiven = argumentGiven;
 	}	
+	
+	/**
+	 * Sort the stack, on top the closest pieces of the chosen piece
+	 * @param chosenPiece
+	 * @param originalStack
+	 * @return Stack
+	 */
+	public Stack<Piece> sortOriginalStack(Piece chosenPiece, Stack<Piece> originalStack) {
+		ArrayList<Piece> tmpList = new ArrayList<>();
+		int hauteur = 1;
+		while(!originalStack.isEmpty()) {	
+			Iterator<Piece> iterator = originalStack.iterator();
+			while (iterator.hasNext()) {
+			   Piece  p = iterator.next();
+			   if( Math.sqrt( Math.pow(p.getI()-chosenPiece.getI(),2) + Math.pow(p.getJ()-chosenPiece.getJ(),2)) <= hauteur ) {
+				   tmpList.add(p);
+				   iterator.remove();
+			   }
+			}
+			hauteur++;
+		}
+		Collections.reverse(tmpList);
+		Stack<Piece> sortedStack = new Stack<>();
+		sortedStack.addAll(tmpList);
+		return sortedStack;
+	}
 	
 	/**
 	 * Says if piece respects links with others
@@ -99,6 +128,7 @@ public class LevelSolverStack {
 		
 		while(!originalStack.isEmpty()) {
 			Piece p = originalStack.pop();
+			//System.out.println(p);
 			while( !this.respectAncestors(p,finalStack) && (p.getIndex()<p.getPossibleOrientations().size()-1)) {
 				p.rotatePossibleOrientation();
 			}
@@ -149,7 +179,6 @@ public class LevelSolverStack {
 		}
 		
 		//mobilePiece = totalPiece - lockedPiece;
-
 	    //System.out.println("total pieces : " + totalPiece + "\n");
 		//System.out.println("locked pieces : " + lockedPiece + "\n");
 		//System.out.println("mobiles pieces : " + mobilePiece + "\n");
@@ -184,7 +213,8 @@ public class LevelSolverStack {
 			
 			originalStack.remove(chosenPiece);
 			
-			//System.out.println(chosenPiece);
+			originalStack = sortOriginalStack(chosenPiece, originalStack);
+
 			
 			boolean solutionFound = false;
 			int k = 0;
@@ -195,7 +225,7 @@ public class LevelSolverStack {
 				root.setPossibleOrientations(orientationPossible);
 				finalStack.push(root);
 				solutionFound = stack(originalStack,finalStack);
-				System.out.println(k + " " + root + " " + solutionFound);
+				//System.out.println(k + " " + root + " " + solutionFound);
 				k++;
 			}			
 			if( solutionFound ) {
@@ -214,16 +244,16 @@ public class LevelSolverStack {
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-		LevelGenerator test = new LevelGenerator(250,250);
+		LevelGenerator test = new LevelGenerator(70,70);
 		test.buildSolution();
 		test.shuffleSolution();
 		Grid grid = test.getGrid();
-		//grid.writeFile("file6");
-	   	//Grid grid2 = Grid.readFile("file6");
+		//Write.writeFile("file", grid);
+	   	//Grid grid2 = Read.readFile("file");
 	   	
 	    long debut = System.currentTimeMillis();
 	   
-	    boolean argumentGiven = true;
+	    boolean argumentGiven = false;
 		LevelSolverStack sol = new LevelSolverStack(grid, argumentGiven);
 		System.out.println(sol.solve());
 		

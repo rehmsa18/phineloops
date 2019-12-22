@@ -81,9 +81,9 @@ public class LevelSolverIA {
 		ParallelPortfolio portfolio = new ParallelPortfolio();
 
 		int nbmodels = 1;
-		if (this.threads > 1) {
-			nbmodels = this.threads;
-		}
+		//if (this.threads > 1) {
+		//	nbmodels = this.threads;
+		//}
 		for (int k=0; k<nbmodels; k++) {
 			Model model = new Model("choco solver");		
 			//init variables to IntVar 

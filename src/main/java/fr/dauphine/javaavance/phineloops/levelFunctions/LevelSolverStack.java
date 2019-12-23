@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Stack;
-
 import fr.dauphine.javaavance.phineloops.model.Grid;
 import fr.dauphine.javaavance.phineloops.model.Piece;
-import fr.dauphine.javaavance.phineloops.utils.Read;
-import fr.dauphine.javaavance.phineloops.utils.Write;
 import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class LevelSolverStack {
@@ -17,13 +14,14 @@ public class LevelSolverStack {
 	private Grid grid;
 	private int totalPiece;
 	private int lockedPiece = 0;
-	//private int mobilePiece = 0; just use for println not used now
 	private boolean argumentGiven;
-
-	public LevelSolverStack(Grid grid, boolean argumentGiven) {
+	private int maxThreads;
+	
+	public LevelSolverStack(Grid grid, boolean argumentGiven, int maxThreads) {
 		this.grid = grid;
 		this.totalPiece = grid.getHeight()*grid.getWidth();
 		this.argumentGiven = argumentGiven;
+		this.maxThreads = maxThreads;
 	}	
 	
 	/**
@@ -53,22 +51,6 @@ public class LevelSolverStack {
 	}
 	
 	/**
-	 * Says if piece respects links with others
-	 * @param child
-	 * @param pieces
-	 * @return true if the links with others pieces are respected
-	 */
-	public boolean respectAncestors(Piece child, Stack<Piece> pieces) {
-		for(int i=0; i<pieces.size(); i++) {
-    	   if( !child.linkedNeighborOrNoNeighbor(pieces.get(i) )) {
-				return false;
-    	   }
-        } 
-		return true;	
-	}
-	
-	
-	/**
 	 * Return piece with the least orientation possible
 	 * @param originalStack
 	 * @return Piece
@@ -91,7 +73,6 @@ public class LevelSolverStack {
 		}
 		return chosenPiece;
 	}
-	
 	
 	/**
 	 * Return piece with the most orientation possible
@@ -119,20 +100,35 @@ public class LevelSolverStack {
 	}
 	
 	/**
+	 * Says if piece respects links with others
+	 * @param child
+	 * @param pieces
+	 * @return true if the links with others pieces are respected
+	 */
+	public static boolean respectAncestors(Piece child, Stack<Piece> pieces) {
+		for(int i=0; i<pieces.size(); i++) {
+    	   if( !child.linkedNeighborOrNoNeighbor(pieces.get(i) )) {
+				return false;
+    	   }
+        } 
+		return true;	
+	}
+	
+	/**
 	 * Says if a solution is found
 	 * @param originalStack
 	 * @param finalStack
 	 * @return true if solution found
 	 */
-	public boolean stack(Stack<Piece> originalStack, Stack<Piece> finalStack) {
-		
+	public static Stack<Piece> stack(Stack<Piece> originalStack, Piece root) {
+		Stack<Piece> finalStack = new Stack<>();
+		finalStack.push(root);
 		while(!originalStack.isEmpty()) {
 			Piece p = originalStack.pop();
-			//System.out.println(p);
-			while( !this.respectAncestors(p,finalStack) && (p.getIndex()<p.getPossibleOrientations().size()-1)) {
+			while( !respectAncestors(p,finalStack) && (p.getIndex()<p.getPossibleOrientations().size()-1)) {
 				p.rotatePossibleOrientation();
 			}
-			if(this.respectAncestors(p,finalStack)) {
+			if(respectAncestors(p,finalStack)) {
 				finalStack.push(p);
 			}
 			else {	
@@ -150,18 +146,19 @@ public class LevelSolverStack {
 				}
 				if(finalStack.isEmpty()) {
 					originalStack.pop();
-					return false;
+					return finalStack;
 				}
 			}
-		}	
-		return true;
+		}
+		return finalStack;
 	}
 
 	/**
 	 * Solve the level
 	 * @return true if a solution found
+	 * @throws IOException 
 	 */
-	public boolean solve() {
+	public boolean solve() throws IOException {
 		if (!this.grid.detectImpossible()) {
 			return false;
 		}
@@ -178,7 +175,7 @@ public class LevelSolverStack {
 			}
 		}
 		
-		//mobilePiece = totalPiece - lockedPiece;
+		int mobilePiece = totalPiece - lockedPiece;
 	    //System.out.println("total pieces : " + totalPiece + "\n");
 		//System.out.println("locked pieces : " + lockedPiece + "\n");
 		//System.out.println("mobiles pieces : " + mobilePiece + "\n");
@@ -189,12 +186,11 @@ public class LevelSolverStack {
 		else {
 			
 			Stack<Piece> originalStack = new Stack<>();
-			Stack<Piece> finalStack = new Stack<>();
 			for( int i = this.grid.getHeight()-1; i>=0; i-- ) {
 				for( int j = this.grid.getWidth()-1; j>=0; j-- ) {
 					if(grid.getCases()[i][j].getLock()==0) {
 						Piece p = grid.getCases()[i][j];
-						Collections.sort(p.getPossibleOrientations());
+						//Collections.sort(p.getPossibleOrientations());
 						p.setOrientation(p.getPossibleOrientations().get(0));
 						p.defineLinks();
 						originalStack.push(p);
@@ -211,40 +207,86 @@ public class LevelSolverStack {
 				chosenPiece = this.getPieceWithMostOrientation(originalStack);
 			}
 			
+			System.out.println(chosenPiece + " " +chosenPiece.getPossibleOrientations().size());
+						
 			originalStack.remove(chosenPiece);
-			
 			originalStack = sortOriginalStack(chosenPiece, originalStack);
-
 			
-			boolean solutionFound = false;
-			int k = 0;
-			while( !solutionFound &&  k<chosenPiece.getPossibleOrientations().size()) {
+
+			int nbOrientations = chosenPiece.getPossibleOrientations().size();
+			int nbThreads = 0; 
+
+			if(nbOrientations == maxThreads) {
+				nbThreads = nbOrientations - 1;
+			}
+			else if(nbOrientations < maxThreads) {
+				nbThreads = nbOrientations - 1;
+			}
+			else if(nbOrientations > maxThreads){
+				nbThreads = maxThreads - 1;
+			}
+
+			StackThread[] threads = new StackThread[nbThreads];
+			
+			// threads created
+	        for (int i = 0; i < nbThreads; i++) {
+				Piece root = new Piece(chosenPiece.getI(),chosenPiece.getJ(),chosenPiece.getType(),chosenPiece.getPossibleOrientations().get(i));
+				ArrayList<Integer> orientationPossible = new ArrayList<>();
+				orientationPossible.add(chosenPiece.getPossibleOrientations().get(i));
+				root.setPossibleOrientations(orientationPossible);
+				Stack<Piece> originalStack2 = new Stack<>();
+				originalStack2.addAll(originalStack);
+				threads[i] = new StackThread(originalStack2,root);
+	            threads[i].start();
+	        }
+
+	        try {
+	            for (int i = 0; i < nbThreads; i++) {
+	                threads[i].join();
+	    			Stack<Piece> finalS = threads[i].getFinalStack();
+	    			if(finalS.size() == mobilePiece) {
+		                System.out.println("solution "+ threads[i].getName()+" " + threads[i].getFinalStack());
+						while(!finalS.isEmpty()) {
+							Piece p = (Piece) finalS.pop();
+							grid.getCases()[p.getI()][p.getJ()] = p;
+						}
+	    			return true;
+	            	}	
+	    			else {
+		                System.out.println("not solution "+ threads[i].getName()+" " + threads[i].getFinalStack());
+	    			}
+
+	            }
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	        
+	        //main thread
+			for(int k=nbThreads; k <chosenPiece.getPossibleOrientations().size(); k++) {
 				Piece root = new Piece(chosenPiece.getI(),chosenPiece.getJ(),chosenPiece.getType(),chosenPiece.getPossibleOrientations().get(k));
 				ArrayList<Integer> orientationPossible = new ArrayList<>();
 				orientationPossible.add(chosenPiece.getPossibleOrientations().get(k));
 				root.setPossibleOrientations(orientationPossible);
-				finalStack.push(root);
-				solutionFound = stack(originalStack,finalStack);
-				//System.out.println(k + " " + root + " " + solutionFound);
-				k++;
-			}			
-			if( solutionFound ) {
-				while(!finalStack.isEmpty()) {
-					Piece p = finalStack.pop();
-					grid.getCases()[p.getI()][p.getJ()] = p;
-				}
-				return true;
+				Stack<Piece> finalS = stack(originalStack, root);
+    			if(finalS.size() == mobilePiece) {
+	                System.out.println("solution Thread "+ Thread.currentThread().getName() + "-" + k + " " + finalS);
+					while(!finalS.isEmpty()) {
+						Piece p = (Piece) finalS.pop();
+						grid.getCases()[p.getI()][p.getJ()] = p;
+					}
+					return true;
+    			}
+    			else {
+	                System.out.println("not solution Thread "+ Thread.currentThread().getName() + "-" + k + " " + finalS);
+    			}
 			}
-			else {
-				return false;
-			}
-			 
+			return false;		 
 		}		
 	}
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-		LevelGenerator test = new LevelGenerator(70,70);
+		LevelGenerator test = new LevelGenerator(100, 100);
 		test.buildSolution();
 		test.shuffleSolution();
 		Grid grid = test.getGrid();
@@ -254,14 +296,18 @@ public class LevelSolverStack {
 	    long debut = System.currentTimeMillis();
 	   
 	    boolean argumentGiven = false;
-		LevelSolverStack sol = new LevelSolverStack(grid, argumentGiven);
+		LevelSolverStack sol = new LevelSolverStack(grid, argumentGiven, 4);
 		System.out.println(sol.solve());
 		
 	    long fin = System.currentTimeMillis();
 	    System.out.println("Méthode exécutée en " + Long.toString(fin - debut) + " millisecondes");
 
 	    LevelDisplay display2 = new LevelDisplay(test, sol.grid); 
-
+	    
+    	LevelChecker levelChecker = new LevelChecker(sol.grid);
+    	
+    	System.out.println("check " +levelChecker.check());
+	    
 	}
 
 }

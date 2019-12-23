@@ -405,7 +405,7 @@ public class Piece {
 	 * Display the type and orientation of the piece, place in grid, and unicode shape
 	 */
 	public String toString() {
-		return "(" + i + "," + j + ") " +type + " " + orientation + " " + this.unicode() + " " +possibleOrientations + " " +index;
+		return "(" + i + "," + j + ")" +type + " " + orientation + " " + possibleOrientations + " " + this.unicode()+" "+index;
 	}
 	
 	/**

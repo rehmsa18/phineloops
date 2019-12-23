@@ -7,7 +7,7 @@ import fr.dauphine.javaavance.phineloops.model.Grid;
 
 public class TestInstances {
 
-	public static void test() throws IOException {
+	public static void test() throws IOException, InterruptedException {
 		final File folder = new File(".\\instances\\public");
 		long totalTime = 0;
 	    for (final File fileName : folder.listFiles()) {
@@ -16,7 +16,7 @@ public class TestInstances {
 	    	
 			long debut = System.currentTimeMillis();
 			LevelSolverIA sol = new LevelSolverIA(grid, 1);
-			//LevelSolverStack sol = new LevelSolverStack(grid, true);
+			//LevelSolverStack sol = new LevelSolverStack(grid, true, 4);
 			boolean response = sol.solve();
 			long fin = System.currentTimeMillis();
 			long time = fin-debut;
@@ -26,7 +26,7 @@ public class TestInstances {
 	    }  
 	    System.out.println(totalTime);
 	}
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		TestInstances.test();
 	}
 

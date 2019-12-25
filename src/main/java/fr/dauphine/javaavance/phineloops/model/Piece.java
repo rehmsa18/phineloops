@@ -26,9 +26,6 @@ public class Piece {
 	}
 	
 	public Piece(int type, int orientation) {
-		if(type<0 || type>5 || orientation<0 || orientation>3){
-            throw new IllegalArgumentException();
-        }
 		this.type = type;
 		this.orientation = orientation;
 		this.defineLinks();
@@ -40,9 +37,6 @@ public class Piece {
 	}
 
 	public Piece(int i, int j, int type, int orientation) {
-		if(i<0 || j<0 || type<0 || type>5 || orientation<0 || orientation>3){
-            throw new IllegalArgumentException();
-        }
 		this.i = i;
 		this.j = j;
 		this.orientation = orientation;
@@ -68,9 +62,6 @@ public class Piece {
 	}
 
 	public void setOrientation(int orientation) {
-		if(orientation<0 || orientation>3){
-			throw new IllegalArgumentException();
-        }
 		this.orientation = orientation;
 	}
 
@@ -79,9 +70,6 @@ public class Piece {
 	}
 
 	public void setType(int type) {
-		if(type<0 || type>5){
-			throw new IllegalArgumentException();
-        }
 		this.type = type;
 	}
 
@@ -90,9 +78,6 @@ public class Piece {
 	}
 
 	public void setLock(int lock) {
-		if(lock<0 || lock>1){
-			throw new IllegalArgumentException();
-        }
 		this.lock = lock;
 	}
 
@@ -109,9 +94,6 @@ public class Piece {
 	}
 
 	public void setGridX(int gridX) {
-		if(gridX<0){
-            throw new IllegalArgumentException();
-        }
 		this.gridX = gridX;
 	}
 
@@ -120,9 +102,6 @@ public class Piece {
 	}
 
 	public void setGridY(int gridY) {
-		if(gridY<0){
-            throw new IllegalArgumentException();
-        }
 		this.gridY = gridY;
 	}
 
@@ -135,9 +114,6 @@ public class Piece {
 	}
 
 	public void setPossibleOrientations(ArrayList<Integer> possibleOrientations) {
-		if(possibleOrientations == null){
-			throw new NullPointerException();
-        }
 		this.possibleOrientations = possibleOrientations;
 	}
 
@@ -167,79 +143,77 @@ public class Piece {
 	 * @param links
 	 */
 	public void defineOrientation (int type, int []links) {
-		if(type<0 || type >5){
-            throw new IllegalArgumentException();
-        }
 		switch (this.type) {
-		case 0 : case 4 : 
-			this.orientation = 0;
-			break;
-		case 1 : 
-			if (links[0] == 1) {
+			case 0 : case 4 : 
 				this.orientation = 0;
 				break;
-			}
-			if (links[1] == 1) {
-				this.orientation = 1;
+			case 1 : 
+				if (links[0] == 1) {
+					this.orientation = 0;
+					break;
+				}
+				if (links[1] == 1) {
+					this.orientation = 1;
+					break;
+				}
+				if (links[2] == 1) {
+					this.orientation = 2;
+					break;
+				}
+				if (links[3] == 1) {
+					this.orientation = 3;
+					break;
+				}
 				break;
-			}
-			if (links[2] == 1) {
-				this.orientation = 2;
+			case 2 : 
+				if (links[0] == 1) {
+					this.orientation = 0;
+					break;
+				}
+				if (links[1] == 1) {
+					this.orientation = 1;
+					break;
+				}
+			case 3 : 
+				if (links[0] == 0) {
+					this.orientation = 2;
+					break;
+				}
+				if (links[1] == 0) {
+					this.orientation = 3;
+					break;
+				}
+				if (links[2] == 0) {
+					this.orientation = 0;
+					break;
+				}
+				if (links[3] == 0) {
+					this.orientation = 1;
+					break;
+				}
 				break;
-			}
-			if (links[3] == 1) {
-				this.orientation = 3;
+	
+			case 5 : 
+				if (links[0] == 1 && links[1] == 1) {
+					this.orientation = 0;
+					break;
+				}
+				if (links[1] == 1 && links[2] == 1) {
+					this.orientation = 1;
+					break;
+				}
+				if (links[2] == 1 && links[3] == 1) {
+					this.orientation = 2;
+					break;
+				}
+				if (links[3] == 1 && links[0] == 1) {
+					this.orientation = 3;
+					break;
+				}
 				break;
-			}
-			break;
-		case 2 : 
-			if (links[0] == 1) {
-				this.orientation = 0;
-				break;
-			}
-			if (links[1] == 1) {
-				this.orientation = 1;
-				break;
-			}
-		case 3 : 
-			if (links[0] == 0) {
-				this.orientation = 2;
-				break;
-			}
-			if (links[1] == 0) {
-				this.orientation = 3;
-				break;
-			}
-			if (links[2] == 0) {
-				this.orientation = 0;
-				break;
-			}
-			if (links[3] == 0) {
-				this.orientation = 1;
-				break;
-			}
-			break;
-
-		case 5 : 
-			if (links[0] == 1 && links[1] == 1) {
-				this.orientation = 0;
-				break;
-			}
-			if (links[1] == 1 && links[2] == 1) {
-				this.orientation = 1;
-				break;
-			}
-			if (links[2] == 1 && links[3] == 1) {
-				this.orientation = 2;
-				break;
-			}
-			if (links[3] == 1 && links[0] == 1) {
-				this.orientation = 3;
-				break;
-			}
-			break;
 		}
 	}
+	
 	/**
 	   * Says if orientation in parameter is possible
 	   * for this kind of piece
@@ -247,15 +221,11 @@ public class Piece {
 	   * @return boolean true for possible.
 	   */
 	public boolean isOrientationChoice(int orientation) {
-		if(orientation<0|| orientation>=4){
-            throw new IllegalArgumentException();
-        }
 		switch (this.type) {
 		case 0  : case 4 :
 			return orientation == 0;
 		case 1 : case 3 : case 5 : 
-			return (orientation<=3 && orientation>=0);
-		
+			return (orientation<=3 && orientation>=0);		
 		case 2 : 
 			return (orientation==0 || orientation==1);
 		}
@@ -360,9 +330,6 @@ public class Piece {
 	 * @return -1 not neighbors, 0 p is at North, 1 at East, 2 at South, 3 at West
 	 */
 	public int isNeighbor(Piece p) {
-		if(p == null){
-			throw new NullPointerException();
-        }
 		if ( (this.i == p.i + 1) && (this.j == p.j)) {
 			return 0;
 		}
@@ -387,9 +354,6 @@ public class Piece {
 	 * @return true if they are linked
 	 */
 	public boolean isLinked(Piece p) {
-		if(p == null){
-			throw new NullPointerException();
-        }
 		int pos = this.isNeighbor(p);
 		switch (pos) {
 		case 0 :
@@ -523,7 +487,6 @@ public class Piece {
 	 * @param g
 	 */
 	public void draw(Graphics g, int DIM) {
-		// TODO Auto-generated method stub
 		DrawablePiece dp=new DrawablePiece(this, DIM);
 		dp.paintComponent(g);
 	}
@@ -534,9 +497,6 @@ public class Piece {
 	 * @return true if they are linked
 	 */
 	public boolean linkedNeighborOrNoNeighbor(Piece p) {
-		if(p == null){
-			throw new NullPointerException();
-        }
 		int pos = this.isNeighbor(p);
 		switch (pos) {
 		case 0 :

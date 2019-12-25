@@ -17,7 +17,7 @@ public class LevelDisplay extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int DIM = 20;
+	private int DIM = 30;
 
 	public int getDIM() {
 		return DIM;
@@ -38,7 +38,7 @@ public class LevelDisplay extends JFrame {
 	    container.add(buttonPanel, BorderLayout.SOUTH);
 	    
 		this.setTitle("Infinity loop");
-		this.setSize(new Dimension(grid.getWidth()*DIM + 1*DIM, grid.getHeight()*DIM + 4*DIM));
+		this.setSize(new Dimension(grid.getWidth()*DIM + 1*DIM, grid.getHeight()*DIM + 3*DIM));
 		this.setVisible(true);
 		this.setLocationRelativeTo(null); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,8 +47,8 @@ public class LevelDisplay extends JFrame {
 	
     public static void main(String[] args) throws IOException {
     	
-    	int width = 25;
-    	int height = 15; 
+    	int width = 10;
+    	int height = 10; 
     	
     	//int maxConnectedComponent = 7;
 		/*LevelGenerator generator = new LevelGenerator(height, width, maxConnectedComponent);
@@ -69,6 +69,5 @@ public class LevelDisplay extends JFrame {
 		LevelDisplay ld = new LevelDisplay(generator, grid);	
 				
     }
-  
 }
  

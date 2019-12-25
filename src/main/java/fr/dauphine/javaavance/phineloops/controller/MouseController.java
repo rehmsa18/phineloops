@@ -55,9 +55,8 @@ public class MouseController implements MouseListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		int a = (int) (e.getX()/DIM);
-   	  	int b = (int) (e.getY()/DIM);
-   	  	b --;
+		int a = (int) ((e.getX())/DIM);
+   	  	int b = (int) ((e.getY()-DIM)/DIM);
 
 		for(int i=0; i<gridPanel.getHeight(); i++) {
 			for(int j=0; j<gridPanel.getWidth(); j++) {		

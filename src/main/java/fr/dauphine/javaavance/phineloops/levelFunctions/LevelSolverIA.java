@@ -18,20 +18,11 @@ public class LevelSolverIA {
 	private int threads = 1;
 
 	public LevelSolverIA(Grid grid) {
-		if(grid == null){
-			throw new NullPointerException();
-        }
 		this.grid = grid;
 		this.totalPiece = grid.getHeight()*grid.getWidth();
 	}
 	
 	public LevelSolverIA(Grid grid, int threads) {
-		if(grid == null){
-			throw new NullPointerException();
-        }
-		if(threads<0 || threads>4){
-            throw new IllegalArgumentException();
-        }
 		this.grid = grid;
 		this.threads = threads;
 		this.totalPiece = grid.getHeight()*grid.getWidth();
@@ -158,12 +149,6 @@ public class LevelSolverIA {
 	 * @return the domain or null if its a case of impossible solve
 	 */
 	public IntVar defineDomain (Piece p, int i, int j, Model model) {
-		if(p == null || model == null){
-			throw new NullPointerException();
-        }
-		if(i<0 || j<0){
-            throw new IllegalArgumentException();
-        }
 		switch(p.getType()) {
 		case 0 :
 			return model.intVar(new int[] {0});
@@ -335,12 +320,6 @@ public class LevelSolverIA {
 	 * @param j
 	 */
 	public void defineConstraintsSolve (IntVar[][] pieces, int i, int j, Model model) {
-		if(pieces == null || model == null){
-			throw new NullPointerException();
-        }
-		if(i<0 || j<0){
-            throw new IllegalArgumentException();
-        }		
 		if (this.grid.northWestSide(i, j)) {
 			//condition with south neighbor
 			if (this.grid.getHeight() >=2) {
@@ -424,12 +403,6 @@ public class LevelSolverIA {
 	 * @param j
 	 */
 	public void defineConstraintsNoSolve (IntVar[][] pieces, int i, int j, Model model) {
-		if(pieces == null || model == null){
-			throw new NullPointerException();
-        }
-		if(i<0 || j<0){
-            throw new IllegalArgumentException();
-        }
 		if (this.grid.northWestSide(i, j)) {
 			//condition with south neighbor
 			if (this.grid.getHeight() >=2) {
@@ -521,9 +494,6 @@ public class LevelSolverIA {
 	 * Value 9 : Type 5 orientation 3
 	 */
 	public void translate(IntVar[][]pieces) {
-		if(pieces == null){
-			throw new NullPointerException();
-        }
 		for (int i = 0; i < this.grid.getHeight(); i++) {
 			for (int j = 0; j < this.grid.getWidth(); j++) {
 				switch(pieces[i][j].getValue()) {

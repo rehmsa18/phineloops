@@ -28,7 +28,7 @@ public class Main {
 
     private static void generate(int width, int height, String outputFile) throws IOException{
 	// generate grid and store it to outputFile...
-    	if(width<0 || height<0){
+    	if(width<=0 || height<=0){
             throw new IncorrectArgumentException("height and width must be positive");
         }
     	if(outputFile == null){
@@ -43,7 +43,7 @@ public class Main {
     
     private static void generate(int width, int height, String outputFile, int maxcc) throws IOException{
 	// generate grid and store it to outputFile...
-    	if(width<0 || height<0){
+    	if(width<=0 || height<=0){
             throw new IncorrectArgumentException("height and width must be positive");
         }
     	if(maxcc<1){
@@ -61,9 +61,6 @@ public class Main {
 
     private static boolean solve(String inputFile, String outputFile, int threads) throws IOException{
 	// load grid from inputFile, solve it and store result to outputFile...
-    	if(threads<0 || threads>4){
-            throw new IncorrectArgumentException("the number of threads must be must be between 1 and 4");
-        }
     	if(outputFile == null || inputFile == null){
 			throw new IncorrectArgumentException("please type the name of the output/input file");
         }

@@ -20,6 +20,9 @@ public class ConnectedComponent {
 	 * @param piece
 	 */
 	public void addPiece(Piece piece) {
+		if(piece == null){
+			throw new NullPointerException();
+        }
 		pieces.add(piece);
 		this.nbLink();
 	}
@@ -29,6 +32,9 @@ public class ConnectedComponent {
 	 * @param connectedComponent
 	 */
 	public void addAll(ConnectedComponent connectedComponent) {
+		if(connectedComponent == null){
+			throw new NullPointerException();
+        }
 		pieces.addAll(connectedComponent.pieces);
 		this.nbLink();
 	}
@@ -39,6 +45,9 @@ public class ConnectedComponent {
 	 * @return true if contains piece
 	 */
 	public boolean contains(Piece piece) {
+		if(piece == null){
+			throw new NullPointerException();
+        }
 		return pieces.contains(piece);
 	}
 	
@@ -48,6 +57,9 @@ public class ConnectedComponent {
 	 * @return piece
 	 */
 	public Piece get(int index) {
+		if(index<0){
+            throw new IllegalArgumentException();
+        }
 		return pieces.get(index);
 	}
 	

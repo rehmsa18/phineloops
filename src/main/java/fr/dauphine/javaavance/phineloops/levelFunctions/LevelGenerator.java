@@ -29,6 +29,9 @@ public class LevelGenerator {
 	}
 
 	public LevelGenerator(int height, int width) {
+		if(height<0 || width<0){
+            throw new IllegalArgumentException();
+        }
 		this.width = width;
 		this.height = height;
 		this.maxConnectedComponent = -1;
@@ -37,6 +40,9 @@ public class LevelGenerator {
 	}
 	
 	public LevelGenerator(int height, int width, int maxConnectedComponent) {
+		if(height<0 || width<0 || maxConnectedComponent<0){
+            throw new IllegalArgumentException();
+        }
 		this.width = width;
 		this.height = height;
 		this.maxConnectedComponent = maxConnectedComponent;
@@ -74,7 +80,14 @@ public class LevelGenerator {
 	 * @param p
 	 * @return true if all possible links done with neighbors
 	 */
-	public boolean respectLinkNeighbors(int i, int j, Piece p) {	
+	public boolean respectLinkNeighbors(int i, int j, Piece p) {
+		if(p == null){
+			throw new NullPointerException();
+        }
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }
+		
 		//for piece not in the west border 
 		//the piece on its west side need to have the same value for the link west-east
 		if( j > 0 ) {
@@ -98,6 +111,13 @@ public class LevelGenerator {
 	 * @return true if the two piece are of the type 1
 	 */
 	public boolean pieceType1Neighbors(int i, int j, Piece p) {	
+		if(p == null){
+			throw new NullPointerException();
+        }
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }
+		
 		//the piece and its west neighbor can not be of the type 1 to avoid too much connected component in the grid
 		if( j > 0 ) {
 			if( (p.getType() == 1) && (grid.getCases()[i][j-1].getType() == 1) )
@@ -118,7 +138,10 @@ public class LevelGenerator {
 	 * @return list of pieces 
 	 */
 	public ArrayList<Piece> pieceAlternative(int i, int j){
-		
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }
+				
 		ArrayList<Piece> piecesPossible = new ArrayList<Piece>();
 		ArrayList<Piece> piecesChoice = new ArrayList<Piece>();
 		if (this.grid.getHeight() == 1 && this.grid.getWidth() == 1) {
@@ -232,6 +255,12 @@ public class LevelGenerator {
 	 * @return piece
 	 */
 	public Piece respectNumberConnectedComponents(int i, int j, Piece chosenPiece, ArrayList<Piece> piecesPossible) {
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }
+		if(chosenPiece == null || piecesPossible == null){
+			throw new NullPointerException();
+        }
 		
     	// if the number of connected components is indicated
         // and if we have almost the maximum number of connected componenet with no more links possible
@@ -314,7 +343,9 @@ public class LevelGenerator {
 	 * @return Piece
 	 */
 	public Piece associatePieceToGrid(int i, int j) {
-		
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }		
 		ArrayList<Piece> piecesPossible = this.pieceAlternative(i, j);
 	
 		// choose randomly a piece among the possibilities

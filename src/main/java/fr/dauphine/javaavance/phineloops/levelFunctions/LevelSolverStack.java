@@ -190,7 +190,7 @@ public class LevelSolverStack {
 				for( int j = this.grid.getWidth()-1; j>=0; j-- ) {
 					if(grid.getCases()[i][j].getLock()==0) {
 						Piece p = grid.getCases()[i][j];
-						//Collections.sort(p.getPossibleOrientations());
+						Collections.sort(p.getPossibleOrientations());
 						p.setOrientation(p.getPossibleOrientations().get(0));
 						p.defineLinks();
 						originalStack.push(p);
@@ -253,7 +253,7 @@ public class LevelSolverStack {
 	    			return true;
 	            	}	
 	    			else {
-		                System.out.println("not solution "+ threads[i].getName()+" " + threads[i].getFinalStack());
+		                System.out.println("no solution "+ threads[i].getName()+" " + threads[i].getFinalStack());
 	    			}
 
 	            }
@@ -286,7 +286,7 @@ public class LevelSolverStack {
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-		LevelGenerator test = new LevelGenerator(100, 100);
+		LevelGenerator test = new LevelGenerator(70, 70);
 		test.buildSolution();
 		test.shuffleSolution();
 		Grid grid = test.getGrid();

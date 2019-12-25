@@ -9,6 +9,9 @@ public class Grid  extends Observable {
 	private Piece cases[][];
 	
 	public Grid(int height, int width){
+		if(height<0 || width<0){
+            throw new IllegalArgumentException();
+        }
 		if (height > 0) {
 			this.height = height;
 		}
@@ -45,6 +48,9 @@ public class Grid  extends Observable {
 	 * @param Piece p
 	 */
 	public void add (Piece p) {
+		if(p == null){
+			throw new NullPointerException();
+        }
 		cases[p.getI()][p.getJ()] = p;
 	}
 	
@@ -54,6 +60,9 @@ public class Grid  extends Observable {
 	 * @return true if it is linked
 	 */
 	public boolean allLinked(Piece p) {
+		if(p == null){
+			throw new NullPointerException();
+        }
 		int cpt = 0;	
 		if ( (p.getLinks()[0] == 1) && this.existsPiece(p.getI()-1,p.getJ()) ){
 				if (p.isLinked(this.getCases()[p.getI()-1][p.getJ()])){
@@ -182,6 +191,9 @@ public class Grid  extends Observable {
 	 * @return true if in the north west
 	 */
 	public boolean northWestSide(int i, int j) {
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }
 		return ( i==0 && j==0 );		
 	}
 
@@ -192,6 +204,9 @@ public class Grid  extends Observable {
 	 * @return true if in the north east
 	 */
 	public boolean northEastSide(int i, int j) {
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }
 		return ( i==0 && j==this.width-1 );		
 	}
 	
@@ -202,6 +217,9 @@ public class Grid  extends Observable {
 	 * @return true if in the south west
 	 */
 	public boolean southWestSide(int i, int j) {
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }
 		return ( i==this.height-1 && j==0 );		
 	}
 	
@@ -212,6 +230,9 @@ public class Grid  extends Observable {
 	 * @return true if in the south east
 	 */
 	public boolean southEastSide(int i, int j) {
+		if(i<0 || j<0){
+            throw new IllegalArgumentException();
+        }
 		return ( i==this.height-1 && j==this.width-1 );		
 	}
 	
@@ -222,6 +243,9 @@ public class Grid  extends Observable {
 	 * @return true if in the west border
 	 */
 	public boolean westBorder(int j) {
+		if(j<0){
+            throw new IllegalArgumentException();
+        }
 		return ( j==0 );		
 	}	
 	
@@ -232,6 +256,9 @@ public class Grid  extends Observable {
 	 * @return true if in the east border
 	 */
 	public boolean eastBorder(int j) {
+		if(j<0){
+            throw new IllegalArgumentException();
+        }
 		return ( j==this.width-1 );		
 	}	
 	
@@ -242,6 +269,9 @@ public class Grid  extends Observable {
 	 * @return true if in the north border
 	 */
 	public boolean northBorder(int i) {
+		if(i<0){
+            throw new IllegalArgumentException();
+        }
 		return ( i==0 );		
 	}
 	
@@ -252,6 +282,9 @@ public class Grid  extends Observable {
 	 * @return true if in the south border
 	 */
 	public boolean southBorder(int i) {
+		if(i<0){
+            throw new IllegalArgumentException();
+        }
 		return ( i==this.height-1 );		
 	}
 	
@@ -261,6 +294,9 @@ public class Grid  extends Observable {
 	 * @return true if no link respected
 	 */
 	public boolean noRespectedLockPiece(Piece p) {
+		if(p == null){
+			throw new NullPointerException();
+        }
 		if( p.getI() > 0 ) {
 			if( this.cases[p.getI()-1][p.getJ()].getLock() == 1 && this.cases[p.getI()-1][p.getJ()].getLinks()[2] != p.getLinks()[0]) {
 				//System.out.println("a" + " "+ this.cases[p.x-1][p.y] +" "+this.cases[p.x-1][p.y].links[2] +" "+ p.links[0]);

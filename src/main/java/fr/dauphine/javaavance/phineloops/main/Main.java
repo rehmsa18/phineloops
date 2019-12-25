@@ -13,6 +13,7 @@ import fr.dauphine.javaavance.phineloops.levelFunctions.LevelChecker;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverIA;
 import fr.dauphine.javaavance.phineloops.model.Grid;
+import fr.dauphine.javaavance.phineloops.utils.IncorrectArgumentException;
 import fr.dauphine.javaavance.phineloops.utils.Read;
 import fr.dauphine.javaavance.phineloops.utils.Write;
 import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
@@ -27,6 +28,12 @@ public class Main {
 
     private static void generate(int width, int height, String outputFile) throws IOException{
 	// generate grid and store it to outputFile...
+    	if(width<0 || height<0){
+            throw new IncorrectArgumentException("height and width must be positive");
+        }
+    	if(outputFile == null){
+			throw new IncorrectArgumentException("please type the name of the output file");
+        }
 		LevelGenerator generator = new LevelGenerator(height, width);
 		generator.buildSolution();
 		generator.shuffleSolution();
@@ -36,6 +43,15 @@ public class Main {
     
     private static void generate(int width, int height, String outputFile, int maxcc) throws IOException{
 	// generate grid and store it to outputFile...
+    	if(width<0 || height<0){
+            throw new IncorrectArgumentException("height and width must be positive");
+        }
+    	if(maxcc<1){
+            throw new IncorrectArgumentException("the number of connected components must be higher 1");
+        }
+    	if(outputFile == null){
+			throw new IncorrectArgumentException("please type the name of the output file");
+        }
 		LevelGenerator generator = new LevelGenerator(height, width, maxcc);
 		generator.buildSolution();
 		generator.shuffleSolution();
@@ -45,6 +61,12 @@ public class Main {
 
     private static boolean solve(String inputFile, String outputFile, int threads) throws IOException{
 	// load grid from inputFile, solve it and store result to outputFile...
+    	if(threads<0 || threads>4){
+            throw new IncorrectArgumentException("the number of threads must be must be between 1 and 4");
+        }
+    	if(outputFile == null || inputFile == null){
+			throw new IncorrectArgumentException("please type the name of the output/input file");
+        }
     	Grid grid = Read.readFile(inputFile);
 		LevelSolverIA sol = new LevelSolverIA(grid, threads);
 		sol.solve();
@@ -56,6 +78,9 @@ public class Main {
 
     private static boolean check(String inputFile) throws IOException{
 	// load grid from inputFile and check if it is solved... 
+    	if(inputFile == null){
+			throw new IncorrectArgumentException("please type the name of the input file");
+        }
     	Grid grid = Read.readFile(inputFile);
     	LevelChecker levelChecker = new LevelChecker(grid);
     	
@@ -63,6 +88,9 @@ public class Main {
     }
     
     private static void gui(String inputFile) throws IOException{
+    	if(inputFile == null){
+			throw new IncorrectArgumentException("please type the name of the input file");
+        }
 		Grid grid = Read.readFile(inputFile);
 		LevelGenerator generator = new LevelGenerator(grid.getHeight(), grid.getWidth());
 		generator.setGrid(grid);

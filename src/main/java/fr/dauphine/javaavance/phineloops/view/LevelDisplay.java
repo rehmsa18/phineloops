@@ -17,7 +17,7 @@ public class LevelDisplay extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int DIM = 30;
+	private int DIM = 20;
 
 	public int getDIM() {
 		return DIM;
@@ -38,7 +38,7 @@ public class LevelDisplay extends JFrame {
 	    container.add(buttonPanel, BorderLayout.SOUTH);
 	    
 		this.setTitle("Infinity loop");
-		this.setSize(new Dimension(grid.getWidth()*DIM + 1*DIM, grid.getHeight()*DIM + 3*DIM));
+		this.setSize(new Dimension(grid.getWidth()*DIM + 1*DIM, grid.getHeight()*DIM + 4*DIM));
 		this.setVisible(true);
 		this.setLocationRelativeTo(null); 
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

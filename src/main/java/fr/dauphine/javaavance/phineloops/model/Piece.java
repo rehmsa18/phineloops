@@ -17,7 +17,6 @@ public class Piece {
 	private int gridX;
 	private int gridY;
 	private int nbRotation; 
-	private int index = 0;
 	private ArrayList <Integer> possibleOrientations;
 	
 	public Piece() {
@@ -222,14 +221,13 @@ public class Piece {
 	   */
 	public boolean isOrientationChoice(int orientation) {
 		switch (this.type) {
-		case 0  : case 4 :
-			return orientation == 0;
-		case 1 : case 3 : case 5 : 
-			return (orientation<=3 && orientation>=0);		
-		case 2 : 
-			return (orientation==0 || orientation==1);
-		}
-		
+			case 0  : case 4 :
+				return orientation == 0;
+			case 1 : case 3 : case 5 : 
+				return (orientation<=3 && orientation>=0);		
+			case 2 : 
+				return (orientation==0 || orientation==1);
+			}
 		return false;	
 	}
 	
@@ -356,15 +354,15 @@ public class Piece {
 	public boolean isLinked(Piece p) {
 		int pos = this.isNeighbor(p);
 		switch (pos) {
-		case 0 :
-			return p.links[2]==1 && this.links[0]==1;
-		case 1 :
-			return p.links[3]==1 && this.links[1]==1;
-		case 2 :
-			return p.links[0]==1 && this.links[2]==1;
-		case 3 :
-			return p.links[1]==1 && this.links[3]==1;
-		}
+			case 0 :
+				return p.links[2]==1 && this.links[0]==1;
+			case 1 :
+				return p.links[3]==1 && this.links[1]==1;
+			case 2 :
+				return p.links[0]==1 && this.links[2]==1;
+			case 3 :
+				return p.links[1]==1 && this.links[3]==1;
+			}
 		return false;
 	}
 	
@@ -404,7 +402,7 @@ public class Piece {
 	 * Display the type and orientation of the piece, place in grid, and unicode shape
 	 */
 	public String toString() {
-		return "(" + i + "," + j + ") " +type + " " + orientation + " " + this.unicode() + " " +possibleOrientations + " " +index;
+		return "(" + i + "," + j + ") " +type + " " + orientation + " " + this.unicode();
 	}
 	
 	/**
@@ -499,17 +497,17 @@ public class Piece {
 	public boolean linkedNeighborOrNoNeighbor(Piece p) {
 		int pos = this.isNeighbor(p);
 		switch (pos) {
-		case 0 :
-			return p.links[2] == this.links[0] ;
-		case 1 :
-			return p.links[3]== this.links[1] ;
-		case 2 :
-			return p.links[0]== this.links[2] ;
-		case 3 :
-			return p.links[1]== this.links[3] ;
-		case -1 :
-			return true;
-		}
+			case 0 :
+				return p.links[2] == this.links[0] ;
+			case 1 :
+				return p.links[3]== this.links[1] ;
+			case 2 :
+				return p.links[0]== this.links[2] ;
+			case 3 :
+				return p.links[1]== this.links[3] ;
+			case -1 :
+				return true;
+			}
 		return false;
 	}	
 	
@@ -539,35 +537,4 @@ public class Piece {
 			}
 	}
 
-	/**
-	 * initialize to 0 the position in the list of possible orientations of a piece
-	 */
-	public void initializeIndex() {
-		index = 0;
-	}
-	
-	/**
-	 * the position in the list of possible orientations of a piece
-	 * @return index
-	 */
-	public int getIndex() {
-		return index;
-	}
-	
-	/**
-	 * get the position in which is the piece
-	 * @return int
-	 */
-	public int getIndexOrientation() {
-		return possibleOrientations.indexOf(orientation)+1;
-	}
-	
-	/**
-	 * rotate piece depending the possible orientations
-	 */
-	public void rotatePossibleOrientation() {
-		index++;
-		this.orientation = this.possibleOrientations.get(index);
-		this.defineLinks();
-	}
 }

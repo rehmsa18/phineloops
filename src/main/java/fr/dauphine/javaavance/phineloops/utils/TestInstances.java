@@ -15,7 +15,7 @@ public class TestInstances {
 	    	Grid grid = Read.readFile(fileName.toString());
 	    	
 			long debut = System.currentTimeMillis();
-			LevelSolverIA sol = new LevelSolverIA(grid, 1);
+			LevelSolverIA sol = new LevelSolverIA(grid, 4);
 			//LevelSolverStack sol = new LevelSolverStack(grid, true, 4);
 			boolean response = sol.solve();
 			long fin = System.currentTimeMillis();

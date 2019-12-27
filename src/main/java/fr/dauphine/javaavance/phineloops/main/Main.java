@@ -8,7 +8,6 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-
 import fr.dauphine.javaavance.phineloops.alternativeSolver.LevelSolverStack;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelChecker;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
@@ -18,7 +17,7 @@ import fr.dauphine.javaavance.phineloops.utils.IncorrectArgumentException;
 import fr.dauphine.javaavance.phineloops.utils.Read;
 import fr.dauphine.javaavance.phineloops.utils.Write;
 import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
-
+ 
 
 public class Main {
     private static String inputFile = null;  
@@ -28,7 +27,7 @@ public class Main {
     private static Integer height = -1;
     private static Integer maxcc = -1; 
     private static Integer threads = -1; 
-
+ 
     private static void generate(int width, int height, String outputFile) throws IOException{
 	// generate grid and store it to outputFile...
     	if(width<=0 || height<=0){
@@ -171,7 +170,7 @@ public class Main {
         options.addOption("g", "generate ", true, "Generate a grid of size height x width.");
         options.addOption("c", "check", true, "Check whether the grid in <arg> is solved.");        
         options.addOption("s", "solve", true, "Solve the grid stored in <arg>.");   
-        options.addOption("sa", "solvealt", true, "Solve the grid stored in <arg> with the second solver."); 
+        options.addOption("a", "solvealt", true, "Solve the grid stored in <arg> with the second solver."); 
         options.addOption("o", "output", true, "Store the generated or solved grid in <arg>. (Use only with --generate and --solve.)");
         options.addOption("p", "piece", true, "Choose the type of piece to fixe. (Use only with --solvealt.)"); 
         options.addOption("t", "threads", true, "Maximum number of solver threads. (Use only with --solve and solvealt.)");
@@ -211,7 +210,7 @@ public class Main {
 				System.out.println("Running phineloops solver.");
 				inputFile = cmd.getOptionValue( "s" );
 				if(! cmd.hasOption("o")) throw new ParseException("Missing mandatory --output argument.");      
-				outputFile = cmd.getOptionValue( "o" );
+					outputFile = cmd.getOptionValue( "o" );
 				if( cmd.hasOption( "t" ) ) {
 					threads = Integer.parseInt(cmd.getOptionValue( "t" )); 
 				}
@@ -232,10 +231,10 @@ public class Main {
 				gui(inputFile);         
 		    }
 		    
-		    else if( cmd.hasOption( "sa" ) ) {
-				inputFile = cmd.getOptionValue( "s" );
+		    else if( cmd.hasOption( "a" ) ) {
+				inputFile = cmd.getOptionValue( "a" );
 				if(! cmd.hasOption("o")) throw new ParseException("Missing mandatory --output argument.");      
-				outputFile = cmd.getOptionValue( "o" );
+					outputFile = cmd.getOptionValue( "o" );
 				if( cmd.hasOption( "t" ) && cmd.hasOption( "p" ) ) {
 					System.out.println("Running phineloops solver alternative with the given number of threads and chosen type of piece.");
 					threads = Integer.parseInt(cmd.getOptionValue( "t" )); 

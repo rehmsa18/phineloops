@@ -9,7 +9,7 @@ public class StackThread extends Thread{
 	private Piece root;
 	private Node node;
 	private boolean solutionFound;
-    private final static Object monitor = new Object();
+	private final static Object monitor = new Object();
 	
 	public StackThread(Stack<Stack<Piece>> originalStack, Piece root) {
 		StackThread.originalStack = originalStack;
@@ -25,21 +25,20 @@ public class StackThread extends Thread{
 	}
 	
 	/**
-	 * Get the stack formed with one orientation of the chosen piece
-	 * @return stack of pieces
+	 * Says if a solutution is found
+	 * @return boolean
 	 */
 	public boolean getSolutionFound() {
 		return solutionFound;
 	}
 	
+	/**
+	 * search a solution with the orientation of the chosen piece
+	 */
 	public void run() {
 		synchronized(monitor) {
-			//System.out.println("\nd " + currentThread().getName()+ " "+root);
-			//System.out.println("d2 " + currentThread().getName()+ " "+originalStack);
 			node = new Node(root);
 		    solutionFound = node.DepthFirstSearch(originalStack, node, " ");
-			//System.out.println("f " + currentThread().getName()+ " "+finalStack);
-			//System.out.println("f2 " + currentThread().getName()+ " "+originalStack+"\n");
 		}
 	}
 }

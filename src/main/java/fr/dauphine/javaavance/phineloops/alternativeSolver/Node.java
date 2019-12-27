@@ -5,8 +5,6 @@ import java.util.Stack;
 import fr.dauphine.javaavance.phineloops.model.Piece;
 
 public class Node {
-	//https://www.javagists.com/java-tree-data-structure
-
 	private Piece piece;
 	private Node parent = null;
 	private Node child = null;
@@ -27,12 +25,21 @@ public class Node {
 		return child;
 	}	
 
+	/**
+	 * Add a child to the node
+	 * @param child
+	 * @return Node
+	 */
     public Node addChild(Node child){
     	child.parent = this;
         this.child = child;
 		return child;
     }
 
+    /**
+     * Get the lead of a node
+     * @return Node
+     */
     public Node getLeafNode() {
     	if (this.child == null) {
     		return this;
@@ -42,6 +49,11 @@ public class Node {
 		}
     }	 
 
+    /**
+     * Delete leaf of node
+     * @param root
+     * @return Node
+     */
 	public Node leafDelete(Node root) { 
 		if (root == null) { 
 			return null; 
@@ -53,12 +65,13 @@ public class Node {
 		return root; 
 	} 
 
-    public static void printTree(Node node, String appender) {
-    	System.out.println(appender + node.getPiece());
-		if(node.getChild()!=null)
-			printTree(node.getChild(), appender + " ");
-    }
-
+	/**
+	 * Says if the links are respected in a tree
+	 * @param parent
+	 * @param child
+	 * @param test
+	 * @return boolean
+	 */
     public int RespectParent(Node parent, Node child, Node test) {
 		if(parent.piece.linkedNeighborOrNoNeighbor(test.piece)) {
 			if(parent.parent!=null)
@@ -70,8 +83,14 @@ public class Node {
 		}
     }
 
+    /**
+     * Search a solution of the level by depth first serach
+     * @param stacks
+     * @param parent
+     * @param espace
+     * @return boolean
+     */
 	public boolean DepthFirstSearch(Stack<Stack<Piece>> stacks, Node parent, String espace) {
-		//System.out.println("\n"+stacks);
 		Boolean solutionFound = false;
 		Stack<Piece> stack = stacks.pop();
 		Stack<Piece> tmp = new Stack<>();
@@ -79,7 +98,6 @@ public class Node {
 			Piece p = stack.pop();
 			Node node = new Node(p);
 			if( RespectParent(parent, null, node ) == 0){
-				//System.out.println(espace + node.getPiece());
 				parent.addChild(node);	
 				if(stacks.isEmpty()) {
 					return true;
@@ -93,6 +111,5 @@ public class Node {
 		stacks.push(tmp);
 		return solutionFound;
 	}
-
 
 }

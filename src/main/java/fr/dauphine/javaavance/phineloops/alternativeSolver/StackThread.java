@@ -5,14 +5,14 @@ import fr.dauphine.javaavance.phineloops.model.Piece;
 
 public class StackThread extends Thread{
 
-	private static Stack<Stack<Piece>> originalStack;
+	private Stack<Stack<Piece>> originalStack;
 	private Piece root;
 	private Node node;
 	private boolean solutionFound;
 	private final static Object monitor = new Object();
 	
 	public StackThread(Stack<Stack<Piece>> originalStack, Piece root) {
-		StackThread.originalStack = originalStack;
+		this.originalStack = originalStack;
 		this.root = root;
 	}
 	

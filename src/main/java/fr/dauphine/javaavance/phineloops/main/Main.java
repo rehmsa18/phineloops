@@ -19,6 +19,7 @@ import fr.dauphine.javaavance.phineloops.utils.Read;
 import fr.dauphine.javaavance.phineloops.utils.Write;
 import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
+
 public class Main {
     private static String inputFile = null;  
     private static String outputFile = null;
@@ -36,7 +37,7 @@ public class Main {
     	if(outputFile == null){
 			throw new IncorrectArgumentException("please type the name of the output file");
         }
-		LevelGenerator generator = new LevelGenerator(height, width);
+    	LevelGenerator generator = new LevelGenerator(height, width);
 		generator.buildSolution();
 		generator.shuffleSolution();
 		Grid grid = generator.getGrid();
@@ -161,6 +162,7 @@ public class Main {
 
     	return sol.solve();
     }
+    
     public static void main(String[] args) throws IOException {
         Options options = new Options();
         CommandLineParser parser = new DefaultParser();

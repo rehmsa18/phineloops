@@ -11,8 +11,9 @@ public class StackThread extends Thread{
 	private boolean solutionFound;
     private final static Object monitor = new Object();
 	
+	@SuppressWarnings("static-access")
 	public StackThread(Stack<Stack<Piece>> originalStack, Piece root) {
-		StackThread.originalStack = originalStack;
+		this.originalStack = originalStack;
 		this.root = root;
 	}
 	

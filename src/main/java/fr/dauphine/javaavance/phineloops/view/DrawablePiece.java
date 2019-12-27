@@ -25,10 +25,10 @@ public class DrawablePiece {
      */
 	public void paintComponent(Graphics g) {
 		
-		/*if(p.getLock() == 0)
+		if(p.getLock() == 0)
 		   	 g.setColor(Color.green);
 		else
-		   	 g.setColor(Color.blue);*/
+		   	 g.setColor(Color.blue);
 		
 		if (p.getType() == 1) {
 			if(p.getOrientation() == 0) {

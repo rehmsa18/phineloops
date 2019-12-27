@@ -58,17 +58,5 @@ class GridTest {
 		g.add(p3);
 		assertSame(false,g.detectCircledByType0());
 	}
-	
-	/*@Test
-	public void lockPiece() {
-		g = new Grid(2,2);
-		Piece p1 = new Piece(0,0,5,1);
-		g.add(p1);
-		Piece p2 = new Piece(0,1,1,3);
-		g.add(p2);
-		Piece p3 = new Piece(1,0,1,0);
-		g.add(p3);
-		assertEquals(3,g.lockPiece());
-	}*/
 
 }

@@ -12,7 +12,7 @@
 * java -jar phineloops-1.0-jar-with-dependencies.jar --generate hxw --output file --nbcc nb
   
 ##### Checker (file)
-. java -jar phineloops-1.0-jar-with-dependencies.jar --check file
+* java -jar phineloops-1.0-jar-with-dependencies.jar --check file
   
 ##### Solver 
 ###### résoudre un niveau (file, filesolved)

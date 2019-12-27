@@ -7,46 +7,21 @@ import fr.dauphine.javaavance.phineloops.levelFunctions.LevelChecker;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
 import fr.dauphine.javaavance.phineloops.model.Grid;
 import fr.dauphine.javaavance.phineloops.model.Piece;
-import fr.dauphine.javaavance.phineloops.utils.Read;
 
 public class LevelSolverStack {
 	
 	private Grid grid;
 	private int totalPiece;
 	private int lockedPiece = 0;
-	private String chosenPieceNbNeighbors = "min";
-	private int maxThreads = 1;
+	private boolean argumentGiven;
+	private int maxThreads;
 	
-	public LevelSolverStack(Grid grid) {
+	public LevelSolverStack(Grid grid, boolean argumentGiven, int maxThreads) {
 		this.grid = grid;
 		this.totalPiece = grid.getHeight()*grid.getWidth();
-	}
-	
-	public LevelSolverStack(Grid grid, int maxThreads) {
-		this.grid = grid;
-		this.totalPiece = grid.getHeight()*grid.getWidth();
+		this.argumentGiven = argumentGiven;
 		this.maxThreads = maxThreads;
 	}	
-	
-	public LevelSolverStack(Grid grid, String chosenPieceNbNeighbors) {
-		this.grid = grid;
-		this.totalPiece = grid.getHeight()*grid.getWidth();
-		this.chosenPieceNbNeighbors = chosenPieceNbNeighbors;
-	}	
-	
-	
-	public LevelSolverStack(Grid grid, String chosenPieceNbNeighbors, int maxThreads) {
-		this.grid = grid;
-		this.totalPiece = grid.getHeight()*grid.getWidth();
-		this.chosenPieceNbNeighbors = chosenPieceNbNeighbors;
-		this.maxThreads = maxThreads;
-	}	
-	
-	
-	public Grid getGrid() {
-		return grid;
-	}
-	
 	
 	/**
 	 * Return piece with the least orientation possible
@@ -147,7 +122,7 @@ public class LevelSolverStack {
 			
 			Stack<Piece> chosenPiece;
 			
-			if(chosenPieceNbNeighbors.equals("min")) {
+			if(argumentGiven) {
 				chosenPiece = this.getPieceWithMostNeighborsFixed(originalStack);
 			}
 			else {
@@ -217,7 +192,7 @@ public class LevelSolverStack {
 				Piece root = chosenPiece.get(k);
 				Node node = new Node(root);
     			if(node.DepthFirstSearch(originalStack, node, " ")) {
-	                //System.out.println("solution Thread "+ Thread.currentThread().getName() + "-" + k);
+	                System.out.println("solution Thread "+ Thread.currentThread().getName() + "-" + k);
 	        		while(node.getChild()!=null) {
 	        			Piece p = node.getLeafNode().getPiece();
 	        			grid.getCases()[p.getI()][p.getJ()] = p;
@@ -228,7 +203,7 @@ public class LevelSolverStack {
 					return true;
     			}
     			else {
-	                //System.out.println("not solution Thread "+ Thread.currentThread().getName() + "-" + k);
+	                System.out.println("not solution Thread "+ Thread.currentThread().getName() + "-" + k);
     			}
 			}
 			return false;		 
@@ -239,13 +214,14 @@ public class LevelSolverStack {
 		LevelGenerator test = new LevelGenerator(100,100);
 		test.buildSolution();
 		test.shuffleSolution();
-		//Grid grid = test.getGrid();
+		Grid grid = test.getGrid();
 		//Write.writeFile("file3", grid);
-	    Grid grid2 = Read.readFile("file2");
+	    //Grid grid2 = Read.readFile("file2");
 
 	    long debut = System.currentTimeMillis();
 
-	    LevelSolverStack sol = new LevelSolverStack(grid2);
+	    boolean argumentGiven = true;
+		LevelSolverStack sol = new LevelSolverStack(grid, argumentGiven,1);
 		System.out.println(sol.solve());
 
 	    long fin = System.currentTimeMillis();

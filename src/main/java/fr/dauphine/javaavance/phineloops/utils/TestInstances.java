@@ -2,7 +2,7 @@ package fr.dauphine.javaavance.phineloops.utils;
 
 import java.io.File;
 import java.io.IOException;
-import fr.dauphine.javaavance.phineloops.alternativeSolver.LevelSolverStack;
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverIA;
 import fr.dauphine.javaavance.phineloops.model.Grid;
 
 public class TestInstances {
@@ -15,8 +15,8 @@ public class TestInstances {
 	    	Grid grid = Read.readFile(fileName.toString());
 	    	
 			long debut = System.currentTimeMillis();
-			//LevelSolverIA sol = new LevelSolverIA(grid, 4);
-			LevelSolverStack sol = new LevelSolverStack(grid);
+			LevelSolverIA sol = new LevelSolverIA(grid, 4);
+			//LevelSolverStack sol = new LevelSolverStack(grid, true, 4);
 			boolean response = sol.solve();
 			long fin = System.currentTimeMillis();
 			long time = fin-debut;

@@ -95,8 +95,7 @@ public class Main {
 		LevelGenerator generator = new LevelGenerator(grid.getHeight(), grid.getWidth());
 		generator.setGrid(grid);
 		@SuppressWarnings("unused")
-		LevelDisplay ld = new LevelDisplay(generator, grid);
-		
+		LevelDisplay ld = new LevelDisplay(generator, grid);	
     }
     
     
@@ -272,8 +271,6 @@ public class Main {
 	            System.exit(1); // exit with error      
 		}
 
-
         //System.exit(0); // exit with success   
-
     }
 }

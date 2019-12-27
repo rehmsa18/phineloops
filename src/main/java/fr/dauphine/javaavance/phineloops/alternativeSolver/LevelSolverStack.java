@@ -13,15 +13,36 @@ public class LevelSolverStack {
 	private Grid grid;
 	private int totalPiece;
 	private int lockedPiece = 0;
-	private boolean argumentGiven;
-	private int maxThreads;
+    private String pieceNbNeighbors = "min";
+	private int maxThreads = 1;
 	
-	public LevelSolverStack(Grid grid, boolean argumentGiven, int maxThreads) {
+	public LevelSolverStack(Grid grid) {
 		this.grid = grid;
 		this.totalPiece = grid.getHeight()*grid.getWidth();
-		this.argumentGiven = argumentGiven;
+	}
+	
+	public LevelSolverStack(Grid grid, int maxThreads) {
+		this.grid = grid;
+		this.totalPiece = grid.getHeight()*grid.getWidth();
+		this.maxThreads = maxThreads;
+	}
+	
+	public LevelSolverStack(Grid grid, String pieceNbNeighbors) {
+		this.grid = grid;
+		this.totalPiece = grid.getHeight()*grid.getWidth();
+		this.pieceNbNeighbors = pieceNbNeighbors;
+	}
+	
+	public LevelSolverStack(Grid grid, String pieceNbNeighbors, int maxThreads) {
+		this.grid = grid;
+		this.totalPiece = grid.getHeight()*grid.getWidth();
+		this.pieceNbNeighbors = pieceNbNeighbors;
 		this.maxThreads = maxThreads;
 	}	
+	
+	public Grid getGrid() {
+		return grid;
+	}
 	
 	/**
 	 * Return piece with the least orientation possible
@@ -122,7 +143,7 @@ public class LevelSolverStack {
 			
 			Stack<Piece> chosenPiece;
 			
-			if(argumentGiven) {
+			if( pieceNbNeighbors.equals("min") ) {
 				chosenPiece = this.getPieceWithMostNeighborsFixed(originalStack);
 			}
 			else {
@@ -220,8 +241,7 @@ public class LevelSolverStack {
 
 	    long debut = System.currentTimeMillis();
 
-	    boolean argumentGiven = true;
-		LevelSolverStack sol = new LevelSolverStack(grid, argumentGiven,1);
+		LevelSolverStack sol = new LevelSolverStack(grid);
 		System.out.println(sol.solve());
 
 	    long fin = System.currentTimeMillis();
@@ -233,5 +253,6 @@ public class LevelSolverStack {
 	    System.out.println(ch.check());
 
 	}
+
 
 }

@@ -16,7 +16,7 @@ public class TestInstances {
 	    	
 			long debut = System.currentTimeMillis();
 			LevelSolverIA sol = new LevelSolverIA(grid, 4);
-			//LevelSolverStack sol = new LevelSolverStack(grid, true, 4);
+			//LevelSolverStack sol = new LevelSolverStack(grid);
 			boolean response = sol.solve();
 			long fin = System.currentTimeMillis();
 			long time = fin-debut;

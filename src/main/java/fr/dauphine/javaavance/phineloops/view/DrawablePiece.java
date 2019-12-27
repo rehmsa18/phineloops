@@ -1,6 +1,5 @@
 package fr.dauphine.javaavance.phineloops.view;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import fr.dauphine.javaavance.phineloops.model.Piece;
@@ -24,11 +23,6 @@ public class DrawablePiece {
      * @param g
      */
 	public void paintComponent(Graphics g) {
-		
-		/*if(p.getLock() == 0)
-		   	 g.setColor(Color.green);
-		else
-		   	 g.setColor(Color.blue);*/
 		
 		if (p.getType() == 1) {
 			if(p.getOrientation() == 0) {

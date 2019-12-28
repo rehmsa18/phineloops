@@ -17,7 +17,7 @@ public class LevelDisplay extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int DIM = 20;
+	private int DIM = 30;
 
 	public int getDIM() {
 		return DIM;
@@ -47,8 +47,8 @@ public class LevelDisplay extends JFrame {
 	
     public static void main(String[] args) throws IOException {
     	
-    	int width = 10;
-    	int height = 10; 
+    	int width =  30;
+    	int height =  15; 
     	
     	//int maxConnectedComponent = 7;
 		/*LevelGenerator generator = new LevelGenerator(height, width, maxConnectedComponent);
@@ -59,6 +59,7 @@ public class LevelDisplay extends JFrame {
 		LevelGenerator generator = new LevelGenerator(height, width);
 		
 		generator.buildSolution();
+				
 		generator.shuffleSolution();
 		Grid grid = generator.getGrid();
 		

@@ -4,11 +4,9 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelChecker;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelGenerator;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverIA;

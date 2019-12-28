@@ -8,7 +8,6 @@ import org.chocosolver.solver.variables.IntVar;
 
 import fr.dauphine.javaavance.phineloops.model.Grid;
 import fr.dauphine.javaavance.phineloops.model.Piece;
-import fr.dauphine.javaavance.phineloops.utils.Read;
 import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class LevelSolverIA {
@@ -105,7 +104,7 @@ public class LevelSolverIA {
 		}
 		if (portfolio.solve()) {
 			for (int i = 0; i < this.totalPiece; i++) {
-				pieces[i/this.grid.getHeight()][i % this.grid.getWidth()] = (IntVar) portfolio.getBestModel().getVar(i);
+				//pieces[i/this.grid.getHeight()][i % this.grid.getWidth()] = (IntVar) portfolio.getBestModel().getVar(i);
 				this.translate(pieces);
 			}
 			this.translate(pieces);
@@ -519,21 +518,23 @@ public class LevelSolverIA {
 	
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-		LevelGenerator test = new LevelGenerator(100, 100);
-		//test.buildSolution();
-		//test.shuffleSolution();
+		LevelGenerator test = new LevelGenerator(15, 30);
+		test.buildSolution();
+		test.shuffleSolution();
 		//Grid grid = test.getGrid();
 		//Write.writeFile("file5", grid);
-	   	Grid grid2 = Read.readFile("file5");
+	   	//Grid grid2 = Read.readFile("file5");
 		long debut = System.currentTimeMillis();
 		//LevelSolverIA sol = new LevelSolverIA(test.getGrid(), 3);
-		LevelSolverIA sol = new LevelSolverIA(grid2, 1);
-		System.out.println("Solution after solver : " + sol.solve());
+		//LevelSolverIA sol = new LevelSolverIA(grid2, 1);
+		//System.out.println("Solution after solver : " + sol.solve());
 		//System.out.println(sol.grid.getCases()[0][0].toString());
 		long fin = System.currentTimeMillis();
 		System.out.println(fin-debut);
 		//sol.grid.displayInConsole();
-		LevelDisplay display = new LevelDisplay(test, sol.grid);
+		LevelDisplay display = new LevelDisplay(test,test.getGrid());
 
 	}
-}
+}	
+	
+

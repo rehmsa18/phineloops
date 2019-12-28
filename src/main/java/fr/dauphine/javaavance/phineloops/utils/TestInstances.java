@@ -2,9 +2,8 @@ package fr.dauphine.javaavance.phineloops.utils;
 
 import java.io.File;
 import java.io.IOException;
-
-import fr.dauphine.javaavance.phineloops.alternativeSolver.LevelSolverStack;
 import fr.dauphine.javaavance.phineloops.levelFunctions.LevelChecker;
+import fr.dauphine.javaavance.phineloops.levelFunctions.LevelSolverIA;
 import fr.dauphine.javaavance.phineloops.model.Grid;
 
 public class TestInstances {
@@ -14,11 +13,11 @@ public class TestInstances {
 		long totalTime = 0;
 		int i = 1;
 	    for (final File fileName : folder.listFiles()) {
-			if(i!=7 &&i!=27 && i!=28 && i!=29 && i!=36 && i!=46 && i!=48) {
+			if(i!=7 &&i!=27 && i!=28 && i!=29 && i!=36 && i!=46) {
 		    	Grid grid = Read.readFile(fileName.toString());
 				long debut = System.currentTimeMillis();
-				//LevelSolverIA sol = new LevelSolverIA(grid, 1);
-				LevelSolverStack sol = new LevelSolverStack(grid, "max", 4);
+				LevelSolverIA sol = new LevelSolverIA(grid, 1);
+				//LevelSolverStack sol = new LevelSolverStack(grid, "max", 4);
 				boolean response = sol.solve();
 				long fin = System.currentTimeMillis();
 				long time = fin-debut;	

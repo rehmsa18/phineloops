@@ -15,24 +15,12 @@ public class GridHex {
 		return height;
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
 	public int getWidth() {
 		return width;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
 	public PieceHex[][] getCases() {
 		return cases;
-	}
-
-	public void setCases(PieceHex[][] cases) {
-		this.cases = cases;
 	}
 
 	public void add (PieceHex p) {

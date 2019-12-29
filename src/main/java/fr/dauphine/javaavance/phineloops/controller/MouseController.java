@@ -61,9 +61,7 @@ public class MouseController implements MouseListener{
 		for(int i=0; i<gridPanel.getHeight(); i++) {
 			for(int j=0; j<gridPanel.getWidth(); j++) {		
 				if(j == a && i == b) {
-					//System.out.print(cases[i][j] + " -> ");
 					cases[i][j].rotatePiece();
-					//System.out.println(cases[i][j]);
 					levelDisplay.repaint();				
 				}
 			}

@@ -17,9 +17,6 @@ import fr.dauphine.javaavance.phineloops.view.LevelDisplay;
 
 public class ButtonPanel extends JPanel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public ButtonPanel(final LevelGenerator levelGenerator, final Grid grid, final LevelDisplay levelDisplay ) {

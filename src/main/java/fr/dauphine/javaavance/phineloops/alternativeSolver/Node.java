@@ -84,7 +84,7 @@ public class Node {
     }
 
     /**
-     * Search a solution of the level by depth first serach
+     * Search a solution of the level by depth first search
      * @param stacks
      * @param parent
      * @param espace

@@ -25,7 +25,7 @@ public class ConnectedComponent {
 	}
 
 	/**
-	 * add all pieces from another connected componenet
+	 * add all pieces from another connected component
 	 * @param connectedComponent
 	 */
 	public void addAll(ConnectedComponent connectedComponent) {
@@ -52,7 +52,7 @@ public class ConnectedComponent {
 	}
 	
 	/**
-	 * calculate the number of links a connected componnent can make with other piece 
+	 * calculate the number of links a connected component can make with other piece 
 	 */
 	public void nbLink() {
 		nbLinkPossible = 0;

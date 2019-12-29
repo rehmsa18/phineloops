@@ -19,7 +19,7 @@ public class LevelSolverIAHex {
 	 * Fourth bit a link to the S
 	 * Third bit a link to the SW
 	 * Fourth bit a link to the SN
-	 * With this modelisation each piece is defined with a different value (for more details go check our project documentation)
+	 * With this modeling each piece is defined with a different value (for more details go check our project documentation)
 	 */
 	public boolean solve() {
 		Model model = new Model("choco solver");		
@@ -27,7 +27,7 @@ public class LevelSolverIAHex {
 		//init variables to IntVar 
 		for (int i = 0; i < this.grid.getHeight(); i++) {
 			for (int j = 0; j < this.grid.getWidth(); j++) {
-				//define possible values considering type and postion on the grid of a piece
+				//define possible values considering type and position on the grid of a piece
 				switch(this.grid.getCases()[i][j].getType()) {
 				case 0 :
 					pieces[i][j] = model.intVar(new int[] {0});
@@ -257,12 +257,6 @@ public class LevelSolverIAHex {
 		}
 		Solver solver = model.getSolver();
 		boolean resolution = solver.solve();	
-		//this.translate(pieces);
-		/*for (int i=0; i<this.grid.height; i++) {
-			for (int j=0; j<this.grid.width; j++) {
-				System.out.println(pieces[i][j].getValue());
-			}
-		}*/
 		return resolution;
 	}
 	
@@ -277,7 +271,7 @@ public class LevelSolverIAHex {
 		//init variables to IntVar 
 		for (int i = 0; i < this.grid.getHeight(); i++) {
 			for (int j = 0; j < this.grid.getWidth(); j++) {
-				//define possible values considering type and postion on the grid of a piece
+				//define possible values considering type and position on the grid of a piece
 				switch(this.grid.getCases()[i][j].getType()) {
 				case 0 :
 					pieces[i][j] = model.intVar(new int[] {0});
@@ -438,17 +432,12 @@ public class LevelSolverIAHex {
 		}
 		Solver solver = model.getSolver();
 		boolean resolution = solver.solve();
-		/*for (int i=0; i<this.grid.getHeight(); i++) {
-			for (int j=0; j<this.grid.getWidth(); j++) {
-				System.out.println(pieces[i][j].getValue());
-			}
-		}*/
 		return resolution;
 	}
 	
 
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		GridHex grid = new GridHex(3,3);
 		//NW
 		grid.add(new PieceHex(0,0,3,0));
@@ -473,9 +462,9 @@ public class LevelSolverIAHex {
 		grid.add(new PieceHex(1,1,0,0));
 		
 		LevelSolverIAHex sol = new LevelSolverIAHex(grid);
-		System.out.println("Solution after solver : " + sol.nosolve());
+		System.out.println("Solution after solver : " + sol.solve());
 
-	}
+	}*/
 }	
 	
 

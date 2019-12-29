@@ -265,25 +265,21 @@ public class Grid  extends Observable {
 	public boolean noRespectedLockPiece(Piece p) {
 		if( p.getI() > 0 ) {
 			if( this.cases[p.getI()-1][p.getJ()].getLock() == 1 && this.cases[p.getI()-1][p.getJ()].getLinks()[2] != p.getLinks()[0]) {
-				//System.out.println("a" + " "+ this.cases[p.x-1][p.y] +" "+this.cases[p.x-1][p.y].links[2] +" "+ p.links[0]);
 				return true;
 			}
 		}
 		if( p.getI() < this.height-1 ) {
 			if( this.cases[p.getI()+1][p.getJ()].getLock() == 1 && this.cases[p.getI()+1][p.getJ()].getLinks()[0] != p.getLinks()[2]) {
-				//System.out.println("b" + " " + this.cases[p.x+1][p.y] +" "+this.cases[p.x+1][p.y].links[0] + " "+ p.links[2]);
 				return true;
 			}		
 		}
 		if( p.getJ() > 0 ) {
 			if( this.cases[p.getI()][p.getJ()-1].getLock() == 1 && this.cases[p.getI()][p.getJ()-1].getLinks()[1] != p.getLinks()[3] ) {
-				//System.out.println("c"+" " + this.cases[p.x][p.y-1] +" "+this.cases[p.x][p.y-1].links[1] +" "+ p.links[3]);
 				return true;
 			}
 		}
 		if( p.getJ() < this.width-1 ) {
 			if( this.cases[p.getI()][p.getJ()+1].getLock() == 1 && this.cases[p.getI()][p.getJ()+1].getLinks()[3] != p.getLinks()[1] ) {
-				//System.out.println("d"+ " " +this.cases[p.x][p.y+1] +" "+this.cases[p.x][p.y+1].links[3] +" "+p.links[1]);
 				return true;
 			}		
 		}

@@ -95,15 +95,15 @@ public class LevelGenerator {
 	 * @param x
 	 * @param y
 	 * @param p
-	 * @return true if the two piece are of the type 1
+	 * @return true if the two pieces are of the type 1
 	 */
 	public boolean pieceType1Neighbors(int i, int j, Piece p) {	
-		//the piece and its west neighbor can not be of the type 1 to avoid too much connected component in the grid
+		//the piece and its west neighbor can not be of the type 1 to avoid too much connected components in the grid
 		if( j > 0 ) {
 			if( (p.getType() == 1) && (grid.getCases()[i][j-1].getType() == 1) )
 				return true;
 		}
-	    //the piece and its north neighbor can not be of the type 1 to avoid too much connected component in the grid
+	    //the piece and its north neighbor can not be of the type 1 to avoid too much connected components in the grid
 		if( i > 0) {
 			if( (p.getType() == 1) && (grid.getCases()[i-1][j].getType() == 1) )
 				return true;
@@ -126,25 +126,16 @@ public class LevelGenerator {
 		}
 		
 		if (this.grid.getHeight() == 1 && this.grid.getWidth() == 2) {
-			//piecesChoice.add(pieces.get(0));
 			piecesChoice.add(pieces.get(1));
 			piecesChoice.add(pieces.get(3));
 		}
 		
 		else if (this.grid.getHeight() == 2 && this.grid.getWidth() == 1) {
-			//piecesChoice.add(pieces.get(0));
 			piecesChoice.add(pieces.get(2));
 			piecesChoice.add(pieces.get(4));
 		}
 		else {
-			piecesChoice = pieces;
-			/*piecesChoice.add(pieces.get(0));
-			piecesChoice.add(pieces.get(1));
-			piecesChoice.add(pieces.get(2));
-			piecesChoice.add(pieces.get(3));
-			piecesChoice.add(pieces.get(4));
-			piecesChoice.add(pieces.get(15));*/
-			
+			piecesChoice = pieces;		
 		}
 		
 		if( this.grid.northWestSide(i,j) ){
@@ -232,8 +223,8 @@ public class LevelGenerator {
 	 */
 	public Piece respectNumberConnectedComponents(int i, int j, Piece chosenPiece, ArrayList<Piece> piecesPossible) {
     	// if the number of connected components is indicated
-        // and if we have almost the maximum number of connected componenet with no more links possible
-        // the rest of the connected componenets with open links need to be connected
+        // and if we have almost the maximum number of connected components with no more links possible
+        // the rest of the connected components with open links need to be connected
         // we select the pieces with links on their east or south side or are of type 0
 		if( (maxConnectedComponent-nbConnectedComponent) == 1) {		
 			Collections.shuffle(piecesPossible);
@@ -243,8 +234,8 @@ public class LevelGenerator {
 			}
 		}
 		
-		// if the number of maximum of connected component is highter 
-		// than number of connected componenet with no more links possible
+		// if the number of maximum of connected component is higher 
+		// than number of connected components with no more links possible
 		// Choose piece of type 1
 		if( (maxConnectedComponent-nbConnectedComponent) > 1 ){
 			for(Piece piece : piecesPossible){
@@ -292,7 +283,7 @@ public class LevelGenerator {
 		}
        
         // if a connected component can no longer be linked to another piece
-        // then the number of real connected component increments
+        // then the number of real connected components increments
         for(int k=0; k<connectedComponents.size(); k++) {
         	if(connectedComponents.get(k).getNbLinkPossible() == 0) {
         		connectedComponents.remove(connectedComponents.get(k));

@@ -270,7 +270,5 @@ public class Main {
 	            formatter.printHelp( "phineloops", options );         
 	            System.exit(1); // exit with error      
 		}
-
-        //System.exit(0); // exit with success   
     }
 }

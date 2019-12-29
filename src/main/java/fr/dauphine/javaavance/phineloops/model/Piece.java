@@ -11,7 +11,7 @@ public class Piece {
 	private int j;
 	private int orientation = 0; //depends of piece between 0 and 3
 	private int type; //kind of piece 0,1,2,3,4,5
-	private int lock = 0; //indicate if we can move a piece, it is lock if = 1
+	private int lock = 0; //indicate if we can move a piece, it is locked if = 1
 	private int links[] = {0,0,0,0}; //tab to define where the piece makes a link with value 1 {North,East,South,West}
 	private int nbneighbors = 0;
 	private int gridX;
@@ -323,7 +323,7 @@ public class Piece {
 	
 	
 	/**
-	 * Says if pieces are neighbors considering theirs coordinates is says where
+	 * Says if pieces are neighbors considering theirs coordinates
 	 * @param Piece p
 	 * @return -1 not neighbors, 0 p is at North, 1 at East, 2 at South, 3 at West
 	 */
@@ -347,7 +347,7 @@ public class Piece {
 	}
 
 	/**
-	 * Says true if two pieces are linked
+	 * Says if two pieces are linked
 	 * @param Piece p
 	 * @return true if they are linked
 	 */
@@ -490,7 +490,7 @@ public class Piece {
 	}
 	
 	/**
-	 * Says true if two pieces are neighbors, ig they have same value of their link or if they are not neighbors
+	 * Says true if two pieces are neighbors, if they have same value of their link or if they are not neighbors
 	 * @param Piece p
 	 * @return true if they are linked
 	 */

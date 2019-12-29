@@ -117,7 +117,7 @@ public class LevelSolverStack {
 	}
 	
 	/**
-	 * choose the piece to fixe
+	 * choose the piece to fix
 	 */
 	public void choosePiece() {
 		if( pieceNbNeighbors.equals("min") ) {

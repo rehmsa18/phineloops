@@ -25,7 +25,7 @@ public class StackThread extends Thread{
 	}
 	
 	/**
-	 * Says if a solutution is found
+	 * Says if a solution is found
 	 * @return boolean
 	 */
 	public boolean getSolutionFound() {

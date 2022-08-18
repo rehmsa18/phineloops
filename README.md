@@ -1,7 +1,3 @@
-* Sania UR REHMAN
-* Boris MARTIN
-* Fatima Zahra MARHOUSS
-
 #### Les commandes à taper pour compiler et exécuter notre projet.
 
 ##### Générateur
